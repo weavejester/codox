@@ -1,4 +1,17 @@
 # Codox
 
-A Clojure documentation writer. Currently not yet in a state where it
-can be used.
+A tool for generating documentation from Clojure source code.
+
+Currently in an early state of development.
+
+## Usage
+
+Include the following development dependency in your `project.clj` file:
+
+    [codox "0.1.0"]
+
+Then run:
+
+    lein codox
+
+To generate the documentation, which will be placed in a "doc" subdirectory.
