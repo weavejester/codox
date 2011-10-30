@@ -21,6 +21,10 @@
        [:h2 (link-to (ns-filename namespace) (:name namespace))]
        [:pre.doc (:doc namespace)]])]))
 
+(defn- var-usage [var]
+  (for [arglist (:arglists var)]
+    (list* (:name var) arglist)))
+
 (defn- make-ns-page
   [namespace]
   (html5
@@ -28,11 +32,13 @@
     [:title (:name namespace) " documentation"]]
    [:body
     [:h1 (:name namespace) " documentation"]
-    [:div.doc (:doc namespace)]
+    [:pre.doc (:doc namespace)]
     (for [public (:publics namespace)]
-      [:div.public
+      [:div.public {:id (:name public)}
        [:h3 (:name public)]
-       [:pre (pr-str (:arglists public))]
+       [:div.usage
+        (for [form (var-usage public)]
+          [:code (pr-str form)])]
        [:pre.doc "  " (:doc public)]])]))
 
 (defn write-docs
