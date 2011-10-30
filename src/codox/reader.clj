@@ -9,11 +9,15 @@
         (select-keys [:name :file :line :arglists :doc :macro :added]))))
 
 (defn- read-namespace [namespace]
-  (require namespace :reload)
-  (-> (find-ns namespace)
-      (meta)
-      (assoc :name namespace)
-      (assoc :publics (read-publics namespace))))
+  (try
+    (require namespace :reload)
+    (-> (find-ns namespace)
+        (meta)
+        (assoc :name namespace)
+        (assoc :publics (read-publics namespace))
+        (list))
+    (catch Exception e
+      (println "Could not generate documentation for" namespace))))
 
 (defn read-info
   "Read namespaces from a source directory (defaults to \"src\"), and
@@ -36,4 +40,4 @@
   ([dir]
      (->> (io/file dir)
           (ns/find-namespaces-in-dir)
-          (map read-namespace))))
+          (mapcat read-namespace))))
