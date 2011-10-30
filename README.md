@@ -1,13 +1,4 @@
-# codox
+# Codox
 
-FIXME: write description
-
-## Usage
-
-FIXME: write
-
-## License
-
-Copyright (C) 2011 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+A Clojure documentation writer. Currently not yet in a state where it
+can be used.
