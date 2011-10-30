@@ -9,42 +9,56 @@
 (defn- ns-filepath [namespace]
   (str "doc/" (ns-filename namespace)))
 
-(defn- make-index
-  [namespaces]
+(defn- var-uri [namespace var]
+  (str (ns-filename namespace) "#" (:name var)))
+
+(defn- make-index [namespaces]
   (html5
    [:head
-    [:title "API documentation"]]
+    [:title "API documentation"]
+    (include-css "css/default.css")]
    [:body
     [:h1 "API documentation"]
     (for [namespace namespaces]
       [:div.namespace
        [:h2 (link-to (ns-filename namespace) (:name namespace))]
-       [:pre.doc (:doc namespace)]])]))
+       [:pre.doc (:doc namespace)]
+       [:ul.publics
+        (for [var (:publics namespace)]
+          [:li (link-to (var-uri namespace var) (:name var))])]])]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- make-ns-page
-  [namespace]
+(defn- make-ns-page [namespace]
   (html5
    [:head
-    [:title (:name namespace) " documentation"]]
+    [:title (:name namespace) " documentation"]
+    (include-css "css/default.css")]
    [:body
     [:h1 (:name namespace) " documentation"]
     [:pre.doc (:doc namespace)]
-    (for [public (:publics namespace)]
-      [:div.public {:id (:name public)}
-       [:h3 (:name public)]
+    (for [var (:publics namespace)]
+      [:div.public {:id (:name var)}
+       [:h3 (:name var)]
        [:div.usage
-        (for [form (var-usage public)]
+        (for [form (var-usage var)]
           [:code (pr-str form)])]
-       [:pre.doc "  " (:doc public)]])]))
+       [:pre.doc "  " (:doc var)]])]))
+
+(defn- copy-resource [src dest]
+  (io/copy (io/input-stream (io/resource src))
+           (io/file dest)))
+
+(defn- mkdirs [dir]
+  (.mkdirs (io/file dir)))
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [info]
-  (.mkdirs (io/file "doc"))
+  (mkdirs "doc/css")
+  (copy-resource "codox/css/default.css" "doc/css/default.css")
   (spit "doc/index.html" (make-index info))
   (doseq [namespace info]
     (spit (ns-filepath namespace) (make-ns-page namespace))))
