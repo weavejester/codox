@@ -2,8 +2,13 @@ body {
    font-family: sans-serif;
 }
 
+.publics {
+   padding: 0;
+}
+
 .publics li {
    display: inline;
+   padding: 0 .5em;
 }
 
 .usage code {
