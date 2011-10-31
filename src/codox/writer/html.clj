@@ -12,6 +12,13 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (:name var)))
 
+(defn html-doc [title & body]
+  (html5
+   [:head
+    [:title title]
+    (include-css "css/default.css")]
+   [:body body]))
+
 (defn- make-index [namespaces]
   (html5
    [:head
