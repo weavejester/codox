@@ -2,11 +2,11 @@ body {
    font-family: sans-serif;
 }
 
-.publics {
+.index {
    padding: 0;
 }
 
-.publics li {
+.index li {
    display: inline;
    padding: 0 .5em;
 }
