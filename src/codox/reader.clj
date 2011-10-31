@@ -6,11 +6,12 @@
             [clojure.tools.namespace :as ns]))
 
 (defn- correct-indent [text]
-  (let [lines (str/split-lines text)]
-    (->> (rest lines)
-         (str/join "\n")
-         (unindent)
-         (str (first lines) "\n"))))
+  (if text
+    (let [lines (str/split-lines text)]
+      (->> (rest lines)
+           (str/join "\n")
+           (unindent)
+           (str (first lines) "\n")))))
 
 (defn- read-publics [namespace]
   (for [[_ public] (ns-publics namespace)]
