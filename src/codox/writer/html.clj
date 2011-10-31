@@ -45,7 +45,7 @@
        [:div.usage
         (for [form (var-usage var)]
           [:code (pr-str form)])]
-       [:pre.doc "  " (:doc var)]])]))
+       [:pre.doc (:doc var)]])]))
 
 (defn- copy-resource [src dest]
   (io/copy (io/input-stream (io/resource src))

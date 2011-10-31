@@ -1,12 +1,22 @@
 (ns codox.reader
   "Read raw documentation information from Clojure source directory."
+  (:use [codox.utils :only (unindent)])
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [clojure.tools.namespace :as ns]))
+
+(defn- correct-indent [text]
+  (let [lines (str/split-lines text)]
+    (->> (rest lines)
+         (str/join "\n")
+         (unindent)
+         (str (first lines) "\n"))))
 
 (defn- read-publics [namespace]
   (for [[_ public] (ns-publics namespace)]
     (-> (meta public)
-        (select-keys [:name :file :line :arglists :doc :macro :added]))))
+        (select-keys [:name :file :line :arglists :doc :macro :added])
+        (update-in [:doc] correct-indent))))
 
 (defn- read-namespace [namespace]
   (try
@@ -15,6 +25,7 @@
         (meta)
         (assoc :name namespace)
         (assoc :publics (read-publics namespace))
+        (update-in [:doc] correct-indent)
         (list))
     (catch Exception e
       (println "Could not generate documentation for" namespace))))
