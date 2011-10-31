@@ -13,9 +13,14 @@
            (unindent)
            (str (first lines) "\n")))))
 
+(defn- sorted-public-vars [namespace]
+  (->> (ns-publics namespace)
+       (vals)
+       (sort-by (comp :name meta))))
+
 (defn- read-publics [namespace]
-  (for [[_ public] (ns-publics namespace)]
-    (-> (meta public)
+  (for [var (sorted-public-vars namespace)]
+    (-> (meta var)
         (select-keys [:name :file :line :arglists :doc :macro :added])
         (update-in [:doc] correct-indent))))
 
