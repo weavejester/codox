@@ -26,10 +26,10 @@
    (for [var (:publics namespace)]
      [:li (link-to (var-uri namespace var) (:name var))])])
 
-(defn- make-index [namespaces]
+(defn- make-index [options]
   (html-page
    "API documentation"
-   (for [namespace namespaces]
+   (for [namespace (:namespaces options)]
      [:div.namespace
       [:h2 (link-to (ns-filename namespace) (:name namespace))]
       [:pre.doc (:doc namespace)]
@@ -61,9 +61,9 @@
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
-  [info]
+  [options]
   (mkdirs "doc/css")
   (copy-resource "codox/css/default.css" "doc/css/default.css")
-  (spit "doc/index.html" (make-index info))
-  (doseq [namespace info]
+  (spit "doc/index.html" (make-index options))
+  (doseq [namespace (:namespaces options)]
     (spit (ns-filepath namespace) (make-ns-page namespace))))

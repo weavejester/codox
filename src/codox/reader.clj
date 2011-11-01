@@ -24,7 +24,7 @@
         (select-keys [:name :file :line :arglists :doc :macro :added])
         (update-in [:doc] correct-indent))))
 
-(defn- read-namespace [namespace]
+(defn- read-ns [namespace]
   (try
     (require namespace :reload)
     (-> (find-ns namespace)
@@ -36,7 +36,7 @@
     (catch Exception e
       (println "Could not generate documentation for" namespace))))
 
-(defn read-info
+(defn read-namespaces
   "Read namespaces from a source directory (defaults to \"src\"), and
   return a list of maps suitable for documentation purposes.
 
@@ -53,8 +53,8 @@
       :macro    - true if the var is a macro
       :added    - the library version the var was added in"
   ([]
-     (read-info "src"))
+     (read-namespaces "src"))
   ([dir]
      (->> (io/file dir)
           (ns/find-namespaces-in-dir)
-          (mapcat read-namespace))))
+          (mapcat read-ns))))
