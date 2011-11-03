@@ -1,16 +1,29 @@
 body {
    font-family: sans-serif;
+   font-size: 11pt;
 }
 
 .index {
    padding: 0;
 }
 
-.index li {
+.index * {
    display: inline;
+}
+
+.index li {
    padding: 0 .5em;
+}
+
+.index ul {
+   padding-left: 0;
 }
 
 .usage code {
    display: block;
+}
+
+pre, code {
+   font-family: monospace;
+   font-size: 10pt;
 }

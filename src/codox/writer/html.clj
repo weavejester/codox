@@ -23,9 +23,11 @@
     body]))
 
 (defn- make-var-links [namespace]
-  [:ul.index
-   (for [var (:publics namespace)]
-     [:li (link-to (var-uri namespace var) (:name var))])])
+  [:div.index
+   [:p "Public variables and functions:"]
+   [:ul
+    (for [var (:publics namespace)]
+      [:li (link-to (var-uri namespace var) (:name var))])]])
 
 (defn- make-index [options]
   (html-page
