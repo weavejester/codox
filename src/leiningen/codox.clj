@@ -2,7 +2,7 @@
   (:use [leiningen.compile :only (eval-in-project)]))
 
 (defn codox
-  "Generate documentation"
+  "Generate API documentation from source code."
   [project]
   (eval-in-project project
     `(codox.main/generate-docs
