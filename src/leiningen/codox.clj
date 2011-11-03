@@ -5,6 +5,7 @@
   "Generate documentation"
   [project]
   (eval-in-project project
-    '(codox.main/generate-docs)
+    `(codox.main/generate-docs
+       '~(select-keys project [:name :version :description]))
     nil nil
-    '(require 'codox.main)))
+    `(require 'codox.main)))

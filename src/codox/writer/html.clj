@@ -1,7 +1,8 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
   (:use [hiccup core page-helpers])
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]))
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -28,7 +29,9 @@
 
 (defn- make-index [options]
   (html-page
-   "API documentation"
+   (str (str/capitalize (:name options)) " " (:version options)
+        " API documentation")
+   [:div.doc (:description options)]
    (for [namespace (:namespaces options)]
      [:div.namespace
       [:h2 (link-to (ns-filename namespace) (:name namespace))]
