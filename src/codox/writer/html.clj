@@ -13,6 +13,12 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (:name var)))
 
+(defn- link-to-ns [namespace]
+  (link-to (ns-filename namespace) (:name namespace)))
+
+(defn- link-to-var [namespace var]
+  (link-to (var-uri namespace var) (:name var)))
+
 (defn- html-page [title & body]
   (html5
    [:head
@@ -22,21 +28,33 @@
     [:h1 title]
     body]))
 
+(defn- make-ns-menu [namespaces]
+  [:div#namespaces
+   (unordered-list
+    (map link-to-ns namespaces))])
+
+(defn- var-list [namespace]
+  (unordered-list
+   (map (partial link-to-var namespace)
+        (:publics namespace))))
+
+(defn- make-var-menu [namespace]
+  [:div.vars (var-list namespace)])
+
 (defn- make-var-links [namespace]
   [:div.index
    [:p "Public variables and functions:"]
-   [:ul
-    (for [var (:publics namespace)]
-      [:li (link-to (var-uri namespace var) (:name var))])]])
+   (var-list namespace)])
 
 (defn- make-index [options]
   (html-page
    (str (str/capitalize (:name options)) " " (:version options)
         " API documentation")
    [:div.doc (:description options)]
+   (make-ns-menu (:namespaces options))
    (for [namespace (:namespaces options)]
      [:div.namespace
-      [:h2 (link-to (ns-filename namespace) (:name namespace))]
+      [:h2 (link-to-ns namespace)]
       [:pre.doc (:doc namespace)]
       (make-var-links namespace)])))
 
@@ -44,11 +62,12 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- make-ns-page [namespace]
+(defn- make-ns-page [namespace options]
   (html-page
    (str (:name namespace) " documentation")
    [:pre.doc (:doc namespace)]
-   (make-var-links namespace)
+   (make-ns-menu (:namespaces options))
+   (make-var-menu namespace)
    (for [var (:publics namespace)]
       [:div.public {:id (:name var)}
        [:h3 (:name var)]
@@ -71,4 +90,5 @@
   (copy-resource "codox/css/default.css" "doc/css/default.css")
   (spit "doc/index.html" (make-index options))
   (doseq [namespace (:namespaces options)]
-    (spit (ns-filepath namespace) (make-ns-page namespace))))
+    (spit (ns-filepath namespace)
+          (make-ns-page namespace options))))

@@ -1,6 +1,23 @@
 body {
    font-family: sans-serif;
    font-size: 11pt;
+   margin-left: 15em;
+}
+
+pre, code {
+   font-family: monospace;
+   font-size: 10pt;
+}
+
+#namespaces {
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   width: 14em;
+   background: #dddddd;
+   border-right: solid 1px #bbbbbb;
+   
 }
 
 .index {
@@ -21,9 +38,4 @@ body {
 
 .usage code {
    display: block;
-}
-
-pre, code {
-   font-family: monospace;
-   font-size: 10pt;
 }
