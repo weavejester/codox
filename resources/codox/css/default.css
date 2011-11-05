@@ -18,11 +18,23 @@ pre, code {
 
 #namespaces li, #vars li {
    display: block;
-   padding: 0.8em 0;
+}
+
+#namespaces a, #vars a {
+   display: block;
+   padding: 0.5em 0.8em;
+   color: #333;
+   text-decoration: none;
+}
+
+#namespaces li.current a {
+   border-left: 0.3em solid #a33;
+   padding-left: 0.5em;
+   color: #a33;
 }
 
 #namespaces ul, #vars ul {
-   padding: 0.5em 1em;
+   padding: 0.5em 0em;
    margin: 0;
 }
 

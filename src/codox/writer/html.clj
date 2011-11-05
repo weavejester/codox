@@ -19,9 +19,12 @@
 (defn- link-to-var [namespace var]
   (link-to (var-uri namespace var) (:name var)))
 
-(defn- ns-links [project]
-  (unordered-list
-   (map link-to-ns (:namespaces project))))
+(defn- ns-links [project & [namespace]]
+  [:ul
+   (for [ns (:namespaces project)]
+     (if (= ns namespace)
+       [:li.current (link-to-ns ns)]
+       [:li (link-to-ns ns)]))])
 
 (defn- var-links [namespace]
   (unordered-list
@@ -63,7 +66,7 @@
     (include-css "css/default.css")
     [:title (namespace-title namespace)]]
    [:body
-    [:div#namespaces (ns-links project)]
+    [:div#namespaces (ns-links project namespace)]
     [:div#vars (var-links namespace)]
     [:div#content
      [:h1 (namespace-title namespace)]
