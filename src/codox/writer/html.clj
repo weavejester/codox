@@ -38,7 +38,7 @@
    [:h3 (link-to (ns-filename namespace) "Public Vars")]
    (var-links namespace)])
 
-(def default-includes
+(def ^{:private true} default-includes
   (list
    (include-css "css/default.css")
    (include-js "js/jquery.min.js")

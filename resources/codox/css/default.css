@@ -8,6 +8,15 @@ pre, code {
    font-size: 10pt;
 }
 
+h1, h2 {
+   font-weight: normal;
+}
+
+h1 {
+   font-size: 18pt;
+   margin: 10px 0 0.8em 0;
+}
+
 .sidebar {
    position: fixed;
    top: 0;
@@ -30,7 +39,7 @@ pre, code {
 }
 
 .sidebar h3 a {
-   padding: 0.2em 0.5em 0 0.5em;
+   padding: 10px 0.5em 0 0.5em;
 }
 
 .sidebar ul {
