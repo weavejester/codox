@@ -38,6 +38,11 @@
    [:h3 (link-to (ns-filename namespace) "Public Vars")]
    (var-links namespace)])
 
+(def default-includes
+  (list
+   (include-css "css/default.css")
+   (include-js "js/jquery.min.js")))
+
 (defn- project-title [project]
   (str (str/capitalize (:name project)) " "
        (:version project) " API documentation"))
@@ -45,7 +50,7 @@
 (defn- index-page [project]
   (html5
    [:head
-    (include-css "css/default.css")
+    default-includes
     [:title (project-title project)]]
    [:body
     (namespaces-menu project)
@@ -70,7 +75,7 @@
 (defn- namespace-page [project namespace]
   (html5
    [:head
-    (include-css "css/default.css")
+    default-includes
     [:title (namespace-title namespace)]]
    [:body
     (namespaces-menu project namespace)
@@ -90,14 +95,16 @@
   (io/copy (io/input-stream (io/resource src))
            (io/file dest)))
 
-(defn- mkdirs [dir]
-  (.mkdirs (io/file dir)))
+(defn- mkdirs [& dirs]
+  (doseq [dir dirs]
+    (.mkdirs (io/file dir))))
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [project]
-  (mkdirs "doc/css")
+  (mkdirs "doc/css" "doc/js")
   (copy-resource "codox/css/default.css" "doc/css/default.css")
+  (copy-resource "codox/js/jquery.min.js" "doc/js/jquery.min.js")
   (spit "doc/index.html" (index-page project))
   (doseq [namespace (:namespaces project)]
     (spit (ns-filepath namespace)
