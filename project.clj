@@ -1,4 +1,4 @@
-(defproject codox "0.1.3"
+(defproject codox "0.2.0"
   :description "Generate documentation from Clojure source files"
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/tools.namespace "0.1.0"]
