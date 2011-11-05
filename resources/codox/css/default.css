@@ -1,7 +1,6 @@
 body {
    font-family: sans-serif;
    font-size: 11pt;
-   margin-left: 15em;
 }
 
 pre, code {
@@ -9,15 +8,38 @@ pre, code {
    font-size: 10pt;
 }
 
-#namespaces {
-   position: absolute;
+#namespaces, #vars {
+   position: fixed;
    top: 0;
-   left: 0;
    bottom: 0;
    width: 14em;
-   background: #dddddd;
-   border-right: solid 1px #bbbbbb;
-   
+   overflow: auto;
+}
+
+#namespaces li, #vars li {
+   display: block;
+   padding: 0.8em 0;
+}
+
+#namespaces ul, #vars ul {
+   padding: 0.5em 1em;
+   margin: 0;
+}
+
+#namespaces {
+   background: #e6e6e6;
+   left: 0;
+}
+
+#vars {
+   background: #eeeeee;
+   border-left: solid 1px #bbb;
+   border-right: solid 1px #ccc;
+   left: 14em;
+}
+
+#content {
+   margin-left: 29em;
 }
 
 .index {
