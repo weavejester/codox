@@ -19,62 +19,62 @@
 (defn- link-to-var [namespace var]
   (link-to (var-uri namespace var) (:name var)))
 
-(defn- html-page [title & body]
-  (html5
-   [:head
-    [:title title]
-    (include-css "css/default.css")]
-   [:body
-    [:h1 title]
-    body]))
+(defn- ns-links [project]
+  (unordered-list
+   (map link-to-ns (:namespaces project))))
 
-(defn- make-ns-menu [namespaces]
-  [:div#namespaces
-   (unordered-list
-    (map link-to-ns namespaces))])
-
-(defn- var-list [namespace]
+(defn- var-links [namespace]
   (unordered-list
    (map (partial link-to-var namespace)
         (:publics namespace))))
 
-(defn- make-var-menu [namespace]
-  [:div.vars (var-list namespace)])
+(defn- project-title [project]
+  (str (str/capitalize (:name project)) " "
+       (:version project) " API documentation"))
 
-(defn- make-var-links [namespace]
-  [:div.index
-   [:p "Public variables and functions:"]
-   (var-list namespace)])
-
-(defn- make-index [options]
-  (html-page
-   (str (str/capitalize (:name options)) " " (:version options)
-        " API documentation")
-   [:div.doc (:description options)]
-   (make-ns-menu (:namespaces options))
-   (for [namespace (:namespaces options)]
-     [:div.namespace
-      [:h2 (link-to-ns namespace)]
-      [:pre.doc (:doc namespace)]
-      (make-var-links namespace)])))
+(defn- index-page [project]
+  (html5
+   [:head
+    (include-css "css/default.css")
+    [:title (project-title project)]]
+   [:body
+    [:div#namespaces (ns-links project)]
+    [:div#content
+     [:h1 (project-title project)]
+     [:div.doc (:description project)]
+     (for [namespace (:namespaces project)]
+       [:div.namespace
+        [:h2 (link-to-ns namespace)]
+        [:pre.doc (:doc namespace)]
+        [:div.index
+         [:p "Public variables and functions:"]
+         (var-links namespace)]])]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- make-ns-page [namespace options]
-  (html-page
-   (str (:name namespace) " documentation")
-   [:pre.doc (:doc namespace)]
-   (make-ns-menu (:namespaces options))
-   (make-var-menu namespace)
-   (for [var (:publics namespace)]
+(defn- namespace-title [namespace]
+  (str (:name namespace) " documentation"))
+
+(defn- namespace-page [project namespace]
+  (html5
+   [:head
+    (include-css "css/default.css")
+    [:title (namespace-title namespace)]]
+   [:body
+    [:div#namespaces (ns-links project)]
+    [:div#vars (var-links namespace)]
+    [:div#content
+     [:h1 (namespace-title namespace)]
+     [:pre.doc (:doc namespace)]
+     (for [var (:publics namespace)]
       [:div.public {:id (:name var)}
        [:h3 (:name var)]
        [:div.usage
         (for [form (var-usage var)]
           [:code (pr-str form)])]
-       [:pre.doc (:doc var)]])))
+       [:pre.doc (:doc var)]])]]))
 
 (defn- copy-resource [src dest]
   (io/copy (io/input-stream (io/resource src))
@@ -85,10 +85,10 @@
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
-  [options]
+  [project]
   (mkdirs "doc/css")
   (copy-resource "codox/css/default.css" "doc/css/default.css")
-  (spit "doc/index.html" (make-index options))
-  (doseq [namespace (:namespaces options)]
+  (spit "doc/index.html" (index-page project))
+  (doseq [namespace (:namespaces project)]
     (spit (ns-filepath namespace)
-          (make-ns-page namespace options))))
+          (namespace-page project namespace))))
