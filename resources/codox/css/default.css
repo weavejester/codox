@@ -47,6 +47,7 @@ pre, code {
 
 #namespaces {
    background: #e6e6e6;
+   border-right: solid 1px #bbb;
    left: 0;
 }
 
@@ -57,7 +58,11 @@ pre, code {
    left: 14em;
 }
 
-#content {
+.namespace-index {
+   margin-left: 15em;
+}
+
+.namespace-docs {
    margin-left: 29em;
 }
 

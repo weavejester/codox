@@ -49,7 +49,7 @@
     [:title (project-title project)]]
    [:body
     (namespaces-menu project)
-    [:div#content
+    [:div#content.namespace-index
      [:h1 (project-title project)]
      [:div.doc (:description project)]
      (for [namespace (:namespaces project)]
@@ -75,7 +75,7 @@
    [:body
     (namespaces-menu project namespace)
     (vars-menu namespace)
-    [:div#content
+    [:div#content.namespace-docs
      [:h1 (namespace-title namespace)]
      [:pre.doc (:doc namespace)]
      (for [var (:publics namespace)]
