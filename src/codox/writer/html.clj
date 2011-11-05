@@ -19,17 +19,24 @@
 (defn- link-to-var [namespace var]
   (link-to (var-uri namespace var) (:name var)))
 
-(defn- ns-links [project & [namespace]]
-  [:ul
-   (for [ns (:namespaces project)]
-     (if (= ns namespace)
-       [:li.current (link-to-ns ns)]
-       [:li (link-to-ns ns)]))])
+(defn- namespaces-menu [project & [namespace]]
+  [:div#namespaces.sidebar
+   [:h3 "Namespaces"]
+   [:ul
+    (for [ns (:namespaces project)]
+      (if (= ns namespace)
+        [:li.current (link-to-ns ns)]
+        [:li (link-to-ns ns)]))]])
 
 (defn- var-links [namespace]
   (unordered-list
-   (map (partial link-to-var namespace)
-        (:publics namespace))))
+    (map (partial link-to-var namespace)
+         (:publics namespace))))
+
+(defn- vars-menu [namespace]
+  [:div#vars.sidebar
+   [:h3 "Public Vars"]
+   (var-links namespace)])
 
 (defn- project-title [project]
   (str (str/capitalize (:name project)) " "
@@ -41,7 +48,7 @@
     (include-css "css/default.css")
     [:title (project-title project)]]
    [:body
-    [:div#namespaces (ns-links project)]
+    (namespaces-menu project)
     [:div#content
      [:h1 (project-title project)]
      [:div.doc (:description project)]
@@ -66,8 +73,8 @@
     (include-css "css/default.css")
     [:title (namespace-title namespace)]]
    [:body
-    [:div#namespaces (ns-links project namespace)]
-    [:div#vars (var-links namespace)]
+    (namespaces-menu project namespace)
+    (vars-menu namespace)
     [:div#content
      [:h1 (namespace-title namespace)]
      [:pre.doc (:doc namespace)]

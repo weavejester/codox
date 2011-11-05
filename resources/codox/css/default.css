@@ -8,7 +8,7 @@ pre, code {
    font-size: 10pt;
 }
 
-#namespaces, #vars {
+.sidebar {
    position: fixed;
    top: 0;
    bottom: 0;
@@ -16,26 +16,33 @@ pre, code {
    overflow: auto;
 }
 
-#namespaces li, #vars li {
+.sidebar h3 {
+   margin: 0;
+   padding: 0.2em 0.5em 0 0.5em;
+   font-size: 14pt;
+   font-weight: normal
+}
+
+.sidebar li {
    display: block;
 }
 
-#namespaces a, #vars a {
+.sidebar a {
    display: block;
    padding: 0.5em 0.8em;
    color: #333;
    text-decoration: none;
 }
 
+.sidebar ul {
+   padding: 0.5em 0em;
+   margin: 0;
+}
+
 #namespaces li.current a {
    border-left: 0.3em solid #a33;
    padding-left: 0.5em;
    color: #a33;
-}
-
-#namespaces ul, #vars ul {
-   padding: 0.5em 0em;
-   margin: 0;
 }
 
 #namespaces {
