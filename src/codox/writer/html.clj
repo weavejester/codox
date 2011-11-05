@@ -41,7 +41,8 @@
 (def default-includes
   (list
    (include-css "css/default.css")
-   (include-js "js/jquery.min.js")))
+   (include-js "js/jquery.min.js")
+   (include-js "js/page_effects.js")))
 
 (defn- project-title [project]
   (str (str/capitalize (:name project)) " "
@@ -105,6 +106,7 @@
   (mkdirs "doc/css" "doc/js")
   (copy-resource "codox/css/default.css" "doc/css/default.css")
   (copy-resource "codox/js/jquery.min.js" "doc/js/jquery.min.js")
+  (copy-resource "codox/js/page_effects.js" "doc/js/page_effects.js")
   (spit "doc/index.html" (index-page project))
   (doseq [namespace (:namespaces project)]
     (spit (ns-filepath namespace)

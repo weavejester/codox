@@ -52,6 +52,12 @@ pre, code {
    color: #a33;
 }
 
+#vars li.current a {
+   border-left: 0.3em solid #33a;
+   padding-left: 0.5em;
+   color: #33a;
+}
+
 #namespaces {
    background: #e6e6e6;
    border-right: solid 1px #bbb;
