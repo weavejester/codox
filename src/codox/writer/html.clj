@@ -21,7 +21,7 @@
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
-   [:h3 "Namespaces"]
+   [:h3 (link-to "index.html" "Namespaces")]
    [:ul
     (for [ns (:namespaces project)]
       (if (= ns namespace)
@@ -35,7 +35,7 @@
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
-   [:h3 "Public Vars"]
+   [:h3 (link-to (ns-filename namespace) "Public Vars")]
    (var-links namespace)])
 
 (defn- project-title [project]
