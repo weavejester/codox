@@ -8,21 +8,69 @@ pre, code {
    font-size: 10pt;
 }
 
-h1, h2 {
+h2 {
    font-weight: normal;
-}
-
-h1 {
    font-size: 18pt;
    margin: 10px 0 0.8em 0;
 }
 
+#header, #content, .sidebar {
+   position: fixed;
+}
+
+#header {
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 20px;
+   background: #444;
+   color: #fff;
+   padding: 5px;
+}
+
+#header h1 {
+   margin: 0;
+   padding: 0;
+   font-size: 11pt;
+   font-weight: bold;
+}
+
+#content {
+   top: 30px;
+   right: 0;
+   bottom: 0;
+   overflow: auto;
+   background: #fff;
+   color: #333;
+   padding: 0 1em;
+}
+
 .sidebar {
    position: fixed;
-   top: 0;
+   top: 30px;
    bottom: 0;
-   width: 14em;
+   width: 200px;
    overflow: auto;
+}
+
+#namespaces {
+   background: #e6e6e6;
+   border-right: solid 1px #bbb;
+   left: 0;
+}
+
+#vars {
+   background: #eeeeee;
+   border-right: solid 1px #ccc;
+   left: 201px;
+}
+
+.namespace-index {
+   left: 201px;
+}
+
+.namespace-docs {
+   left: 402px;
 }
 
 .sidebar a {
@@ -65,27 +113,6 @@ h1 {
    border-left: 0.3em solid #33a;
    padding-left: 0.5em;
    color: #33a;
-}
-
-#namespaces {
-   background: #e6e6e6;
-   border-right: solid 1px #bbb;
-   left: 0;
-}
-
-#vars {
-   background: #eeeeee;
-   border-left: solid 1px #bbb;
-   border-right: solid 1px #ccc;
-   left: 14em;
-}
-
-.namespace-index {
-   margin-left: 15em;
-}
-
-.namespace-docs {
-   margin-left: 29em;
 }
 
 .index {

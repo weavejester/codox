@@ -55,12 +55,13 @@
     [:title (project-title project)]]
    [:body
     (namespaces-menu project)
+    [:div#header [:h1 (project-title project)]]
     [:div#content.namespace-index
-     [:h1 (project-title project)]
+     [:h2 (project-title project)]
      [:div.doc (:description project)]
      (for [namespace (:namespaces project)]
        [:div.namespace
-        [:h2 (link-to-ns namespace)]
+        [:h3 (link-to-ns namespace)]
         [:pre.doc (:doc namespace)]
         [:div.index
          [:p "Public variables and functions:"]
@@ -79,10 +80,11 @@
     default-includes
     [:title (namespace-title namespace)]]
    [:body
+    [:div#header [:h1 (project-title project)]]
     (namespaces-menu project namespace)
     (vars-menu namespace)
     [:div#content.namespace-docs
-     [:h1 (namespace-title namespace)]
+     [:h2 (namespace-title namespace)]
      [:pre.doc (:doc namespace)]
      (for [var (:publics namespace)]
       [:div.public {:id (:name var)}
