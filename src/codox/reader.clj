@@ -3,7 +3,8 @@
   (:use [codox.utils :only (unindent)])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.tools.namespace :as ns]))
+            [clojure.tools.namespace :as ns])
+  (:import java.util.jar.JarFile))
 
 (defn- correct-indent [text]
   (if text
@@ -36,6 +37,15 @@
     (catch Exception e
       (println "Could not generate documentation for" namespace))))
 
+(defn- jar-file? [file]
+  (and (.isFile file)
+       (-> file .getName (.endsWith ".jar"))))
+
+(defn- find-namespaces [file]
+  (cond
+   (.isDirectory file) (ns/find-namespaces-in-dir file)
+   (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
+
 (defn read-namespaces
   "Read namespaces from a source directory (defaults to \"src\"), and
   return a list of maps suitable for documentation purposes.
@@ -54,7 +64,9 @@
       :added    - the library version the var was added in"
   ([]
      (read-namespaces "src"))
-  ([dir]
-     (->> (io/file dir)
-          (ns/find-namespaces-in-dir)
-          (mapcat read-ns))))
+  ([path]
+     (->> (io/file path)
+          (find-namespaces)
+          (mapcat read-ns)))
+  ([path & paths]
+     (mapcat read-namespaces (cons path paths))))
