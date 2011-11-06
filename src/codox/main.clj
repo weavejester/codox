@@ -8,4 +8,5 @@
   ([]
      (generate-docs {}))
   ([options]
-     (write-docs (assoc options :namespaces (read-namespaces)))))
+     (let [namespaces (apply read-namespaces (:sources options))]
+       (write-docs (assoc options :namespaces namespaces)))))
