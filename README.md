@@ -8,7 +8,7 @@ Currently in an early state of development.
 
 Include the following development dependency in your `project.clj` file:
 
-    [codox "0.2.1"]
+    [codox "0.2.2"]
 
 Then run:
 
