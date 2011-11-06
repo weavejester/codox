@@ -28,13 +28,6 @@ h2 {
    padding: 5px;
 }
 
-#header h1 {
-   margin: 0;
-   padding: 0;
-   font-size: 11pt;
-   font-weight: bold;
-}
-
 #content {
    top: 30px;
    right: 0;
@@ -73,21 +66,32 @@ h2 {
    left: 402px;
 }
 
-.sidebar a {
+#header h1 {
+   margin: 0;
+   padding: 0;
+   font-size: 12pt;
+   font-weight: normal;
+}
+
+#header a, .sidebar a {
    display: block;
    color: #333;
    text-decoration: none;
 }
 
-.sidebar h3 {
-   margin: 0;
-   padding: 0;
-   font-size: 14pt;
-   font-weight: normal
+#header a {
+   color: #fff;
 }
 
-.sidebar h3 a {
+.sidebar a {
+   color: #333;
+}
+
+.sidebar h3 {
+   margin: 0;
    padding: 10px 0.5em 0 0.5em;
+   font-size: 14pt;
+   font-weight: normal
 }
 
 .sidebar ul {

@@ -21,7 +21,7 @@
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
-   [:h3 (link-to "index.html" "Namespaces")]
+   [:h3 "Namespaces"]
    [:ul
     (for [ns (:namespaces project)]
       (if (= ns namespace)
@@ -35,7 +35,7 @@
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
-   [:h3 (link-to (ns-filename namespace) "Public Vars")]
+   [:h3 "Public Vars"]
    (var-links namespace)])
 
 (def ^{:private true} default-includes
@@ -48,14 +48,18 @@
   (str (str/capitalize (:name project)) " "
        (:version project) " API documentation"))
 
+(defn- header [project]
+  [:div#header
+   [:h1 (link-to "index.html" (project-title project))]])
+
 (defn- index-page [project]
   (html5
    [:head
     default-includes
     [:title (project-title project)]]
    [:body
+    (header project)
     (namespaces-menu project)
-    [:div#header [:h1 (project-title project)]]
     [:div#content.namespace-index
      [:h2 (project-title project)]
      [:div.doc (:description project)]
@@ -80,7 +84,7 @@
     default-includes
     [:title (namespace-title namespace)]]
    [:body
-    [:div#header [:h1 (project-title project)]]
+    (header project)
     (namespaces-menu project namespace)
     (vars-menu namespace)
     [:div#content.namespace-docs
