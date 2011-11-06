@@ -119,6 +119,12 @@ h2 {
    color: #33a;
 }
 
+#content h3 {
+   margin-bottom: 0.5em;
+   font-size: 13pt;
+   font-weight: bold;
+}
+
 .index {
    padding: 0;
 }
