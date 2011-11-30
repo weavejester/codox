@@ -42,7 +42,6 @@ h2 {
    position: fixed;
    top: 30px;
    bottom: 0;
-   width: 200px;
    overflow: auto;
 }
 
@@ -50,20 +49,22 @@ h2 {
    background: #e6e6e6;
    border-right: solid 1px #bbb;
    left: 0;
+   width: 250px;
 }
 
 #vars {
    background: #eeeeee;
    border-right: solid 1px #ccc;
-   left: 201px;
+   left: 251px;
+   width: 200px;
 }
 
 .namespace-index {
-   left: 201px;
+   left: 251px;
 }
 
 .namespace-docs {
-   left: 402px;
+   left: 452px;
 }
 
 #header h1 {
