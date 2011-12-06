@@ -17,6 +17,7 @@
 (defn- sorted-public-vars [namespace]
   (->> (ns-publics namespace)
        (vals)
+       (filter (comp :doc meta))
        (sort-by (comp :name meta))))
 
 (defn- read-publics [namespace]
