@@ -35,7 +35,7 @@ h2 {
    overflow: auto;
    background: #fff;
    color: #333;
-   padding: 0 1em;
+   padding: 0 1em 15% 1em;
 }
 
 .sidebar {
@@ -124,6 +124,10 @@ h2 {
    margin-bottom: 0.5em;
    font-size: 13pt;
    font-weight: bold;
+}
+
+.public {
+   margin-bottom: 2.5em;
 }
 
 .index {
