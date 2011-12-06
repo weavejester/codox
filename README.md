@@ -12,6 +12,6 @@ Include the following development dependency in your `project.clj` file:
 
 Then run:
 
-    lein codox
+    lein doc
 
-To generate the documentation, which will be placed in a "doc" subdirectory.
+This will generate API documentation in the "doc" subdirectory.
