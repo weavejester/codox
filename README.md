@@ -1,12 +1,12 @@
 # Codox
 
-A tool for generating documentation from Clojure source code.
+A tool for generating API documentation from Clojure source code.
 
 ## Usage
 
 Include the following development dependency in your `project.clj` file:
 
-    [codox "0.2.3"]
+    [codox "0.3.0"]
 
 Then run:
 
