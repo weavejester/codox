@@ -6,7 +6,7 @@ A tool for generating API documentation from Clojure source code.
 
 Include the following development dependency in your `project.clj` file:
 
-    [codox "0.3.0"]
+    [codox "0.3.1"]
 
 Then run:
 
