@@ -2,6 +2,7 @@
   "Read raw documentation information from Clojure source directory."
   (:use [codox.utils :only (unindent)])
   (:require [clojure.java.io :as io]
+            [clojure.repl :as repl]
             [clojure.string :as str]
             [clojure.tools.namespace :as ns])
   (:import java.util.jar.JarFile))
@@ -20,10 +21,14 @@
        (filter (comp :doc meta))
        (sort-by (comp :name meta))))
 
+(defn- get-source [meta namespace]
+  (repl/source-fn (symbol (str namespace) (str (:name meta)))))
+
 (defn- read-publics [namespace]
   (for [var (sorted-public-vars namespace)]
     (-> (meta var)
         (select-keys [:name :file :line :arglists :doc :macro :added])
+        (assoc :source (get-source (meta var) namespace))
         (update-in [:doc] correct-indent))))
 
 (defn- read-ns [namespace]
@@ -62,7 +67,8 @@
       :arglists - the arguments the function or macro takes
       :doc      - the doc-string of the var
       :macro    - true if the var is a macro
-      :added    - the library version the var was added in"
+      :added    - the library version the var was added in
+      :source   - the source code"
   ([]
      (read-namespaces "src"))
   ([path]
