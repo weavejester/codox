@@ -2,9 +2,12 @@
   "Read raw documentation information from Clojure source directory."
   (:use [codox.utils :only (unindent)])
   (:require [clojure.java.io :as io]
+            [clojure.repl :as repl]
             [clojure.string :as str]
             [clojure.tools.namespace :as ns])
-  (:import java.util.jar.JarFile))
+  (:import java.util.jar.JarFile
+           java.io.PushbackReader
+           clojure.lang.RT))
 
 (defn- correct-indent [text]
   (if text
@@ -20,19 +23,35 @@
        (filter (comp :doc meta))
        (sort-by (comp :name meta))))
 
-(defn- read-publics [namespace]
+;;adapted from the source of clojure.repl/source-fn
+(defn- get-source [meta p namespace]
+  (let [strm (io/reader (io/file p (:file meta)))]
+    (when-let [strm (if strm strm
+                     (.getResourceAsStream (RT/baseLoader) (:file meta)))]
+      (with-open [rdr (io/reader strm)]
+        (dotimes [_ (dec (:line meta))] (.readLine rdr))
+        (let [text (StringBuilder.)
+              pbr (proxy [PushbackReader] [rdr]
+                    (read [] (let [i (proxy-super read)]
+                               (.append text (char i))
+                               i)))]
+          (read (PushbackReader. pbr))
+          (str text))))))
+
+(defn- read-publics [namespace path]
   (for [var (sorted-public-vars namespace)]
     (-> (meta var)
-        (select-keys [:name :file :line :arglists :doc :macro :added])
+        (select-keys [:name :source :file :line :arglists :doc :macro :added])
+        (assoc :source (get-source (meta var) path namespace))
         (update-in [:doc] correct-indent))))
 
-(defn- read-ns [namespace]
+(defn- read-ns [[namespace path]]
   (try
     (require namespace :reload)
     (-> (find-ns namespace)
         (meta)
         (assoc :name namespace)
-        (assoc :publics (read-publics namespace))
+        (assoc :publics (read-publics namespace path))
         (update-in [:doc] correct-indent)
         (list))
     (catch Exception e
@@ -43,9 +62,10 @@
        (-> file .getName (.endsWith ".jar"))))
 
 (defn- find-namespaces [file]
-  (cond
-   (.isDirectory file) (ns/find-namespaces-in-dir file)
-   (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
+  (map #(vector % file)
+   (cond
+    (.isDirectory file) (ns/find-namespaces-in-dir file)
+    (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file)))))
 
 (defn read-namespaces
   "Read namespaces from a source directory (defaults to \"src\"), and
@@ -62,7 +82,8 @@
       :arglists - the arguments the function or macro takes
       :doc      - the doc-string of the var
       :macro    - true if the var is a macro
-      :added    - the library version the var was added in"
+      :added    - the library version the var was added in
+      :source   - the source code"
   ([]
      (read-namespaces "src"))
   ([path]
