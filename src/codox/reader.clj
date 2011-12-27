@@ -26,8 +26,8 @@
 ;;adapted from the source of clojure.repl/source-fn
 (defn- get-source [meta p namespace]
   (let [strm (io/reader (io/file p (:file meta)))]
-    (when-let [strm (if strm strm
-                     (.getResourceAsStream (RT/baseLoader) (:file meta)))]
+    (when-let [strm (or strm
+                        (.getResourceAsStream (RT/baseLoader) (:file meta)))]
       (with-open [rdr (io/reader strm)]
         (dotimes [_ (dec (:line meta))] (.readLine rdr))
         (let [text (StringBuilder.)
@@ -41,7 +41,7 @@
 (defn- read-publics [namespace path]
   (for [var (sorted-public-vars namespace)]
     (-> (meta var)
-        (select-keys [:name :source :file :line :arglists :doc :macro :added])
+        (select-keys [:name :file :line :arglists :doc :macro :added])
         (assoc :source (get-source (meta var) path namespace))
         (update-in [:doc] correct-indent))))
 
