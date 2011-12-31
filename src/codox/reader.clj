@@ -21,7 +21,8 @@
        (sort-by (comp :name meta))))
 
 (defn- read-publics [namespace]
-  (for [var (sorted-public-vars namespace)]
+  (for [var (sorted-public-vars namespace)
+        :when (not (:skip-wiki (meta var)))]
     (-> (meta var)
         (select-keys [:name :file :line :arglists :doc :macro :added])
         (update-in [:doc] correct-indent))))
