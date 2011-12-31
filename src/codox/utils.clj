@@ -29,6 +29,7 @@
   symbols and returns them in set form."
   [x]
   (->> (if (coll? x) x [x])
+       (filter identity)
        (map symbol)
        (into #{})))
 
