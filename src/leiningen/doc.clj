@@ -5,7 +5,7 @@
 (defn- get-options [project]
   (-> project
       (select-keys [:name :version :description])
-      (assoc :sources (get-in project [:codox :sources]))))
+      (merge (get project :codox))))
 
 (defn doc
   "Generate API documentation from source code."
