@@ -20,9 +20,13 @@
        (filter (comp :doc meta))
        (sort-by (comp :name meta))))
 
+(defn- skip-public? [var]
+  (let [{:keys [skip-wiki no-doc]} (meta var)]
+    (or skip-wiki no-doc)))
+
 (defn- read-publics [namespace]
   (for [var (sorted-public-vars namespace)
-        :when (not (:skip-wiki (meta var)))]
+        :when (not (skip-public? var))]
     (-> (meta var)
         (select-keys [:name :file :line :arglists :doc :macro :added])
         (update-in [:doc] correct-indent))))
