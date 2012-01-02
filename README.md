@@ -45,3 +45,34 @@ To include only one or more namespaces, set them with the `:include` key:
 ```
 
 Each of these keywords can be used together, of course.
+
+## Deploying Codox to Github Pages
+
+The [Github Pages](http://pages.github.com/) feature is an excellent way to share codox documentation with your users. Get started with the following steps:
+
+1. Add `doc` to your project's `.gitignore` file.
+2. Inside your project directory, run the following commands:
+
+```bash
+rm -rf doc && mkdir doc
+git clone git@github.com:<user-name>/<project-name>.git doc
+cd doc
+git symbolic-ref HEAD refs/heads/gh-pages
+rm .git/index
+git clean -fdx
+cd ..
+```
+
+3. Build your documentation with `lein doc`.
+4. To publish your docs to Github Pages, run the following commands:
+
+```bash
+cd doc
+git checkout gh-pages # To be sure you're on the right branch
+git add .
+git commit -am "new documentation push."
+git push -u origin gh-pages
+cd ..
+```
+
+That's it! Your documentation should appear within minutes at `http://<user-name>.github.com/<project-name>`.
