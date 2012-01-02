@@ -45,3 +45,21 @@ To include only one or more namespaces, set them with the `:include` key:
 ```
 
 Each of these keywords can be used together, of course.
+
+### Skipping Individual Functions
+
+To force codox to skip an individual public var, add `:no-doc true` to the var's metadata. For example,
+
+```clojure
+;; square show up in codox...
+(defn square
+  "Squares the supplied number."
+  [x])
+
+;; but hidden-square won't.
+(defn hidden-square
+  "Squares the supplied number."
+  {:no-doc true}
+  [x]
+  (* x x))
+```
