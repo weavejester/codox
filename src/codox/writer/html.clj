@@ -8,8 +8,8 @@
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
 
-(defn- ns-filepath [namespace]
-  (str "doc/" (ns-filename namespace)))
+(defn- ns-filepath [output-dir namespace]
+  (str output-dir "/" (ns-filename namespace)))
 
 (defn- var-id [var]
   (str "var-" (URLEncoder/encode (str (:name var)))))
@@ -102,22 +102,31 @@
            [:code (h (pr-str form))])]
         [:pre.doc (h (:doc var))]])]]))
 
-(defn- copy-resource [src dest]
+(defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
-           (io/file dest)))
+           (io/file output-dir dest)))
 
-(defn- mkdirs [& dirs]
+(defn- mkdirs [output-dir & dirs]
   (doseq [dir dirs]
-    (.mkdirs (io/file dir))))
+    (.mkdirs (io/file output-dir dir))))
+
+(defn- write-index [output-dir project]
+  (spit (io/file output-dir "index.html") (index-page project)))
+
+(defn- write-namespaces
+  [output-dir project]
+  (doseq [namespace (:namespaces project)]
+    (spit (ns-filepath output-dir namespace)
+          (namespace-page project namespace))))
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [project]
-  (mkdirs "doc/css" "doc/js")
-  (copy-resource "codox/css/default.css" "doc/css/default.css")
-  (copy-resource "codox/js/jquery.min.js" "doc/js/jquery.min.js")
-  (copy-resource "codox/js/page_effects.js" "doc/js/page_effects.js")
-  (spit "doc/index.html" (index-page project))
-  (doseq [namespace (:namespaces project)]
-    (spit (ns-filepath namespace)
-          (namespace-page project namespace))))
+  (doto (:output-dir project "doc")
+    (mkdirs "css" "js")
+    (copy-resource "codox/css/default.css" "css/default.css")
+    (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
+    (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
+    (write-index project)
+    (write-namespaces project))
+  nil)

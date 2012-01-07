@@ -44,6 +44,13 @@ To include only one or more namespaces, set them with the `:include` key:
 :codox {:include [library.core library.io]}
 ```
 
+To write output to a directory other than the default `doc` directory, use the
+`:output-dir` key:
+
+```clojure
+:codox {:output-dir "doc/codox"}
+```
+
 Each of these keywords can be used together, of course.
 
 ### Skipping Individual Functions
