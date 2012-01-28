@@ -28,7 +28,8 @@
   (for [var (sorted-public-vars namespace)
         :when (not (skip-public? var))]
     (-> (meta var)
-        (select-keys [:name :file :line :arglists :doc :macro :added])
+        (select-keys
+         [:name :file :line :arglists :doc :macro :added :deprecated])
         (update-in [:doc] correct-indent))))
 
 (defn- read-ns [namespace]
