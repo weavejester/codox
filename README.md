@@ -32,7 +32,7 @@ To exclude a namespace, use the `:exclude` key:
 
 Sequences work too:
 
-```clojure    
+```clojure
 :codox {:exclude [my.private.ns another.private.ns]
 ```
 
@@ -49,6 +49,13 @@ To write output to a directory other than the default `doc` directory, use the
 
 ```clojure
 :codox {:output-dir "doc/codox"}
+```
+
+To use a different output writer, specify the fully qualified symbol of the
+writer function in the `:writer` key:
+
+```clojure
+:codox {:writer codox.writer.html/write-docs}
 ```
 
 Each of these keywords can be used together, of course.
