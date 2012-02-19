@@ -4,8 +4,8 @@ body {
 }
 
 pre, code {
-   font-family: monospace;
-   font-size: 10pt;
+   font-family: Monaco, DejaVu Sans Mono, Consolas, monospace;
+   font-size: 9pt;
 }
 
 h2 {
