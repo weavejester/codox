@@ -11,7 +11,7 @@ pre, code {
 h2 {
    font-weight: normal;
    font-size: 18pt;
-   margin: 10px 0 0.8em 0;
+   margin: 10px 0 0.4em 0;
 }
 
 #header, #content, .sidebar {
@@ -138,7 +138,8 @@ h2 {
 }
 
 .public {
-   margin-bottom: 2.5em;
+   margin-top: 1.5em;
+   margin-bottom: 2.0em;
 }
 
 .public:last-child {
