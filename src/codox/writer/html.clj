@@ -1,6 +1,6 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
-  (:use [hiccup core page-helpers])
+  (:use [hiccup core page element])
   (:import java.net.URLEncoder)
   (:require [clojure.java.io :as io]
             [clojure.string :as str]))
