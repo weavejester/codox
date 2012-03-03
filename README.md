@@ -6,6 +6,10 @@ A tool for generating API documentation from Clojure source code.
 
 Include the following development dependency in your `project.clj` file:
 
+    [codox "0.5.0"]
+
+Or, if your project depends on a version of Hiccup before 1.0.0-beta1:
+
     [codox "0.4.1"]
 
 Then run:
