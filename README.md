@@ -4,13 +4,14 @@ A tool for generating API documentation from Clojure source code.
 
 ## Usage
 
-Include the following development dependency in your `project.clj` file:
+Include the following plugin in your `project.clj` file or your global
+profile:
 
-    [codox "0.5.0"]
+    :plugins [[codox "0.6.0"]]
 
-Or, if your project depends on a version of Hiccup before 1.0.0-beta1:
+Or, if you're using a version of Leiningen prior to 1.7.0:
 
-    [codox "0.4.1"]
+    :dev-dependencies [[codox "0.6.0"]]
 
 Then run:
 
