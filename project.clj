@@ -1,5 +1,4 @@
-(defproject codox "0.5.0"
-  :description "Generate documentation from Clojure source files"
-  :dependencies [[org.clojure/clojure "1.2.1"]
-                 [org.clojure/tools.namespace "0.1.0"]
-                 [hiccup "1.0.0-beta1"]])
+(defproject codox "0.6.0-SNAPSHOT"
+  :description "Alias for the codox/codox.leiningen plugin"
+  :dependencies [[codox/codox.leiningen "0.6.0-SNAPSHOT"]]
+  :eval-in-leiningen true)
