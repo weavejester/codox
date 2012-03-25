@@ -24,6 +24,6 @@
   "Generate API documentation from source code."
   [project]
   (eval-in-project
-   (update-in project [:dependencies] conj ['codox/codox.core "0.6.0-SNAPSHOT"])
+   (update-in project [:dependencies] conj ['codox/codox.core "0.6.0"])
    `(codox.main/generate-docs '~(get-options project))
    `(require 'codox.main)))
