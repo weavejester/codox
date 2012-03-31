@@ -25,7 +25,7 @@
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
-   [:h3 "Namespaces"]
+   [:h3 [:span "Namespaces"]]
    [:ul
     (for [ns (:namespaces project)]
       (if (= ns namespace)
