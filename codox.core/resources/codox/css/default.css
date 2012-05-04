@@ -166,3 +166,7 @@ h2 {
    display: block;
    color: #008;
 }
+
+.protocol {
+    margin-left: 3em;
+}

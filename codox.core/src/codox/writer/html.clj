@@ -17,11 +17,19 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))
 
+(defn- var-classes [var]
+  (->> (select-keys var [:protocol])
+       keys
+       (map name)
+       (str/join ",")))
+
 (defn- link-to-ns [namespace]
   (link-to (ns-filename namespace) [:span (h (:name namespace))]))
 
 (defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:span (h (:name var))]))
+  (link-to
+   (var-uri namespace var)
+   [:span {:class (var-classes var)} (h (:name var))]))
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
@@ -95,7 +103,8 @@
      [:h2 (h (namespace-title namespace))]
      [:pre.doc (h (:doc namespace))]
      (for [var (:publics namespace)]
-       [:div.public {:id (h (var-id var))}
+       [:div.public {:id (h (var-id var))
+                     :class (var-classes var)}
         [:h3 (h (:name var))]
         [:div.usage
          (for [form (var-usage var)]

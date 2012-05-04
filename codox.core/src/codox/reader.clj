@@ -18,7 +18,12 @@
   (->> (ns-publics namespace)
        (vals)
        (filter (comp :doc meta))
-       (sort-by (comp :name meta))))
+       (sort-by (fn [v]
+                  (let [{:keys [protocol ns] :as m} (meta v)
+                        vname (name (:name m))]
+                    (if protocol
+                      (str (name (:name (meta protocol))) vname)
+                      vname))))))
 
 (defn- skip-public? [var]
   (let [{:keys [skip-wiki no-doc]} (meta var)]
@@ -29,7 +34,7 @@
         :when (not (skip-public? var))]
     (-> (meta var)
         (select-keys
-         [:name :file :line :arglists :doc :macro :added :deprecated])
+         [:name :file :line :arglists :doc :macro :added :deprecated :protocol])
         (update-in [:doc] correct-indent))))
 
 (defn- read-ns [namespace]
