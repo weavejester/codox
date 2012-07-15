@@ -17,6 +17,10 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))
 
+(defn- var-source-uri [src-dir-uri var]
+  (str src-dir-uri (if (= (last src-dir-uri) \/) "" "/")
+       (:path var) "#" (:line var)))
+
 (defn- link-to-ns [namespace]
   (link-to (ns-filename namespace) [:span (h (:name namespace))]))
 
@@ -100,7 +104,10 @@
         [:div.usage
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]
-        [:pre.doc (h (:doc var))]])]]))
+        [:pre.doc (h (:doc var))]
+        (when (:src-dir-uri project)
+          [:a {:href (var-source-uri (:src-dir-uri project) var)}
+           "Source"])])]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
