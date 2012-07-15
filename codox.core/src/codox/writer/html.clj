@@ -19,7 +19,7 @@
 
 (defn- var-source-uri [src-dir-uri var]
   (str src-dir-uri (if (= (last src-dir-uri) \/) "" "/")
-       (:path var) "#" (:line var)))
+       (:path var) "#L" (:line var)))
 
 (defn- link-to-ns [namespace]
   (link-to (ns-filename namespace) [:span (h (:name namespace))]))
