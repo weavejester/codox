@@ -17,9 +17,12 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))
 
-(defn- var-source-uri [src-dir-uri var]
-  (str src-dir-uri (if (= (last src-dir-uri) \/) "" "/")
-       (:path var) "#L" (:line var)))
+(defn- var-source-uri [src-dir-uri var anchor-prefix]
+  (str src-dir-uri
+       (if (= (last src-dir-uri) \/) "" "/")
+       (:path var)
+       (if anchor-prefix
+         (str "#" anchor-prefix (:line var)))))
 
 (defn- link-to-ns [namespace]
   (link-to (ns-filename namespace) [:span (h (:name namespace))]))
@@ -106,7 +109,8 @@
            [:code (h (pr-str form))])]
         [:pre.doc (h (:doc var))]
         (when (:src-dir-uri project)
-          [:a {:href (var-source-uri (:src-dir-uri project) var)}
+          [:a {:href (var-source-uri (:src-dir-uri project) var
+                                     (:src-linenum-anchor-prefix project))}
            "Source"])])]]))
 
 (defn- copy-resource [output-dir src dest]
