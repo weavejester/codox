@@ -109,9 +109,10 @@
            [:code (h (pr-str form))])]
         [:pre.doc (h (:doc var))]
         (when (:src-dir-uri project)
-          [:a {:href (var-source-uri (:src-dir-uri project) var
-                                     (:src-linenum-anchor-prefix project))}
-           "Source"])])]]))
+          [:div.src-link
+           [:a {:href (var-source-uri (:src-dir-uri project) var
+                                      (:src-linenum-anchor-prefix project))}
+            "Source"]])])]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
