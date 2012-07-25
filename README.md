@@ -63,6 +63,26 @@ writer function in the `:writer` key:
 :codox {:writer codox.writer.html/write-docs}
 ```
 
+If you have the source available at a URI and would like to have links
+to the function's source file in the documentation, you can set the
+`:src-dir-uri` key:
+
+```clojure
+:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master"}
+```
+
+Some code hosting sites, such as Github, set an anchor for each line
+of code. If you set the `:src-linenum-anchor-prefix project` key, the
+function's "Source" link will point directly to the line of code where
+the function is declared. This value should be whatever is prepended
+to the raw line number in the anchors for each line; on Github this is
+"L":
+
+```clojure
+:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master"
+        :src-linenum-anchor-prefix "L"}
+```
+
 Each of these keywords can be used together, of course.
 
 ### Skipping Individual Functions
