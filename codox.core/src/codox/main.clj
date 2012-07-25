@@ -1,6 +1,6 @@
 (ns codox.main
   "Main namespace for generating documentation"
-  (:use [codox.utils :only (ns-filter)]
+  (:use [codox.utils :only (ns-filter add-source-paths)]
         [codox.reader :only (read-namespaces)]))
 
 (defn- writer [{:keys [writer]}]
@@ -22,6 +22,7 @@
      (generate-docs {}))
   ([{:keys [sources include exclude] :as options}]
      (let [namespaces (-> (apply read-namespaces sources)
-                          (ns-filter include exclude))
+                          (ns-filter include exclude)
+                          (add-source-paths sources))
            write (writer options)]
        (write (assoc options :namespaces namespaces)))))
