@@ -18,7 +18,8 @@
 (defn- get-options [project]
   (-> project
       (select-keys [:name :version :description])
-      (merge (get project :codox))))
+      (merge {:sources ["src"]} ;; Default gets overwritten if set in :codox
+             (get project :codox))))
 
 (defn doc
   "Generate API documentation from source code."
