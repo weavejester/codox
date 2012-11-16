@@ -116,18 +116,18 @@ h2 {
 }
 
 .sidebar li a {
-   padding: 0.5em 0.8em;
+   padding: 7px 10px;
 }
 
 #namespaces li.current a {
-   border-left: 0.3em solid #a33;
-   padding-left: 0.5em;
+   border-left: 3px solid #a33;
+   padding-left: 7px;
    color: #a33;
 }
 
 #vars li.current a {
-   border-left: 0.3em solid #33a;
-   padding-left: 0.5em;
+   border-left: 3px solid #33a;
+   padding-left: 7px;
    color: #33a;
 }
 
