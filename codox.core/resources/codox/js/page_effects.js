@@ -1,6 +1,6 @@
 function visibleInParent(element) {
   var position = $(element).position().top
-  return position >= 0 && position < $(element).offsetParent().height()
+  return position >= -50 && position < $(element).offsetParent().height()
 }
 
 function hasFragment(link, fragment) {
