@@ -60,5 +60,8 @@ function resizeNamespaces() {
 
 $(window).ready(resizeNamespaces)
 $(window).ready(setCurrentVarLink)
-$(window).ready(function() { $('#content').scroll(setCurrentVarLink) })
 $(window).ready(function() { persistScrollPosition('#namespaces')})
+$(window).ready(function() {
+    $('#content').scroll(setCurrentVarLink)
+    $(window).resize(setCurrentVarLink)
+})
