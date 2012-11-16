@@ -1,19 +1,7 @@
 (ns leiningen.doc
-  (:refer-clojure :exclude [doc]))
-
-(defn- eval-in-project
-  "Support eval-in-project in both Leiningen 1.x and 2.x."
-  [project form init]
-  (let [[eip two?] (or (try (require 'leiningen.core.eval)
-                            [(resolve 'leiningen.core.eval/eval-in-project)
-                             true]
-                            (catch java.io.FileNotFoundException _))
-                       (try (require 'leiningen.compile)
-                            [(resolve 'leiningen.compile/eval-in-project)]
-                            (catch java.io.FileNotFoundException _)))]
-    (if two?
-      (eip project form init)
-      (eip project form nil nil init))))
+  (:refer-clojure :exclude [doc])
+  (:use [leinjacker.eval :only (eval-in-project)])
+  (:require [leinjacker.deps :as deps]))
 
 (defn- get-options [project]
   (-> project
@@ -25,6 +13,6 @@
   "Generate API documentation from source code."
   [project]
   (eval-in-project
-   (update-in project [:dependencies] conj ['codox/codox.core "0.6.1"])
+   (deps/add-if-missing project '[codox/codox.core "0.6.1"])
    `(codox.main/generate-docs '~(get-options project))
    `(require 'codox.main)))
