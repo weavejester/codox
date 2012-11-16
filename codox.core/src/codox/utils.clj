@@ -19,9 +19,10 @@
    `codox.reader/read-namespaces`), and a sequence of source directory paths,
    returns a File object indicating the file from the repo root."
   [file sources]
-  (->> (map #(io/file % file) sources)
-       (filter #(.exists %))
-       first))
+  (if file
+    (->> (map #(io/file % file) sources)
+         (filter #(.exists %))
+         first)))
 
 (defn unindent
   "Unindent a block of text by a specific amount or the smallest common
@@ -64,6 +65,7 @@
    path to the source file relative to the repo root."
   [ns-seq sources]
   (for [ns ns-seq]
-    (assoc ns :publics (map #(assoc % :path (find-file-in-repo (:file %)
-                                                               sources))
-                            (:publics ns)))))
+    (assoc ns
+      :publics
+      (map #(assoc % :path (find-file-in-repo (:file %) (or sources ["src"])))
+           (:publics ns)))))
