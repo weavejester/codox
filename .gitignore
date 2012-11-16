@@ -1,7 +1,10 @@
 pom.xml
+pom.xml.asc
 *jar
-/lib/
-/classes/
+lib/
+classes/
+target/
+checkouts/
 .lein-failures
 .lein-deps-sum
 doc
