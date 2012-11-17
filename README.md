@@ -7,11 +7,11 @@ A tool for generating API documentation from Clojure source code.
 Include the following plugin in your `project.clj` file or your global
 profile:
 
-    :plugins [[codox "0.6.2"]]
+    :plugins [[codox "0.6.3"]]
 
 Or, if you're using a version of Leiningen prior to 1.7.0:
 
-    :dev-dependencies [[codox "0.6.2"]]
+    :dev-dependencies [[codox "0.6.3"]]
 
 Then run:
 
