@@ -149,6 +149,24 @@ h2 {
    font-weight: bold;
 }
 
+.public h3, h4.macro {
+    margin: 0;
+    float: left;
+}
+
+.usage {
+    clear: both;
+}
+
+h4.macro {
+    font-variant: small-caps;
+    font-size: 13px;
+    font-weight: bold;
+    color: #717171;
+    margin-top: 3px;
+    margin-left: 10px;
+}
+
 .public {
    margin-top: 1.5em;
    margin-bottom: 2.0em;
