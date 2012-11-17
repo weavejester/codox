@@ -34,7 +34,7 @@
 
 (defn- read-ns [namespace]
   (try
-    (require namespace :reload)
+    (require namespace)
     (-> (find-ns namespace)
         (meta)
         (assoc :name namespace)
