@@ -39,7 +39,7 @@
   (when (var? var)
     (let [val @var]
       (cond
-        (:macro var) "macro"
+        (:macro (meta var)) "macro"
         (instance? clojure.lang.MultiFn val) "multimethod"
         (:protocol (meta var)) (str (protocol-name var) " protocol function")
         (protocol? val) "protocol"
