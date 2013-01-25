@@ -17,9 +17,9 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))
 
-(defn- var-source-uri [src-dir-uri var anchor-prefix]
+(defn- var-source-uri [src-dir-uri var anchor-prefix use-relative-path]
   (str src-dir-uri
-       (if (= (last src-dir-uri) \/) "" "/")
+       (if (or (= (last src-dir-uri) \/) use-relative-path) "" "/")
        (:path var)
        (if anchor-prefix
          (str "#" anchor-prefix (:line var)))))
@@ -113,7 +113,7 @@
         (when (:src-dir-uri project)
           [:div.src-link
            [:a {:href (var-source-uri (:src-dir-uri project) var
-                                      (:src-linenum-anchor-prefix project))}
+                                      (:src-linenum-anchor-prefix project) (:src-use-relative-path project))}
             "Source"]])])]]))
 
 (defn- copy-resource [output-dir src dest]
