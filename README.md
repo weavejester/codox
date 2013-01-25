@@ -91,6 +91,13 @@ to the raw line number in the anchors for each line; on Github this is
         :src-linenum-anchor-prefix "L"}
 ```
 
+If your code hosting site requires a relative path to the source file set the
+`:src-use-relative-path` key:
+
+```clojure
+:codox {:src-use-relative-path true}
+```
+
 Each of these keywords can be used together, of course.
 
 ### Skipping Individual Functions
