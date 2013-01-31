@@ -76,8 +76,10 @@ to the function's source file in the documentation, you can set the
 `:src-dir-uri` key:
 
 ```clojure
-:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master"}
+:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master/"}
 ```
+
+Note: The trailing / is no longer automatically inserted.
 
 Some code hosting sites, such as Github, set an anchor for each line
 of code. If you set the `:src-linenum-anchor-prefix project` key, the
@@ -87,15 +89,8 @@ to the raw line number in the anchors for each line; on Github this is
 "L":
 
 ```clojure
-:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master"
+:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master/"
         :src-linenum-anchor-prefix "L"}
-```
-
-If your code hosting site requires a relative path to the source file set the
-`:src-use-relative-path` key:
-
-```clojure
-:codox {:src-use-relative-path true}
 ```
 
 Each of these keywords can be used together, of course.

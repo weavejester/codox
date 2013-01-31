@@ -19,7 +19,6 @@
 
 (defn- var-source-uri [src-dir-uri var anchor-prefix use-relative-path]
   (str src-dir-uri
-       (if (or (= (last src-dir-uri) \/) use-relative-path) "" "/")
        (:path var)
        (if anchor-prefix
          (str "#" anchor-prefix (:line var)))))
