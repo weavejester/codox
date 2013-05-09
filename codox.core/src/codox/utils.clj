@@ -78,6 +78,6 @@
   [s]
   (str/trim
    (loop [s s, [re & res] [#"\f" #"\n\n"]]
-     (let [[sum tail] (str/split s re)]
+     (let [[sum tail] (str/split s re 2)]
        (if (and (not tail) res) (recur s res) sum)))))
 
