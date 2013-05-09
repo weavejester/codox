@@ -75,9 +75,5 @@
    The summary is the first portion of the string, from the first
    character to the first page break (\f) character OR the first TWO
    newlines."
-  [s]
-  (str/trim
-   (loop [s s, [re & res] [#"\f" #"\n\n"]]
-     (let [[sum tail] (str/split s re 2)]
-       (if (and (not tail) res) (recur s res) sum)))))
+  [s] (str/trim (re-find #"(?s).*?(?=\f)|.*?(?=\n\n)|.*" s)))
 
