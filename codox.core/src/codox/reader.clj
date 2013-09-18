@@ -3,7 +3,7 @@
   (:use [codox.utils :only (unindent)])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.tools.namespace :as ns])
+            [clojure.tools.namespace.find :as ns])
   (:import java.util.jar.JarFile))
 
 (defn- correct-indent [text]
