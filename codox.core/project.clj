@@ -1,4 +1,4 @@
-(defproject codox/codox.core "0.6.5"
+(defproject codox/codox.core "0.6.6"
   :description "Generate documentation from Clojure source files"
   :url "https://github.com/weavejester/codox"
   :license {:name "Eclipse Public License"
