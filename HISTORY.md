@@ -6,6 +6,6 @@
 ## 0.6.5 (2013-09-18)
 
 * Support for unicode characters in docs
-* Source URI now requires an explict ending '/'
+* `:src-dir-uri` option now requires an explict ending '/'
 * Public vars without docstrings now included in output. Use
   `^:no-doc` to remove them from documentation.
