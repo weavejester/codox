@@ -1,4 +1,4 @@
-(defproject codox/codox.leiningen "0.6.6"
+(defproject codox/codox.leiningen "0.6.7"
   :description "Codox Leiningen plugin"
   :url "https://github.com/weavejester/codox"
   :license {:name "Eclipse Public License"
