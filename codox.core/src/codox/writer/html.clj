@@ -3,7 +3,8 @@
   (:use [hiccup core page element])
   (:import java.net.URLEncoder)
   (:require [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [codox.utils :as util]))
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -78,7 +79,7 @@
      (for [namespace (:namespaces project)]
        [:div.namespace
         [:h3 (link-to-ns namespace)]
-        [:pre.doc (h (:doc namespace))]
+        [:pre.doc (h (util/summary (:doc namespace)))]
         [:div.index
          [:p "Public variables and functions:"]
          (var-links namespace)]])]]))
