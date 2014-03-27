@@ -110,6 +110,8 @@
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]
         [:pre.doc (h (:doc var))]
+        (when (:added var)
+          [:pre.doc (h (str "Added " (:added var)))])
         (when (:src-dir-uri project)
           [:div.src-link
            [:a {:href (var-source-uri (:src-dir-uri project) var
