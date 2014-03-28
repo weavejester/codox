@@ -69,3 +69,12 @@
       :publics
       (map #(assoc % :path (find-file-in-repo (:file %) (or sources ["src"])))
            (:publics ns)))))
+
+(defn summary
+  "Return the summary of a docstring.
+   The summary is the first portion of the string, from the first
+   character to the first page break (\f) character OR the first TWO
+   newlines."
+  [s]
+  (->> (str/trim s)
+       (re-find #"(?s).*?(?=\f)|.*?(?=\n\n)|.*")))
