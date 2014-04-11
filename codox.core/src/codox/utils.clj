@@ -76,5 +76,6 @@
    character to the first page break (\f) character OR the first TWO
    newlines."
   [s]
-  (->> (str/trim s)
-       (re-find #"(?s).*?(?=\f)|.*?(?=\n\n)|.*")))
+  (if s
+    (->> (str/trim s)
+         (re-find #"(?s).*?(?=\f)|.*?(?=\n\n)|.*"))))
