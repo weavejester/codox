@@ -18,11 +18,22 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))
 
-(defn- var-source-uri [src-dir-uri var anchor-prefix]
+(defn- get-mapping-fn [mappings path]
+  "Gets user URI transform fn corresponding to source path prefix."
+  (some
+    (fn [[re f]] (if (re-find re path) f))
+    mappings))
+
+(defn- var-source-uri
+  "Returns URI for source file, optionally appending a line number."
+  [{:keys [src-dir-uri src-uri-mapping src-linenum-anchor-prefix]}
+   {:keys [path file line]}]
   (str src-dir-uri
-       (:path var)
-       (if anchor-prefix
-         (str "#" anchor-prefix (:line var)))))
+       (if-let [mapping-fn (get-mapping-fn src-uri-mapping (str path))]
+         (mapping-fn file)
+         path)
+       (if src-linenum-anchor-prefix
+         (str "#" src-linenum-anchor-prefix line))))
 
 (defn- link-to-ns [namespace]
   (link-to (ns-filename namespace) [:span (h (:name namespace))]))
@@ -113,8 +124,7 @@
         [:pre.doc (h (:doc var))]
         (when (:src-dir-uri project)
           [:div.src-link
-           [:a {:href (var-source-uri (:src-dir-uri project) var
-                                      (:src-linenum-anchor-prefix project))}
+           [:a {:href (var-source-uri project var)}
             "Source"]])])]]))
 
 (defn- copy-resource [output-dir src dest]
