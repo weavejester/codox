@@ -93,6 +93,19 @@ to the raw line number in the anchors for each line; on Github this is
         :src-linenum-anchor-prefix "L"}
 ```
 
+[cljx](https://github.com/lynaghk/cljx) users can have their API source links point to the correct sources
+with `:src-uri-mapping {path-prefix morph-fn}`. `path-prefix`,
+a pattern for a path prefix of generated sources, will be
+matched against the file path and `transform-func` will be dispatched with
+that file to create the correct file URI substring to be appended
+to `:src-dir-uri`:
+
+```clojure
+:codox {:src-uri-mapping {"target/gen-src" (fn [s] (str "src/" s "x"))}}
+```
+
+(Note that the ending "/" is required in "src/".)
+
 Each of these keywords can be used together, of course.
 
 ### Skipping Individual Functions

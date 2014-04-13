@@ -20,9 +20,11 @@
   "Generate documentation from source files."
   ([]
      (generate-docs {}))
-  ([{:keys [sources include exclude] :as options}]
+  ([{:keys [sources src-uri-mapping include exclude] :as options}]
      (let [namespaces (-> (apply read-namespaces sources)
                           (ns-filter include exclude)
                           (add-source-paths sources))
+           src-uri-mapping (into {} (map (fn [[k v]] [k (eval v)]) src-uri-mapping))
            write (writer options)]
-       (write (assoc options :namespaces namespaces)))))
+       (write (assoc options :namespaces namespaces
+                             :src-uri-mapping src-uri-mapping)))))
