@@ -13,6 +13,6 @@
   "Generate API documentation from source code."
   [project]
   (eval-in-project
-   (deps/add-if-missing project '[codox/codox.core "0.6.6"])
+   (deps/add-if-missing project '[codox/codox.core "0.6.7"])
    `(codox.main/generate-docs '~(get-options project))
    `(require 'codox.main)))

@@ -41,7 +41,10 @@
         (update-in [:doc] correct-indent)
         (list))
     (catch Exception e
-      (println "Could not generate documentation for" namespace))))
+      (println (format "Could not generate documentation for %s - root cause: %s %s"
+                       namespace
+                       (.getName (class e))
+                       (.getMessage e))))))
 
 (defn- jar-file? [file]
   (and (.isFile file)
