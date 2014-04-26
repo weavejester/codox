@@ -25,10 +25,18 @@
          (str "#" anchor-prefix (:line var)))))
 
 (defn- link-to-ns [namespace]
-  (link-to (ns-filename namespace) [:span (h (:name namespace))]))
+  (link-to
+    {:class (when (:doc namespace) "tooltip")
+     :alt (:doc namespace)}
+    (ns-filename namespace)
+    [:span (h (:name namespace))]))
 
 (defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:span (h (:name var))]))
+  (link-to
+    {:class (when (:doc var) "tooltip")
+     :alt (:doc var)}
+    (var-uri namespace var)
+    [:span (h (:name var))]))
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar

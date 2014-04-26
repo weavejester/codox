@@ -201,9 +201,42 @@ h4.macro {
 }
 
 .doc {
-    margin-bottom: .5em;
+   margin-bottom: .5em;
 }
 
 .src-link a {
-    font-size: 9pt;
+   font-size: 9pt;
 }
+
+.tooltip {
+   display: inline;
+   position: relative;
+}
+
+.tooltip:hover:after {
+   background: #333;
+   background: rgba(0,0,0,.8);
+   border-radius: 5px;
+   top: 30px;
+   color: #fff;
+   content: attr(alt);
+   left: 45px;
+   padding: 5px 5px;
+   position: absolute;
+   z-index: 98;
+   width: 127px;
+   font-size: 10px;
+}
+
+.tooltip:hover:before {
+    border: solid;
+    border-color: transparent transparent rgba(0,0,0,.8);
+    border-width: 6px;
+    bottom: 20px;
+    content: "";
+    left: 50px;
+    position: absolute;
+    z-index: 99;
+    top: 20px;
+}
+
