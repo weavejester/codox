@@ -222,6 +222,7 @@ h4.macro {
    content: attr(alt);
    left: 25px;
    right: 5px;
+   min-width: 100px;
    padding: 5px 5px;
    position: absolute;
    z-index: 98;
