@@ -6,6 +6,13 @@
             [clojure.string :as str]
             [codox.utils :as util]))
 
+(def ^:private url-regex
+  #"((https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])")
+
+(defn- add-anchors [text]
+  (if text
+    (str/replace text url-regex "<a href=\"$1\">$1</a>")))
+
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
 
@@ -79,7 +86,7 @@
      (for [namespace (:namespaces project)]
        [:div.namespace
         [:h3 (link-to-ns namespace)]
-        [:pre.doc (h (util/summary (:doc namespace)))]
+        [:pre.doc (add-anchors (h (util/summary (:doc namespace))))]
         [:div.index
          [:p "Public variables and functions:"]
          (var-links namespace)]])]]))
@@ -102,7 +109,7 @@
     (vars-menu namespace)
     [:div#content.namespace-docs
      [:h2 (h (namespace-title namespace))]
-     [:pre.doc (h (:doc namespace))]
+     [:pre.doc (add-anchors (h (:doc namespace)))]
      (for [var (:publics namespace)]
        [:div.public {:id (h (var-id var))}
         [:h3 (h (:name var))]
@@ -110,7 +117,7 @@
         [:div.usage
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]
-        [:pre.doc (h (:doc var))]
+        [:pre.doc (add-anchors (h (:doc var)))]
         (when (:src-dir-uri project)
           [:div.src-link
            [:a {:href (var-source-uri (:src-dir-uri project) var
