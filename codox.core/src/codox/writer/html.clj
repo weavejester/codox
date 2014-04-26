@@ -107,6 +107,8 @@
        [:div.public {:id (h (var-id var))}
         [:h3 (h (:name var))]
         (if (:macro var) [:h4.macro "macro"])
+        (if-let [added (:added var)]
+          [:h4.added "added in " added])
         [:div.usage
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]

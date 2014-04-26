@@ -14,3 +14,8 @@
 (def baz
   "This is an example var."
   true)
+
+(defn quz
+  "Another example function"
+  {:added "1.1"}
+  [x])

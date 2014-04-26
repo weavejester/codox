@@ -148,7 +148,7 @@ h2 {
    font-weight: bold;
 }
 
-.public h3, h4.macro {
+.public h3 {
     margin: 0;
     float: left;
 }
@@ -157,13 +157,22 @@ h2 {
     clear: both;
 }
 
-h4.macro {
+h4.macro, h4.added {
+    margin: 0;
+    float: left;
     font-variant: small-caps;
     font-size: 13px;
     font-weight: bold;
-    color: #717171;
     margin-top: 3px;
     margin-left: 10px;
+}
+
+h4.macro {
+    color: #717171;
+}
+
+h4.added {
+    color: #508820;
 }
 
 .public {
