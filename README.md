@@ -1,6 +1,6 @@
 # Codox
 
-A tool for generating API documentation from Clojure source code.
+A tool for generating API documentation from Clojure/ClojureScript source code.
 
 ## Examples
 
