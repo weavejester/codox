@@ -109,6 +109,11 @@
         (if (:macro var) [:h4.macro "macro"])
         (if-let [added (:added var)]
           [:h4.added "added in " added])
+        (if-let [deprecated (:deprecated var)]
+          [:h4.deprecated
+           "deprecated"
+           (if (string? deprecated)
+             (str " in " deprecated))])
         [:div.usage
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]
