@@ -176,7 +176,7 @@ h4.macro {
 }
 
 .namespace:last-child {
-    margin-bottom: 10%;
+   margin-bottom: 10%;
 }
 
 .index {
@@ -220,12 +220,13 @@ h4.macro {
    top: 30px;
    color: #fff;
    content: attr(alt);
-   left: 45px;
+   left: 25px;
+   right: 5px;
    padding: 5px 5px;
    position: absolute;
    z-index: 98;
-   width: 127px;
    font-size: 10px;
+   word-break: break-word;
 }
 
 .tooltip:hover:before {
@@ -234,7 +235,7 @@ h4.macro {
     border-width: 6px;
     bottom: 20px;
     content: "";
-    left: 50px;
+    left: 30px;
     position: absolute;
     z-index: 99;
     top: 20px;
