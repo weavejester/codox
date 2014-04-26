@@ -111,7 +111,7 @@
          (for [form (var-usage var)]
            [:code (h (pr-str form))])]
         [:pre.doc (h (:doc var))]
-        (when (:src-dir-uri project)
+        (if (:src-dir-uri project)
           [:div.src-link
            [:a {:href (var-source-uri (:src-dir-uri project) var
                                       (:src-linenum-anchor-prefix project))}
