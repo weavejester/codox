@@ -148,7 +148,7 @@ h2 {
    font-weight: bold;
 }
 
-.public h3, h4.macro {
+.public h3, h4.type {
     margin: 0;
     float: left;
 }
@@ -157,7 +157,7 @@ h2 {
     clear: both;
 }
 
-h4.macro {
+h4.type {
     font-variant: small-caps;
     font-size: 13px;
     font-weight: bold;

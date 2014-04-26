@@ -23,13 +23,36 @@
   (let [{:keys [skip-wiki no-doc]} (meta var)]
     (or skip-wiki no-doc)))
 
+(defn- protocol-name [var]
+  (let [proto-var (:protocol (meta var))]
+    (if (= (:ns (meta var))
+           (:ns (meta proto-var)))
+      (:name (meta proto-var))
+      (str (:ns (meta proto-var)) "/" (:name (meta proto-var))))))
+
+;; Ugly duck type check - is there a better way?
+(defn- protocol? [x]
+  (and (map? x) (every? x [:on-interface :on :method-map :method-builders])))
+
+(defn- var-type [var]
+  (when (var? var)
+    (let [val @var]
+      (cond
+        (:macro (meta var)) "macro"
+        (instance? clojure.lang.MultiFn val) "multimethod"
+        (:protocol (meta var)) (str (protocol-name var) " protocol function")
+        (protocol? val) "protocol"
+        (instance? clojure.lang.IFn val) "function"
+        :else "var"))))
+
 (defn- read-publics [namespace]
   (for [var (sorted-public-vars namespace)
         :when (not (skip-public? var))]
     (-> (meta var)
         (select-keys
          [:name :file :line :arglists :doc :macro :added :deprecated])
-        (update-in [:doc] correct-indent))))
+        (update-in [:doc] correct-indent)
+        (assoc :type (var-type var)))))
 
 (defn- read-ns [namespace]
   (try
