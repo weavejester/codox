@@ -1,3 +1,8 @@
+## 0.6.8 (2014-04-27)
+
+* Show `:added` and `:deprecated` metadata in docs
+* Shorten namespace summaries to first line on index page
+
 ## 0.6.7 (2014-02-15)
 
 * Display cause of errors when namespace cannot be loaded for docs
