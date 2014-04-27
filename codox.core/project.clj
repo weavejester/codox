@@ -1,6 +1,7 @@
 (defproject codox/codox.core "0.6.7"
   :description "Generate documentation from Clojure source files"
   :url "https://github.com/weavejester/codox"
+  :scm {:dir ".."}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.2.1"]
