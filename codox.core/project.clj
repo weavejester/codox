@@ -6,4 +6,4 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/tools.namespace "0.1.3"]
-                 [hiccup "1.0.4"]])
+                 [hiccup "1.0.5"]])
