@@ -1,8 +1,7 @@
 (ns codox.reader
   "Read raw documentation information from source directories."
-  (:require
-    [codox.reader.clojure :as clj]
-    [codox.reader.clojurescript :as cljs]))
+  (:require [codox.reader.clojure :as clj]
+            [codox.reader.clojurescript :as cljs]))
 
 (defn read-namespaces
   "Read namespaces from a source directory (defaults to \"src\"), and
@@ -21,6 +20,5 @@
       :macro    - true if the var is a macro
       :added    - the library version the var was added in"
   [& paths]
-  (concat
-    (apply clj/read-namespaces paths)
-    (apply cljs/read-namespaces paths)))
+  (concat (apply clj/read-namespaces paths)
+          (apply cljs/read-namespaces paths)))

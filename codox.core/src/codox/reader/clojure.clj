@@ -1,11 +1,9 @@
 (ns codox.reader.clojure
   "Read raw documentation information from Clojure source directory."
-  (:use
-    [codox.utils :only (correct-indent)])
-  (:require
-    [clojure.java.io :as io]
-    [clojure.tools.namespace :as ns])
-  (:import java.util.jar.JarFile))
+  (:import java.util.jar.JarFile)
+  (:use [codox.utils :only (correct-indent)])
+  (:require [clojure.java.io :as io]
+            [clojure.tools.namespace :as ns]))
 
 (defn- sorted-public-vars [namespace]
   (->> (ns-publics namespace)
@@ -17,11 +15,9 @@
     (or skip-wiki no-doc)))
 
 (defn- read-publics [namespace]
-  (for [var (sorted-public-vars namespace)
-        :when (not (skip-public? var))]
+  (for [var (sorted-public-vars namespace) :when (not (skip-public? var))]
     (-> (meta var)
-        (select-keys
-         [:name :file :line :arglists :doc :macro :added :deprecated])
+        (select-keys [:name :file :line :arglists :doc :macro :added :deprecated])
         (update-in [:doc] correct-indent))))
 
 (defn- read-ns [namespace]
@@ -34,15 +30,15 @@
         (update-in [:doc] correct-indent)
         (list))
     (catch Exception e
-      (println (format "Could not generate clojure documentation for %s - root cause: %s %s"
-                       namespace
-                       (.getName (class e))
-                       (.getMessage e))))))
+      (println
+       (format "Could not generate clojure documentation for %s - root cause: %s %s"
+               namespace
+               (.getName (class e))
+               (.getMessage e))))))
 
 (defn- jar-file? [file]
-  (and
-    (.isFile file)
-    (-> file .getName (.endsWith ".jar"))))
+  (and (.isFile file)
+       (-> file .getName (.endsWith ".jar"))))
 
 (defn- find-namespaces [file]
   (cond
@@ -50,8 +46,7 @@
     (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
 
 (defn read-namespaces
-  ([]
-     (read-namespaces "src"))
+  ([] (read-namespaces "src"))
   ([path]
      (->> (io/file path)
           (find-namespaces)
