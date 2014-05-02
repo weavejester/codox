@@ -12,13 +12,14 @@
     :doc    - the doc-string on the namespace
     :author - the author of the namespace
     :publics
-      :name     - the name of a public function, macro, or value
-      :file     - the file the var was declared in
-      :line     - the line at which the var was declared
-      :arglists - the arguments the function or macro takes
-      :doc      - the doc-string of the var
-      :macro    - true if the var is a macro
-      :added    - the library version the var was added in"
+      :name       - the name of a public function, macro, or value
+      :file       - the file the var was declared in
+      :line       - the line at which the var was declared
+      :arglists   - the arguments the function or macro takes
+      :doc        - the doc-string of the var
+      :macro      - true if the var is a macro
+      :added      - the library version the var was added in
+      :deprecated - the library version the var was deprecated in"
   [& paths]
   (concat (apply clj/read-namespaces paths)
           (apply cljs/read-namespaces paths)))
