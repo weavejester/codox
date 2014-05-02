@@ -35,6 +35,14 @@
             (map #(str/replace % re ""))
             (str/join "\n")))))
 
+(defn correct-indent [text]
+  (if text
+    (let [lines (str/split-lines text)]
+      (->> (rest lines)
+           (str/join "\n")
+           (unindent)
+           (str (first lines) "\n")))))
+
 (defn symbol-set
   "Accepts a single item (or a collection of items), converts them to
   symbols and returns them in set form."
