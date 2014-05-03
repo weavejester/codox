@@ -1,7 +1,10 @@
 (ns codox.example3
   "This is an example namespace for testing ClojureScript support.
 
-  Some more detailed description down here.")
+  Some more detailed description down here.
+
+  An inline link: http://example.com
+  An inline HTTPS link: https://example.com")
 
 (defn foo
   "This is an example function."
