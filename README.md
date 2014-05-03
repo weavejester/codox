@@ -1,6 +1,7 @@
 # Codox
 
-A tool for generating API documentation from Clojure/ClojureScript source code.
+A tool for generating API documentation from Clojure or ClojureScript
+source code.
 
 ## Examples
 
@@ -28,6 +29,14 @@ Then run:
 This will generate API documentation in the "doc" subdirectory.
 
 ## Options
+
+Codox can generate documentation from Clojure or ClojureScript. By
+default it looks for Clojure source files, but you can change this to
+ClojureScript by setting the `:language` key:
+
+```clojure
+:codox {:language :clojurescript}
+```
 
 By default Codox looks for source files in the `src` subdirectory, but
 you can change this by placing the following in your `project.clj`
