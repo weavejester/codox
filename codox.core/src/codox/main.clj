@@ -17,9 +17,23 @@
       (throw
          (Exception. (str "Could not resolve codox writer " writer-sym))))))
 
+(defn- read-macro-namespaces [& paths]
+  (->> (apply clj/read-namespaces paths)
+       (map (fn [ns] (update-in ns [:publics] #(filter :macro %))))
+       (remove (comp empty? :publics))))
+
+(defn- merge-namespaces [namespaces]
+  (for [[name namespaces] (group-by :name namespaces)]
+    (assoc (first namespaces) :publics (mapcat :publics namespaces))))
+
+(defn- cljs-read-namespaces [& paths]
+  (merge-namespaces
+   (concat (apply cljs/read-namespaces paths)
+           (apply read-macro-namespaces paths))))
+
 (def namespace-readers
   {:clojure       clj/read-namespaces
-   :clojurescript cljs/read-namespaces})
+   :clojurescript cljs-read-namespaces})
 
 (defn generate-docs
   "Generate documentation from source files."
