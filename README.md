@@ -104,7 +104,7 @@ to the raw line number in the anchors for each line; on Github this is
 
 Each of these keywords can be used together, of course.
 
-### Function metadata
+### Metadata Options
 
 To force Codox to skip a public var, add `:no-doc true` to the var's
 metadata. For example:
