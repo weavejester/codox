@@ -28,7 +28,7 @@ Then run:
 
 This will generate API documentation in the "doc" subdirectory.
 
-## Options
+## Project Options
 
 Codox can generate documentation from Clojure or ClojureScript. By
 default it looks for Clojure source files, but you can change this to
@@ -104,20 +104,43 @@ to the raw line number in the anchors for each line; on Github this is
 
 Each of these keywords can be used together, of course.
 
-### Skipping Individual Functions
+### Function metadata
 
-To force codox to skip an individual public var, add `:no-doc true` to the var's metadata. For example,
+To force Codox to skip a public var, add `:no-doc true` to the var's
+metadata. For example:
 
 ```clojure
-;; square show up in codox...
+;; Documented
 (defn square
   "Squares the supplied number."
-  [x])
+  [x]
+  (* x x)
 
-;; but hidden-square won't.
-(defn hidden-square
+;; Not documented
+(defn ^:no-doc hidden-square
   "Squares the supplied number."
-  {:no-doc true}
+  [x]
+  (* x x))
+```
+
+To denote the library version the var was added in, use the `:added`
+metadata key:
+
+```clojure
+(defn square
+  "Squares the supplied number."
+  {:added "1.0"}
+  [x]
+  (* x x))
+```
+
+Similar, deprecated vars can be denoted with the `:deprecated`
+metadata key:
+
+```clojure
+(defn square
+  "Squares the supplied number."
+  {:deprecated "2.0"}
   [x]
   (* x x))
 ```
