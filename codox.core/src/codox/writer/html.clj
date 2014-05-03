@@ -1,7 +1,6 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
-  (:import java.net.URLEncoder)
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [codox.utils :as util]))
@@ -20,7 +19,7 @@
   (str output-dir "/" (ns-filename namespace)))
 
 (defn- var-id [var]
-  (str "var-" (URLEncoder/encode (str (:name var)))))
+  (str "var-" (:name var)))
 
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id var)))

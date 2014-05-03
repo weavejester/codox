@@ -14,6 +14,10 @@
   "This is an example var."
   true)
 
+(defn zoo?
+  "An example predicate."
+  [x])
+
 (defn quz
   "Another example function."
   {:added "1.1"}
