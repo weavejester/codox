@@ -40,7 +40,7 @@
   [:div#namespaces.sidebar
    [:h3 [:span "Namespaces"]]
    [:ul
-    (for [ns (:namespaces project)]
+    (for [ns (sort-by :name (:namespaces project))]
       (if (= ns namespace)
         [:li.current (link-to-ns ns)]
         [:li (link-to-ns ns)]))]])
@@ -48,7 +48,7 @@
 (defn- var-links [namespace]
   (unordered-list
     (map (partial link-to-var namespace)
-         (:publics namespace))))
+         (sort-by :name (:publics namespace)))))
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
@@ -82,7 +82,7 @@
     [:div#content.namespace-index
      [:h2 (h (project-title project))]
      [:div.doc (h (:description project))]
-     (for [namespace (:namespaces project)]
+     (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to-ns namespace)]
         [:pre.doc (add-anchors (h (util/summary (:doc namespace))))]
@@ -109,7 +109,7 @@
     [:div#content.namespace-docs
      [:h2 (h (namespace-title namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
-     (for [var (:publics namespace)]
+     (for [var (sort-by :name (:publics namespace))]
        [:div.public {:id (h (var-id var))}
         [:h3 (h (:name var))]
         (if (:macro var) [:h4.macro "macro"])
