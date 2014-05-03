@@ -10,12 +10,16 @@
        (vals)
        (sort-by (comp :name meta))))
 
-(defn- skip-public? [var]
+(defn- no-doc? [var]
   (let [{:keys [skip-wiki no-doc]} (meta var)]
     (or skip-wiki no-doc)))
 
+(defn- proxy? [var]
+  (re-find #"proxy\$" (-> var meta :name str)))
+
 (defn- read-publics [namespace]
-  (for [var (sorted-public-vars namespace) :when (not (skip-public? var))]
+  (for [var (sorted-public-vars namespace)
+        :when (not (or (proxy? var) (no-doc? var)))]
     (-> (meta var)
         (select-keys [:name :file :line :arglists :doc :macro :added :deprecated])
         (update-in [:doc] correct-indent))))
