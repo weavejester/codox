@@ -1,8 +1,7 @@
 (ns codox.main
   "Main namespace for generating documentation"
   (:use [codox.utils :only (ns-filter add-source-paths)])
-  (:require [codox.reader.clojure :as clj]
-            [codox.reader.clojurescript :as cljs]))
+  (:require [codox.reader.clojure :as clj]))
 
 (defn- writer [{:keys [writer]}]
   (let [writer-sym (or writer 'codox.writer.html/write-docs)
@@ -27,9 +26,11 @@
     (assoc (first namespaces) :publics (mapcat :publics namespaces))))
 
 (defn- cljs-read-namespaces [& paths]
-  (merge-namespaces
-   (concat (apply cljs/read-namespaces paths)
-           (apply read-macro-namespaces paths))))
+  (require 'codox.reader.clojurescript)
+  (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
+    (merge-namespaces
+     (concat (apply reader paths)
+             (apply read-macro-namespaces paths)))))
 
 (def namespace-readers
   {:clojure       clj/read-namespaces
