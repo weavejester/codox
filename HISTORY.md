@@ -1,3 +1,10 @@
+## 0.7.0 (2014-04-03)
+
+* ClojureScript support
+* Leiningen `:source-paths` respected
+* URLs in docstrings turned into links
+* Fixed links to vars with non-alphanumeric characters
+
 ## 0.6.8 (2014-04-27)
 
 * Show `:added` and `:deprecated` metadata in docs

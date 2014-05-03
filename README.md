@@ -17,7 +17,7 @@ Include the following plugin in your `project.clj` file or your global
 profile:
 
 ```clojure
-:plugins [[codox "0.6.8"]]
+:plugins [[codox "0.7.0"]]
 ```
 
 Then run:
