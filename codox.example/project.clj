@@ -5,5 +5,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :plugins [[codox "0.7.0-SNAPSHOT"]]
+  :source-paths ["src/clojure"]
   :profiles {:cljs {:dependencies [[org.clojure/clojure "1.5.1"]]
                     :codox {:language :clojurescript}}})
