@@ -31,11 +31,23 @@
        (if anchor-prefix
          (str "#" anchor-prefix (:line var)))))
 
+(defn- tooltip-attrs [namespace-or-var]
+  (if (nil? (:doc namespace-or-var))
+    {}
+    {:class "tooltip"
+     :alt (util/summary (:doc namespace-or-var))}))
+
 (defn- link-to-ns [namespace]
-  (link-to (ns-filename namespace) [:span (h (:name namespace))]))
+  (link-to
+    (tooltip-attrs namespace)
+    (ns-filename namespace)
+    [:span (h (:name namespace))]))
 
 (defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:span (h (:name var))]))
+  (link-to
+    (tooltip-attrs var)
+    (var-uri namespace var)
+    [:span (h (:name var))]))
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
