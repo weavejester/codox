@@ -13,7 +13,9 @@
 (defn doc
   "Generate API documentation from source code."
   [project]
-  (let [project (project/merge-profiles project [:codox])]
+  (let [project (if (get-in project [:profiles :codox])
+                  (project/merge-profiles project [:codox])
+                  project)]
     (eval/eval-in-project
      (deps/add-if-missing project '[codox/codox.core "0.7.1"])
      `(codox.main/generate-docs '~(get-options project))
