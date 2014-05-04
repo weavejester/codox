@@ -71,23 +71,22 @@ function sidebarContentWidth(element) {
     return Math.max.apply(Math, widths)
 }
 
-function resizeNamespaces() {
-    var width = sidebarContentWidth('#namespaces') + 30
-    $('#namespaces').css('width', width)
-    $('#vars, .namespace-index').css('left', width + 1)
-    $('.namespace-docs').css('left', $('#vars').width() + width + 2)
-}
-
-function resizeVars() {
-    if ($('#vars').length == 0) return;
-    var width = sidebarContentWidth('#vars') + 30
-    $('#vars').css('width', width)
-    $('.namespace-docs').css('left', $('#namespaces').width() + width + 2)
-}
-
 function resizeSidebars() {
-    resizeNamespaces()
-    resizeVars()
+    var nsWidth  = sidebarContentWidth('#namespaces') + 30
+    var varWidth = 0
+
+    if ($('#vars').length != 0) {
+        varWidth = sidebarContentWidth('#vars') + 30
+    }
+
+    if ((Math.abs(nsWidth - varWidth) <= 30)) {
+        nsWidth = varWidth = Math.max(nsWidth, varWidth)
+    }
+
+    $('#namespaces').css('width', nsWidth)
+    $('#vars').css('width', varWidth)
+    $('#vars, .namespace-index').css('left', nsWidth + 1)
+    $('.namespace-docs').css('left', nsWidth + varWidth + 2)
 }
 
 $(window).ready(resizeSidebars)
