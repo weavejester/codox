@@ -1,7 +1,8 @@
 (ns leiningen.doc
   (:refer-clojure :exclude [doc])
-  (:use [leinjacker.eval :only (eval-in-project)])
-  (:require [leinjacker.deps :as deps]))
+  (:require [leinjacker.deps :as deps]
+            [leinjacker.eval :as eval]
+            [leiningen.core.project :as project]))
 
 (defn- get-options [project]
   (-> project
@@ -12,7 +13,8 @@
 (defn doc
   "Generate API documentation from source code."
   [project]
-  (eval-in-project
-   (deps/add-if-missing project '[codox/codox.core "0.7.1"])
-   `(codox.main/generate-docs '~(get-options project))
-   `(require 'codox.main)))
+  (let [project (project/merge-profiles project [:codox])]
+    (eval/eval-in-project
+     (deps/add-if-missing project '[codox/codox.core "0.7.1"])
+     `(codox.main/generate-docs '~(get-options project))
+     `(require 'codox.main))))
