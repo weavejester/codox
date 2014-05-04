@@ -28,6 +28,15 @@ lein doc
 
 This will generate API documentation in the "doc" subdirectory.
 
+
+## AOT Compilation
+
+AOT-compiled namespaces will lose their metadata, which mean you'll
+lose documentation for namespaces. Avoid having global `:aot`
+directives in your project; instead, place them in a specialized
+profile, such as `:uberjar`.
+
+
 ## Project Options
 
 Codox can generate documentation from Clojure or ClojureScript. By
@@ -104,6 +113,7 @@ to the raw line number in the anchors for each line; on Github this is
 
 Each of these keywords can be used together, of course.
 
+
 ### Metadata Options
 
 To force Codox to skip a public var, add `:no-doc true` to the var's
@@ -144,6 +154,7 @@ metadata key:
   [x]
   (* x x))
 ```
+
 
 ## License
 
