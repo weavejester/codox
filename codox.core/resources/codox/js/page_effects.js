@@ -11,6 +11,25 @@ function findLinkByFragment(elements, fragment) {
   return $(elements).filter(function(i, e) { return hasFragment(e, fragment)}).first()
 }
 
+function scrollToCurrentVarLink(elements) {
+  var elements = $(elements);
+  var parent   = elements.offsetParent();
+
+  if (elements.length == 0) return;
+
+  var top    = elements.first().position().top;
+  var bottom = elements.last().position().top + elements.last().height();
+
+  if (top >= 0 && bottom <= parent.height()) return;
+
+  if (top < 0) {
+    parent.scrollTop(parent.scrollTop() + top);
+  }
+  else if (bottom > parent.height()) {
+    parent.scrollTop(parent.scrollTop() + bottom - parent.height());
+  }
+}
+
 function setCurrentVarLink() {
   $('#vars li').removeClass('current')
   $('.public').
@@ -20,6 +39,7 @@ function setCurrentVarLink() {
         parent().
         addClass('current')
     })
+  scrollToCurrentVarLink('#vars li.current');
 }
 
 var hasStorage = (function() { try { return localStorage.getItem } catch(e) {} }())
