@@ -1,69 +1,69 @@
 function visibleInParent(element) {
-  var position = $(element).position().top
-  return position > -50 && position < ($(element).offsetParent().height() - 50)
+    var position = $(element).position().top
+    return position > -50 && position < ($(element).offsetParent().height() - 50)
 }
 
 function hasFragment(link, fragment) {
-  return $(link).attr("href").indexOf("#" + fragment) != -1
+    return $(link).attr("href").indexOf("#" + fragment) != -1
 }
 
 function findLinkByFragment(elements, fragment) {
-  return $(elements).filter(function(i, e) { return hasFragment(e, fragment)}).first()
+    return $(elements).filter(function(i, e) { return hasFragment(e, fragment)}).first()
 }
 
 function scrollToCurrentVarLink(elements) {
-  var elements = $(elements);
-  var parent   = elements.offsetParent();
+    var elements = $(elements);
+    var parent   = elements.offsetParent();
 
-  if (elements.length == 0) return;
+    if (elements.length == 0) return;
 
-  var top    = elements.first().position().top;
-  var bottom = elements.last().position().top + elements.last().height();
+    var top    = elements.first().position().top;
+    var bottom = elements.last().position().top + elements.last().height();
 
-  if (top >= 0 && bottom <= parent.height()) return;
+    if (top >= 0 && bottom <= parent.height()) return;
 
-  if (top < 0) {
-    parent.scrollTop(parent.scrollTop() + top);
-  }
-  else if (bottom > parent.height()) {
-    parent.scrollTop(parent.scrollTop() + bottom - parent.height());
-  }
+    if (top < 0) {
+        parent.scrollTop(parent.scrollTop() + top);
+    }
+    else if (bottom > parent.height()) {
+        parent.scrollTop(parent.scrollTop() + bottom - parent.height());
+    }
 }
 
 function setCurrentVarLink() {
-  $('#vars li').removeClass('current')
-  $('.public').
-    filter(function(index) { return visibleInParent(this) }).
-    each(function(index, element) {
-      findLinkByFragment("#vars a", element.id).
-        parent().
-        addClass('current')
-    })
-  scrollToCurrentVarLink('#vars li.current');
+    $('#vars li').removeClass('current')
+    $('.public').
+        filter(function(index) { return visibleInParent(this) }).
+        each(function(index, element) {
+            findLinkByFragment("#vars a", element.id).
+                parent().
+                addClass('current')
+        });
+    scrollToCurrentVarLink('#vars li.current');
 }
 
 var hasStorage = (function() { try { return localStorage.getItem } catch(e) {} }())
 
 function scrollPositionId(element) {
-  var directory = window.location.href.replace(/[^\/]+\.html$/, '')
-  return 'scroll::' + $(element).attr('id') + '::' + directory
+    var directory = window.location.href.replace(/[^\/]+\.html$/, '')
+    return 'scroll::' + $(element).attr('id') + '::' + directory
 }
 
 function storeScrollPosition(element) {
-  if (!hasStorage) return;
-  localStorage.setItem(scrollPositionId(element) + "::x", $(element).scrollLeft())
-  localStorage.setItem(scrollPositionId(element) + "::y", $(element).scrollTop())
+    if (!hasStorage) return;
+    localStorage.setItem(scrollPositionId(element) + "::x", $(element).scrollLeft())
+    localStorage.setItem(scrollPositionId(element) + "::y", $(element).scrollTop())
 }
 
 function recallScrollPosition(element) {
-  if (!hasStorage) return;
-  $(element).scrollLeft(localStorage.getItem(scrollPositionId(element) + "::x"))
-  $(element).scrollTop(localStorage.getItem(scrollPositionId(element) + "::y"))
+    if (!hasStorage) return;
+    $(element).scrollLeft(localStorage.getItem(scrollPositionId(element) + "::x"))
+    $(element).scrollTop(localStorage.getItem(scrollPositionId(element) + "::y"))
 }
 
 function persistScrollPosition(element) {
-  recallScrollPosition(element)
-  $(element).scroll(function() { storeScrollPosition(element) })
+    recallScrollPosition(element)
+    $(element).scroll(function() { storeScrollPosition(element) })
 }
 
 function sidebarContentWidth(element) {
