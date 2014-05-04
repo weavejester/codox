@@ -72,13 +72,25 @@ function sidebarContentWidth(element) {
 }
 
 function resizeNamespaces() {
-    var width = sidebarContentWidth('#namespaces') + 40
+    var width = sidebarContentWidth('#namespaces') + 30
     $('#namespaces').css('width', width)
     $('#vars, .namespace-index').css('left', width + 1)
     $('.namespace-docs').css('left', $('#vars').width() + width + 2)
 }
 
-$(window).ready(resizeNamespaces)
+function resizeVars() {
+    if ($('#vars').length == 0) return;
+    var width = sidebarContentWidth('#vars') + 30
+    $('#vars').css('width', width)
+    $('.namespace-docs').css('left', $('#namespaces').width() + width + 2)
+}
+
+function resizeSidebars() {
+    resizeNamespaces()
+    resizeVars()
+}
+
+$(window).ready(resizeSidebars)
 $(window).ready(setCurrentVarLink)
 $(window).ready(function() { persistScrollPosition('#namespaces')})
 $(window).ready(function() {

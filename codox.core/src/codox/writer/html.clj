@@ -53,7 +53,7 @@
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
-   [:h3 "Public Vars"]
+   [:h3 [:span "Public Vars"]]
    (var-links namespace)])
 
 (def ^{:private true} default-includes
