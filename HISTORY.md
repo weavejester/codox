@@ -1,10 +1,10 @@
-## 0.7.1 (2014-04-04)
+## 0.7.1 (2014-05-04)
 
 * Fixed URI exception for certain var names
 * No longer includes proxy classes in docs
 * Updated tools.namespace dependency
 
-## 0.7.0 (2014-04-03)
+## 0.7.0 (2014-05-03)
 
 * ClojureScript support
 * Leiningen `:source-paths` respected
