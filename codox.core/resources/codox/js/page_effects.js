@@ -31,15 +31,15 @@ function scrollToCurrentVarLink(elements) {
 }
 
 function setCurrentVarLink() {
-    $('#vars li').removeClass('current')
-    $('.public').
+    $('#vars a').parent().removeClass('current')
+    $('.anchor').
         filter(function(index) { return visibleInParent(this) }).
         each(function(index, element) {
             findLinkByFragment("#vars a", element.id).
                 parent().
                 addClass('current')
         });
-    scrollToCurrentVarLink('#vars li.current');
+    scrollToCurrentVarLink('#vars .current');
 }
 
 var hasStorage = (function() { try { return localStorage.getItem } catch(e) {} }())

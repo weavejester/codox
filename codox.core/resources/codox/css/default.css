@@ -11,7 +11,8 @@ pre, code {
 h2 {
    font-weight: normal;
    font-size: 18pt;
-   margin: 10px 0 0.4em 0;
+   padding: 10px 0 0.4em 0;
+   margin: 0;
 }
 
 #header, #content, .sidebar {
@@ -103,6 +104,7 @@ h2 {
     font-size: 9pt;
     font-weight: normal;
     margin: 3px 3px;
+    padding: 0;
     color: #bbb;
 }
 

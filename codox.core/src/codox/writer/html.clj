@@ -39,7 +39,7 @@
 
 (defn- namespaces-menu [project & [namespace]]
   [:div#namespaces.sidebar
-   [:h3 [:span "Namespaces"]]
+   [:h3 (link-to "index.html" [:span "Namespaces"])]
    [:ul
     (for [ns (sort-by :name (:namespaces project))]
       (if (= ns namespace)
@@ -53,7 +53,7 @@
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
-   [:h3 [:span "Public Vars"]]
+   [:h3 (link-to "#top" [:span "Public Vars"])]
    (var-links namespace)])
 
 (def ^{:private true} default-includes
@@ -108,10 +108,10 @@
     (namespaces-menu project namespace)
     (vars-menu namespace)
     [:div#content.namespace-docs
-     [:h2 (h (namespace-title namespace))]
+     [:h2#top.anchor (h (namespace-title namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
      (for [var (sort-by :name (:publics namespace))]
-       [:div.public {:id (h (var-id var))}
+       [:div.public.anchor {:id (h (var-id var))}
         [:h3 (h (:name var))]
         (if (:macro var) [:h4.macro "macro"])
         (if-let [added (:added var)]
