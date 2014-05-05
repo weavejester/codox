@@ -1,3 +1,10 @@
+## 0.7.2 (2014-05-05)
+
+* Var index automatically scrolls with content
+* Links on namespace and public vars headers
+* Better sizing of sidebars
+* `:codox` profile automatically included when available
+
 ## 0.7.1 (2014-05-04)
 
 * Fixed URI exception for certain var names
