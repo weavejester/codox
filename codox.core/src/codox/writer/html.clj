@@ -34,12 +34,15 @@
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
 
+(def ns-tree-part
+  [:span.tree [:span.top] [:span.bottom]])
+
 (defn- link-to-ns [namespace]
-  (let [parts (split-ns (:name namespace))]
-    (link-to (ns-filename namespace) [:span (h (last parts))])))
+  (let [name (last (split-ns (:name namespace)))]
+    (link-to (ns-filename namespace) [:div.inner ns-tree-part [:span (h name)]])))
 
 (defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:span (h (:name var))]))
+  (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]]))
 
 (defn- namespace-parts [namespace]
   (->> (split-ns namespace)
@@ -50,7 +53,10 @@
   (->> (map :name namespaces)
        (sort)
        (mapcat namespace-parts)
-       (distinct)))
+       (distinct)
+       (map (juxt identity (comp count split-ns)))
+       (partition-all 2 1)
+       (map (fn [[[ns d0] [_ d1]]] [ns d0 (= d0 d1)]))))
 
 (defn- index-by [f m]
   (into {} (map (juxt f identity) m)))
@@ -62,15 +68,16 @@
   (let [namespaces (:namespaces project)
         ns-map     (index-by :name namespaces)]
     [:div#namespaces.sidebar
-     [:h3 (link-to "index.html" [:span "Namespaces"])]
+     [:h3 (link-to "index.html" [:span.inner "Namespaces"])]
      [:ul
-      (for [ns-name (namespace-hierarchy namespaces)]
-        (let [class (str "depth-" (ns-depth ns-name))]
-          (if-let [ns (ns-map ns-name)]
+      (for [[name depth branch?] (namespace-hierarchy namespaces)]
+        (let [class (str "depth-" depth (if branch? " branch"))]
+          (if-let [ns (ns-map name)]
             (let [class (str class (if (= ns current) " current"))]
               [:li {:class class} (link-to-ns ns)])
-            [:li {:class class}
-              [:div.no-link [:span (last (split-ns ns-name))]]])))]]))
+            (let [name (last (split-ns name))]
+              [:li {:class class}
+               [:div.no-link [:div.inner ns-tree-part [:span (h name)]]]]))))]]))
 
 (defn- var-links [namespace]
   (unordered-list
@@ -79,7 +86,7 @@
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
-   [:h3 (link-to "#top" [:span "Public Vars"])]
+   [:h3 (link-to "#top" [:span.inner "Public Vars"])]
    (var-links namespace)])
 
 (def ^{:private true} default-includes
