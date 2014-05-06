@@ -31,20 +31,46 @@
        (if anchor-prefix
          (str "#" anchor-prefix (:line var)))))
 
+(defn- split-ns [namespace]
+  (str/split (str namespace) #"\."))
+
 (defn- link-to-ns [namespace]
-  (link-to (ns-filename namespace) [:span (h (:name namespace))]))
+  (let [parts (split-ns (:name namespace))]
+    (link-to (ns-filename namespace) [:span (h (last parts))])))
 
 (defn- link-to-var [namespace var]
   (link-to (var-uri namespace var) [:span (h (:name var))]))
 
-(defn- namespaces-menu [project & [namespace]]
-  [:div#namespaces.sidebar
-   [:h3 (link-to "index.html" [:span "Namespaces"])]
-   [:ul
-    (for [ns (sort-by :name (:namespaces project))]
-      (if (= ns namespace)
-        [:li.current (link-to-ns ns)]
-        [:li (link-to-ns ns)]))]])
+(defn- namespace-parts [namespace]
+  (->> (split-ns namespace)
+       (reductions #(str %1 "." %2))
+       (map symbol)))
+
+(defn- namespace-hierarchy [namespaces]
+  (->> (map :name namespaces)
+       (sort)
+       (mapcat namespace-parts)
+       (distinct)))
+
+(defn- index-by [f m]
+  (into {} (map (juxt f identity) m)))
+
+(defn- ns-depth [namespace]
+  (count (split-ns namespace)))
+
+(defn- namespaces-menu [project & [current]]
+  (let [namespaces (:namespaces project)
+        ns-map     (index-by :name namespaces)]
+    [:div#namespaces.sidebar
+     [:h3 (link-to "index.html" [:span "Namespaces"])]
+     [:ul
+      (for [ns-name (namespace-hierarchy namespaces)]
+        (let [class (str "depth-" (ns-depth ns-name))]
+          (if-let [ns (ns-map ns-name)]
+            (let [class (str class (if (= ns current) " current"))]
+              [:li {:class class} (link-to-ns ns)])
+            [:li {:class class}
+              [:div.no-link [:span (last (split-ns ns-name))]]])))]]))
 
 (defn- var-links [namespace]
   (unordered-list

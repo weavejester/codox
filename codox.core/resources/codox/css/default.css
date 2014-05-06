@@ -128,19 +128,31 @@ h2 {
    display: block;
 }
 
-.sidebar li a {
-   padding: 7px 10px;
+.sidebar li a, .sidebar li .no-link {
+    border-left: 3px solid transparent;
+    padding: 7px 7px;
 }
+
+.sidebar li .no-link {
+    display: block;
+    color: #777;
+    font-style: italic;
+} 
+
+.depth-1 * span { padding-left: 2px; }
+.depth-2 * span { padding-left: 12px; }
+.depth-3 * span { padding-left: 22px; }
+.depth-4 * span { padding-left: 32px; }
+.depth-5 * span { padding-left: 42px; }
+.depth-6 * span { padding-left: 52px; }
 
 #namespaces li.current a {
    border-left: 3px solid #a33;
-   padding-left: 7px;
    color: #a33;
 }
 
 #vars li.current a {
    border-left: 3px solid #33a;
-   padding-left: 7px;
    color: #33a;
 }
 

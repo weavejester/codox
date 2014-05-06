@@ -67,7 +67,7 @@ function persistScrollPosition(element) {
 }
 
 function sidebarContentWidth(element) {
-    var widths = $(element).find('span').map(function() { return $(this).width() })
+    var widths = $(element).find('span').map(function() { return $(this).innerWidth() })
     return Math.max.apply(Math, widths)
 }
 
