@@ -147,20 +147,17 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- namespace-title [namespace]
-  (str (:name namespace) " documentation"))
-
 (defn- namespace-page [project namespace]
   (html5
    [:head
     default-includes
-    [:title (h (namespace-title namespace))]]
+    [:title (h (:name namespace)) " documentation"]]
    [:body
     (header project)
     (namespaces-menu project namespace)
     (vars-menu namespace)
     [:div#content.namespace-docs
-     [:h2#top.anchor (h (namespace-title namespace))]
+     [:h2#top.anchor (h (:name namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
      (for [var (sort-by :name (:publics namespace))]
        [:div.public.anchor {:id (h (var-id var))}
