@@ -72,17 +72,17 @@ function sidebarContentWidth(element) {
 }
 
 function resizeSidebars() {
-    var nsWidth  = sidebarContentWidth('#namespaces') + 25
+    var nsWidth  = sidebarContentWidth('#namespaces') + 30
     var varWidth = 0
 
     if ($('#vars').length != 0) {
-        varWidth = sidebarContentWidth('#vars') + 25
+        varWidth = sidebarContentWidth('#vars') + 30
     }
 
     // snap to grid
-    var snap = 25;
-    nsWidth  = (Math.floor(nsWidth / snap) + 1) * snap;
-    varWidth = (Math.floor(varWidth / snap) + 1) * snap;
+    var snap = 30;
+    nsWidth  = Math.ceil(nsWidth / snap) * snap;
+    varWidth = Math.ceil(varWidth / snap) * snap;
 
     $('#namespaces').css('width', nsWidth)
     $('#vars').css('width', varWidth)
