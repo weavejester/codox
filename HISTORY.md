@@ -1,3 +1,8 @@
+## 0.7.3 (2014-05-07)
+
+* Namespace sidebar made hierarchical
+* Various aesthetic tweaks and fixes
+
 ## 0.7.2 (2014-05-05)
 
 * Var index automatically scrolls with content
