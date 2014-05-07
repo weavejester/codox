@@ -1,6 +1,6 @@
 body {
    font-family: sans-serif;
-   font-size: 11pt;
+   font-size: 15px;
 }
 
 pre, code {
@@ -153,14 +153,16 @@ h2 {
 .depth-1 .inner { padding-left: 2px; }
 .depth-2 .inner { padding-left: 6px; }
 .depth-3 .inner { padding-left: 20px; }
-.depth-4 .inner { padding-left: 30px; }
-.depth-5 .inner { padding-left: 40px; }
-.depth-6 .inner { padding-left: 50px; }
+.depth-4 .inner { padding-left: 34px; }
+.depth-5 .inner { padding-left: 48px; }
+.depth-6 .inner { padding-left: 62px; }
 
 .sidebar li .tree {
     display: block;
     float: left;
-    margin: -10px 4px 0 0;
+    position: relative;
+    top: -10px;
+    margin: 0 4px 0 0;
     padding: 0;
 }
 

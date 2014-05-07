@@ -34,35 +34,51 @@
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
 
-(def ns-tree-part
-  [:span.tree [:span.top] [:span.bottom]])
-
-(defn- link-to-ns [namespace]
-  (let [name (last (split-ns (:name namespace)))]
-    (link-to (ns-filename namespace) [:div.inner ns-tree-part [:span (h name)]])))
-
-(defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]]))
-
 (defn- namespace-parts [namespace]
   (->> (split-ns namespace)
        (reductions #(str %1 "." %2))
        (map symbol)))
+
+(defn- add-depths [namespaces]
+  (->> namespaces
+       (map (juxt identity (comp count split-ns)))
+       (reductions (fn [[_ ds] [ns d]] [ns (cons d ds)]) [nil nil])
+       (rest)))
+
+(defn- add-heights [namespaces]
+  (for [[ns ds] namespaces]
+    (let [d (first ds)
+          h (count (take-while #(not (or (= d %) (= (dec d) %))) (rest ds)))]
+      [ns d h])))
+
+(defn- add-branches [namespaces]
+  (->> (partition-all 2 1 namespaces)
+       (map (fn [[[ns d0 h] [_ d1 _]]] [ns d0 h (= d0 d1)]))))
 
 (defn- namespace-hierarchy [namespaces]
   (->> (map :name namespaces)
        (sort)
        (mapcat namespace-parts)
        (distinct)
-       (map (juxt identity (comp count split-ns)))
-       (partition-all 2 1)
-       (map (fn [[[ns d0] [_ d1]]] [ns d0 (= d0 d1)]))))
+       (add-depths)
+       (add-heights)
+       (add-branches)))
 
 (defn- index-by [f m]
   (into {} (map (juxt f identity) m)))
 
-(defn- ns-depth [namespace]
-  (count (split-ns namespace)))
+;; The values in ns-tree-part are chosen for aesthetic reasons, based
+;; on a text size of 15px and a line height of 31px.
+
+(defn- ns-tree-part [height]
+  (if (zero? height)
+    [:span.tree [:span.top] [:span.bottom]]
+    (let [row-height 31
+          top        (- 0 21 (* height row-height))
+          height     (+ 0 30 (* height row-height))]
+      [:span.tree {:style (str "top: " top "px;")}
+       [:span.top {:style (str "height: " height "px;")}]
+       [:span.bottom]])))
 
 (defn- namespaces-menu [project & [current]]
   (let [namespaces (:namespaces project)
@@ -70,14 +86,17 @@
     [:div#namespaces.sidebar
      [:h3 (link-to "index.html" [:span.inner "Namespaces"])]
      [:ul
-      (for [[name depth branch?] (namespace-hierarchy namespaces)]
-        (let [class (str "depth-" depth (if branch? " branch"))]
+      (for [[name depth height branch?] (namespace-hierarchy namespaces)]
+        (let [class  (str "depth-" depth (if branch? " branch"))
+              short  (last (split-ns name))
+              inner  [:div.inner (ns-tree-part height) [:span (h short)]]]
           (if-let [ns (ns-map name)]
             (let [class (str class (if (= ns current) " current"))]
-              [:li {:class class} (link-to-ns ns)])
-            (let [name (last (split-ns name))]
-              [:li {:class class}
-               [:div.no-link [:div.inner ns-tree-part [:span (h name)]]]]))))]]))
+              [:li {:class class} (link-to (ns-filename ns) inner)])
+            [:li {:class class} [:div.no-link inner]])))]]))
+
+(defn- link-to-var [namespace var]
+  (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]]))
 
 (defn- var-links [namespace]
   (unordered-list
@@ -118,7 +137,7 @@
      [:div.doc (h (:description project))]
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
-        [:h3 (link-to-ns namespace)]
+        [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
         [:pre.doc (add-anchors (h (util/summary (:doc namespace))))]
         [:div.index
          [:p "Public variables and functions:"]
