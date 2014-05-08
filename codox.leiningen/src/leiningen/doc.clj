@@ -7,7 +7,8 @@
 (defn- get-options [project]
   (-> project
       (select-keys [:name :version :description])
-      (merge {:sources (:source-paths project ["src"])}
+      (merge {:sources (:source-paths project ["src"])
+              :root    (:root project)}
              (:codox project))))
 
 (defn doc

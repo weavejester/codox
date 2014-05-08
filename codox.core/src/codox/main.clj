@@ -36,17 +36,19 @@
   {:clojure       clj/read-namespaces
    :clojurescript cljs-read-namespaces})
 
+(def init-dir (System/getProperty "user.dir"))
+
 (defn generate-docs
   "Generate documentation from source files."
   ([]
      (generate-docs {}))
-  ([{:keys [language sources include exclude]
-     :or   {language :clojure}
+  ([{:keys [language root sources include exclude]
+     :or   {language :clojure, sources ["src"], root init-dir}
      :as   options}]
      (let [write-fn   (writer options)
            namespaces (-> (namespace-readers language)
                           (apply sources)
                           (ns-filter include exclude)
-                          (add-source-paths sources))]
+                          (add-source-paths root sources))]
        (write-fn
         (assoc options :namespaces namespaces)))))
