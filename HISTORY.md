@@ -1,3 +1,8 @@
+## 0.7.4 (2014-05-08)
+
+* Added `:src-uri-mapping` option
+* Cleaner namespace index page
+
 ## 0.7.3 (2014-05-07)
 
 * Namespace sidebar made hierarchical
