@@ -1,3 +1,7 @@
+## 0.7.5 (2014-05-08)
+
+* Fixed bug in source links when using absolute source paths
+
 ## 0.7.4 (2014-05-08)
 
 * Added `:src-uri-mapping` option
