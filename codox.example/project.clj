@@ -6,5 +6,10 @@
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :plugins [[codox "0.7.3"]]
   :source-paths ["src/clojure"]
-  :profiles {:cljs {:dependencies [[org.clojure/clojure "1.5.1"]]
-                    :codox {:language :clojurescript}}})
+  :codox
+  {:src-dir-uri "http://github.com/weavejester/codox/blob/master/"
+   :src-linenum-anchor-prefix "L"
+   :src-uri-mapping {#"src/clojure" #(str "codox.example/src/clojure/" %)}}
+  :profiles
+  {:cljs {:dependencies [[org.clojure/clojure "1.5.1"]]
+          :codox {:language :clojurescript}}})
