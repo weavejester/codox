@@ -111,19 +111,20 @@ to the raw line number in the anchors for each line; on Github this is
         :src-linenum-anchor-prefix "L"}
 ```
 
-[cljx](https://github.com/lynaghk/cljx) users can have API source links
-point to the `.cljx` files with `:src-uri-mapping {path-prefix mapping-fn}`.
-`path-prefix`, a regex pattern for a path prefix of generated sources, will be
-matched against the file path and `mapping-fn` will be dispatched with that
-file to create the correct file URI substring to be appended to `:src-dir-uri`:
+For more control, you can assign mapping functions to source paths
+that match a regular expression. This is particularly useful for
+created source links from generated source code, such as is the case
+with [cljx](https://github.com/lynaghk/cljx).
+
+For example, perhaps your Clojure source files are generated in
+`target/classes`. To link back to the original .cljx file, you could
+add a mapping like:
 
 ```clojure
-:codox {:src-uri-mapping {#"target/gen-src" (fn [s] (str "src/" s "x"))}}
+:codox {:src-uri-mapping {#"target/classes" #(str "src/" % "x")}}
 ```
 
 (Note that the ending "/" is required in "src/".)
-
-Each of these keywords can be used together, of course.
 
 
 ### Metadata Options
