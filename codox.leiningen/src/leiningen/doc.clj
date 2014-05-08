@@ -18,5 +18,6 @@
                   project)]
     (eval/eval-in-project
      (deps/add-if-missing project '[codox/codox.core "0.7.3"])
-     `(codox.main/generate-docs '~(get-options project))
+     `(codox.main/generate-docs
+       (update-in '~(get-options project) [:src-uri-mapping] eval))
      `(require 'codox.main))))
