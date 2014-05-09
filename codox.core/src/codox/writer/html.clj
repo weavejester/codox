@@ -105,10 +105,13 @@
 (defn- link-to-var [namespace var]
   (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]]))
 
+(defn- sorted-public-vars [namespace]
+  (sort-by (comp str/lower-case :name) (:publics namespace)))
+
 (defn- var-links [namespace]
   (unordered-list
     (map (partial link-to-var namespace)
-         (sort-by :name (:publics namespace)))))
+         (sorted-public-vars namespace))))
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
@@ -188,7 +191,7 @@
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
-     (for [var (sort-by :name (:publics namespace))]
+     (for [var (sorted-public-vars namespace)]
        (var-docs var (var-source-link project var)))]]))
 
 (defn- copy-resource [output-dir src dest]
