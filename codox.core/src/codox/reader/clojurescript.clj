@@ -22,26 +22,37 @@
          (filter cljs-file?)
          (keep (strip-parent file)))))
 
+(defn- protocol-methods [protocol vars]
+  (let [proto-name (name (:name protocol))]
+    (filter #(if-let [p (:protocol %)] (= proto-name (name p))) vars)))
+
 (defn- var-type [opts]
   (cond
    (:macro opts)           :macro
    (:protocol-symbol opts) :protocol
    :else                   :var))
 
-(defn- read-var [file var]
+(defn- read-var [file vars var]
   (-> var
       (select-keys [:name :line :doc :added :deprecated])
       (update-in [:doc] correct-indent)
       (update-in [:arglists] second)
-      (assoc :file (.getPath file)
-             :type (var-type var))))
+      (assoc :file    (.getPath file)
+             :type    (var-type var)
+             :members (map (partial read-var file vars)
+                           (protocol-methods var vars)))))
+
+
+(defn- namespace-vars [analysis namespace]
+  (->> (get-in analysis [::an/namespaces namespace :defs])
+       (map (fn [[name opts]] (assoc opts :name name)))))
 
 (defn- read-publics [analysis namespace file]
-  (->> (get-in analysis [::an/namespaces namespace :defs])
-       (map (fn [[name opts]] (assoc opts :name name)))
-       (remove :protocol)
-       (map (partial read-var file))
-       (sort-by (comp str/lower-case :name))))
+  (let [vars (namespace-vars analysis namespace)]
+    (->> vars
+         (remove :protocol)
+         (map (partial read-var file vars))
+         (sort-by (comp str/lower-case :name)))))
 
 (defn- read-file [path file]
   (try
