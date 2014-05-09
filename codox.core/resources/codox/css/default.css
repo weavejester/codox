@@ -251,11 +251,15 @@ h4.deprecated {
     margin-bottom: 0;
 }
 
+.members {
+    margin: 15px 0;
+}
+
 .members h4 {
     color: #555;
     font-weight: normal;
     font-variant: small-caps;
-    margin: 15px 0 5px 0;
+    margin: 0 0 5px 0;
 }
 
 .members .inner {
@@ -315,10 +319,12 @@ pre.doc {
     margin: 10px 0;
 }
 
-.src-link {
-    margin-top: -20px;
-}
-
 .src-link a {
-    font-size: 9pt;
+    background: #f6f6f6;
+    border: 1px solid #e4e4e4;
+    border-radius: 2px;
+    font-size: 70%;
+    padding: 1px 4px;
+    text-decoration: none;
+    color: #5555bb;
 }

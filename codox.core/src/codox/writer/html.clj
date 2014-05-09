@@ -153,7 +153,7 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- var-docs [var]
+(defn- var-docs [var & [source-link]]
   [:div.public.anchor {:id (h (var-id var))}
    [:h3 (h (:name var))]
    (if-not (= (:type var) :var)
@@ -169,11 +169,12 @@
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
-      [:div.inner (map var-docs members)]])])
+      [:div.inner (map var-docs members)]])
+   (if source-link [:div.src-link source-link])])
 
 (defn- var-source-link [project var]
   (if (:src-dir-uri project)
-    [:div.src-link (link-to (var-source-uri project var) "Source")]))
+    (link-to (var-source-uri project var) "view source")))
 
 (defn- namespace-page [project namespace]
   (html5
@@ -188,8 +189,7 @@
      [:h2#top.anchor (h (:name namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
      (for [var (sort-by :name (:publics namespace))]
-       (list (var-docs var)
-             (var-source-link project var)))]]))
+       (var-docs var (var-source-link project var)))]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
