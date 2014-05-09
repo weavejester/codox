@@ -3,7 +3,8 @@
   (:import java.util.jar.JarFile)
   (:use [codox.utils :only (correct-indent)])
   (:require [clojure.java.io :as io]
-            [clojure.tools.namespace :as ns]))
+            [clojure.tools.namespace :as ns]
+            [clojure.string :as str]))
 
 (defn- sorted-public-vars [namespace]
   (->> (ns-publics namespace)
@@ -54,7 +55,8 @@
          (remove proxy?)
          (remove no-doc?)
          (remove protocol-method?)
-         (map (partial read-var vars)))))
+         (map (partial read-var vars))
+         (sort-by (comp str/lower-case :name)))))
 
 (defn- read-ns [namespace]
   (try
