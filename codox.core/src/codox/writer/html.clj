@@ -102,21 +102,23 @@
               [:li {:class class} (link-to (ns-filename ns) inner)])
             [:li {:class class} [:div.no-link inner]])))]]))
 
-(defn- link-to-var [namespace var]
-  (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]]))
-
 (defn- sorted-public-vars [namespace]
   (sort-by (comp str/lower-case :name) (:publics namespace)))
-
-(defn- var-links [namespace]
-  (unordered-list
-    (map (partial link-to-var namespace)
-         (sorted-public-vars namespace))))
 
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
    [:h3 (link-to "#top" [:span.inner "Public Vars"])]
-   (var-links namespace)])
+   [:ul
+    (for [var (sorted-public-vars namespace)]
+      (list*
+       [:li.depth-1
+        (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]])]
+       (for [mem (:members var)]
+         (let [branch? (not= mem (last (:members var)))
+               class   (if branch? "depth-2 branch" "depth-2")
+               inner   [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
+           [:li {:class class}
+            (link-to (var-uri namespace mem) inner)]))))]])
 
 (def ^{:private true} default-includes
   (list
@@ -150,7 +152,9 @@
         [:pre.doc (add-anchors (h (util/summary (:doc namespace))))]
         [:div.index
          [:p "Public variables and functions:"]
-         (var-links namespace)]])]]))
+         (unordered-list
+          (for [var (sorted-public-vars namespace)]
+            (link-to (var-uri namespace var) (h (:name var)))))]])]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
