@@ -22,6 +22,9 @@
          (filter cljs-file?)
          (keep (strip-parent file)))))
 
+(defn- no-doc? [var]
+  (or (:skip-wiki var) (:no-doc var)))
+
 (defn- protocol-methods [protocol vars]
   (let [proto-name (name (:name protocol))]
     (filter #(if-let [p (:protocol %)] (= proto-name (name p))) vars)))
@@ -51,6 +54,7 @@
   (let [vars (namespace-vars analysis namespace)]
     (->> vars
          (remove :protocol)
+         (remove no-doc?)
          (map (partial read-var file vars))
          (sort-by (comp str/lower-case :name)))))
 

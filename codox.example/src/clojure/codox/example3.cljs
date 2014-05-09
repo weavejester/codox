@@ -47,3 +47,5 @@
   "An example multimethod."
   {:arglists '([x])}
   :type)
+
+(defn ^:no-doc hidden [x])
