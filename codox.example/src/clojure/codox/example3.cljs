@@ -39,5 +39,10 @@
   [x])
 
 (defprotocol Foop
-  "A protocol."
-  (foop [x] "A protocol function"))
+  "An example protocol."
+  (foop [x] "A protocol function belonging to the protocol Foom."))
+
+(defmulti foom
+  "An example multimethod."
+  {:arglists '([x])}
+  :type)
