@@ -27,6 +27,12 @@
   (let [value (var-get var)]
     (and (map? value) (:on-interface value))))
 
+(defn- protocol-method? [var]
+  (:protocol (meta var)))
+
+(defn- protocol-methods [protocol vars]
+  (filter #(= protocol (:protocol (meta %))) vars))
+
 (defn- var-type [var]
   (cond
    (macro? var)       :macro
@@ -34,13 +40,21 @@
    (protocol? var)    :protocol
    :else              :var))
 
+(defn- read-var [vars var]
+  (-> (meta var)
+      (select-keys [:name :file :line :arglists :doc :added :deprecated])
+      (update-in [:doc] correct-indent)
+      (assoc :type (var-type var))
+      (assoc :members (map (partial read-var vars)
+                           (protocol-methods var vars)))))
+
 (defn- read-publics [namespace]
-  (for [var (sorted-public-vars namespace)
-        :when (not (or (proxy? var) (no-doc? var)))]
-    (-> (meta var)
-        (select-keys [:name :file :line :arglists :doc :added :deprecated])
-        (update-in [:doc] correct-indent)
-        (assoc :type (var-type var)))))
+  (let [vars (sorted-public-vars namespace)]
+    (->> vars
+         (remove proxy?)
+         (remove no-doc?)
+         (remove protocol-method?)
+         (map (partial read-var vars)))))
 
 (defn- read-ns [namespace]
   (try

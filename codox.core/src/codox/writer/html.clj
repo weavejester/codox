@@ -153,6 +153,28 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
+(defn- var-docs [var]
+  [:div.public.anchor {:id (h (var-id var))}
+   [:h3 (h (:name var))]
+   (if-not (= (:type var) :var)
+     [:h4.type (name (:type var))])
+   (if-let [added (:added var)]
+     [:h4.added "added in " added])
+   (if-let [deprecated (:deprecated var)]
+     [:h4.deprecated "deprecated" (if (string? deprecated) (str " in " deprecated))])
+   [:div.usage
+    (for [form (var-usage var)]
+      [:code (h (pr-str form))])]
+   [:pre.doc (add-anchors (h (:doc var)))]
+   (if-let [members (seq (:members var))]
+     [:div.members
+      [:h4 "members"]
+      [:div.inner (map var-docs members)]])])
+
+(defn- var-source-link [project var]
+  (if (:src-dir-uri project)
+    [:div.src-link (link-to (var-source-uri project var) "Source")]))
+
 (defn- namespace-page [project namespace]
   (html5
    [:head
@@ -166,25 +188,8 @@
      [:h2#top.anchor (h (:name namespace))]
      [:pre.doc (add-anchors (h (:doc namespace)))]
      (for [var (sort-by :name (:publics namespace))]
-       [:div.public.anchor {:id (h (var-id var))}
-        [:h3 (h (:name var))]
-        (if-not (= (:type var) :var)
-          [:h4.type (name (:type var))])
-        (if-let [added (:added var)]
-          [:h4.added "added in " added])
-        (if-let [deprecated (:deprecated var)]
-          [:h4.deprecated
-           "deprecated"
-           (if (string? deprecated)
-             (str " in " deprecated))])
-        [:div.usage
-         (for [form (var-usage var)]
-           [:code (h (pr-str form))])]
-        [:pre.doc (add-anchors (h (:doc var)))]
-        (if (:src-dir-uri project)
-          [:div.src-link
-           [:a {:href (var-source-uri project var)}
-            "Source"]])])]]))
+       (list (var-docs var)
+             (var-source-link project var)))]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))

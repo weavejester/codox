@@ -247,6 +247,34 @@ h4.deprecated {
    margin-bottom: 20%;
 }
 
+.members .public:last-child {
+    margin-bottom: 0;
+}
+
+.members h4 {
+    color: #555;
+    font-weight: normal;
+    font-variant: small-caps;
+    margin: 15px 0 5px 0;
+}
+
+.members .inner {
+    padding-top: 5px;
+    padding-left: 15px;
+    margin-top: 2px;
+    margin-left: 4px;
+    border-left: 1px solid #bbb;
+}
+
+.members .inner h3 {
+    font-size: 12pt;
+}
+
+.members .public {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 .namespace {
     margin-bottom: 30px;
 }
@@ -285,6 +313,10 @@ div.doc {
 
 pre.doc {
     margin: 10px 0;
+}
+
+.src-link {
+    margin-top: -20px;
 }
 
 .src-link a {
