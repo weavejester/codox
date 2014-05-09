@@ -2,7 +2,8 @@
   "Read raw documentation information from ClojureScript source directory."
   (:use [codox.utils :only [correct-indent]])
   (:require [clojure.java.io :as io]
-            [cljs.analyzer :as an]))
+            [cljs.analyzer :as an]
+            [clojure.string :as str]))
 
 (defn- cljs-file? [file]
   (and (.isFile file)
@@ -27,27 +28,31 @@
    (:protocol-symbol opts) :protocol
    :else                   :var))
 
+(defn- read-var [file var]
+  (-> var
+      (select-keys [:name :line :doc :added :deprecated])
+      (update-in [:doc] correct-indent)
+      (update-in [:arglists] second)
+      (assoc :file (.getPath file)
+             :type (var-type var))))
+
 (defn- read-publics [analysis namespace file]
-  (sort-by :name
-    (for [[name opts] (get-in analysis [:cljs.analyzer/namespaces namespace :defs])]
-      (-> opts
-          (select-keys [:line :doc :added :deprecated])
-          (update-in [:doc] correct-indent)
-          (assoc :file     (.getPath file)
-                 :arglists (second (:arglists opts))
-                 :name     name
-                 :type     (var-type opts))))))
+  (->> (get-in analysis [::an/namespaces namespace :defs])
+       (map (fn [[name opts]] (assoc opts :name name)))
+       (remove :protocol)
+       (map (partial read-var file))
+       (sort-by (comp str/lower-case :name))))
 
 (defn- read-file [path file]
   (try
     (let [analysis (an/analyze-file (io/file path file))]
       (apply merge
-        (for [namespace (keys (:cljs.analyzer/namespaces analysis))
-              :let [doc (get-in analysis [:cljs.analyzer/namespaces namespace :doc])]]
+        (for [namespace (keys (::an/namespaces analysis))
+              :let [doc (get-in analysis [::an/namespaces namespace :doc])]]
           {namespace
-           {:name namespace
+           {:name     namespace
             :publics (read-publics analysis namespace file)
-            :doc (correct-indent doc)}})))
+            :doc     (correct-indent doc)}})))
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
