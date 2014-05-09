@@ -1,3 +1,10 @@
+## 0.8.0 (2014-05-09)
+
+* Hierarchical visualization for protocol functions
+* Added type information for multimethods and protocols
+* Fixed `:no-doc` not working under ClojureScript
+* Improved look of source links
+
 ## 0.7.5 (2014-05-08)
 
 * Fixed bug in source links when using absolute source paths
