@@ -16,9 +16,12 @@
       (throw
          (Exception. (str "Could not resolve codox writer " writer-sym))))))
 
+(defn- macro? [var]
+  (= (:type var) :macro))
+
 (defn- read-macro-namespaces [& paths]
   (->> (apply clj/read-namespaces paths)
-       (map (fn [ns] (update-in ns [:publics] #(filter :macro %))))
+       (map (fn [ns] (update-in ns [:publics] #(filter macro? %))))
        (remove (comp empty? :publics))))
 
 (defn- merge-namespaces [namespaces]

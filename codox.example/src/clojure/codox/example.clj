@@ -41,3 +41,12 @@
   "A function with a lifespan."
   {:added "1.0" :deprecated "1.1"}
   [x])
+
+(defprotocol Foop
+  "An example protocol."
+  (foop [x] "A protocol function belonging to the protocol Foom."))
+
+(defmulti foom
+  "An example multimethod."
+  {:arglists '([x])}
+  :type)

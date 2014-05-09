@@ -21,15 +21,22 @@
          (filter cljs-file?)
          (keep (strip-parent file)))))
 
+(defn- var-type [opts]
+  (cond
+   (:macro opts)           :macro
+   (:protocol-symbol opts) :protocol
+   :else                   :var))
+
 (defn- read-publics [analysis namespace file]
   (sort-by :name
     (for [[name opts] (get-in analysis [:cljs.analyzer/namespaces namespace :defs])]
       (-> opts
-          (select-keys [:line :doc :macro :added :deprecated])
+          (select-keys [:line :doc :added :deprecated])
           (update-in [:doc] correct-indent)
-          (assoc :file (.getPath file)
+          (assoc :file     (.getPath file)
                  :arglists (second (:arglists opts))
-                 :name name)))))
+                 :name     name
+                 :type     (var-type opts))))))
 
 (defn- read-file [path file]
   (try

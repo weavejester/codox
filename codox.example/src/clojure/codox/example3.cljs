@@ -37,3 +37,7 @@
   "A function with a lifespan."
   {:added "1.0" :deprecated "1.1"}
   [x])
+
+(defprotocol Foop
+  "A protocol."
+  (foop [x] "A protocol function"))

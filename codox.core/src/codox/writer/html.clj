@@ -168,7 +168,8 @@
      (for [var (sort-by :name (:publics namespace))]
        [:div.public.anchor {:id (h (var-id var))}
         [:h3 (h (:name var))]
-        (if (:macro var) [:h4.macro "macro"])
+        (if-not (= (:type var) :var)
+          [:h4.type (name (:type var))])
         (if-let [added (:added var)]
           [:h4.added "added in " added])
         (if-let [deprecated (:deprecated var)]

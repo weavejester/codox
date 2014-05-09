@@ -216,7 +216,7 @@ h2 {
     clear: both;
 }
 
-h4.macro, h4.added, h4.deprecated {
+h4.type, h4.added, h4.deprecated {
     margin: 0;
     float: left;
     font-variant: small-caps;
@@ -226,7 +226,7 @@ h4.macro, h4.added, h4.deprecated {
     margin-left: 10px;
 }
 
-h4.macro {
+h4.type {
     color: #717171;
 }
 

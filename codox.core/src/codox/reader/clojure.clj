@@ -17,12 +17,30 @@
 (defn- proxy? [var]
   (re-find #"proxy\$" (-> var meta :name str)))
 
+(defn- macro? [var]
+  (:macro (meta var)))
+
+(defn- multimethod? [var]
+  (instance? clojure.lang.MultiFn (var-get var)))
+
+(defn- protocol? [var]
+  (let [value (var-get var)]
+    (and (map? value) (:on-interface value))))
+
+(defn- var-type [var]
+  (cond
+   (macro? var)       :macro
+   (multimethod? var) :multimethod
+   (protocol? var)    :protocol
+   :else              :var))
+
 (defn- read-publics [namespace]
   (for [var (sorted-public-vars namespace)
         :when (not (or (proxy? var) (no-doc? var)))]
     (-> (meta var)
-        (select-keys [:name :file :line :arglists :doc :macro :added :deprecated])
-        (update-in [:doc] correct-indent))))
+        (select-keys [:name :file :line :arglists :doc :added :deprecated])
+        (update-in [:doc] correct-indent)
+        (assoc :type (var-type var)))))
 
 (defn- read-ns [namespace]
   (try
