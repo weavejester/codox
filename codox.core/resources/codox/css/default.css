@@ -202,7 +202,6 @@ h2 {
 }
 
 #content h3 {
-   margin-bottom: 0.5em;
    font-size: 13pt;
    font-weight: bold;
 }
@@ -306,8 +305,12 @@ h4.deprecated {
 }
 
 .usage code {
-   display: block;
-   color: #008;
+    display: block;
+    color: #008;
+}
+
+.usage code:first-child {
+    padding-top: 0.5em;
 }
 
 div.doc {
