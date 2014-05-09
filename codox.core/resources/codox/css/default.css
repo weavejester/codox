@@ -270,7 +270,7 @@ h4.deprecated {
     border-left: 1px solid #bbb;
 }
 
-.members .inner h3 {
+#content .members .inner h3 {
     font-size: 12pt;
 }
 
