@@ -88,6 +88,8 @@
   \"src\"), and return a list of maps suitable for documentation
   purposes.
 
+  Any namespace with {:no-doc true} in its metadata will be skipped.
+
   The keys in the maps are:
     :name   - the name of the namespace
     :doc    - the doc-string on the namespace
@@ -105,6 +107,7 @@
   ([path]
      (->> (io/file path)
           (find-namespaces)
-          (mapcat read-ns)))
+          (mapcat read-ns)
+          (remove :no-doc)))
   ([path & paths]
      (mapcat read-namespaces (cons path paths))))
