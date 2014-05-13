@@ -129,8 +129,8 @@ add a mapping like:
 
 ### Metadata Options
 
-To force Codox to skip a public var, add `:no-doc true` to the var's
-metadata. For example:
+To force Codox to skip a public var, add `:no-doc true`
+to the var's metadata. For example:
 
 ```clojure
 ;; Documented
@@ -144,6 +144,14 @@ metadata. For example:
   "Squares the supplied number."
   [x]
   (* x x))
+```
+
+You can also skip namespaces by adding `:no-doc true` to the
+namespace's metadata. *This currently only works for Clojure code, not
+ClojureScript.* For example:
+
+```clojure
+(ns ^:no-doc hidden-ns)
 ```
 
 To denote the library version the var was added in, use the `:added`
