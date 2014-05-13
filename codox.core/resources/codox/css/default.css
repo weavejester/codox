@@ -215,28 +215,6 @@ h2 {
     clear: both;
 }
 
-h4.type, h4.added, h4.deprecated {
-    margin: 0;
-    float: left;
-    font-variant: small-caps;
-    font-size: 13px;
-    font-weight: bold;
-    margin-top: 3px;
-    margin-left: 10px;
-}
-
-h4.type {
-    color: #717171;
-}
-
-h4.added {
-    color: #508820;
-}
-
-h4.deprecated {
-    color: #880000;
-}
-
 .public {
    margin-top: 1.8em;
    margin-bottom: 2.4em;
@@ -276,6 +254,36 @@ h4.deprecated {
 .members .public {
     margin-top: 0;
     margin-bottom: 1em;
+}
+
+.public h4.type,
+.public h4.added,
+.public h4.deprecated {
+    margin: 0;
+    float: left;
+    font-variant: small-caps;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 3px;
+    margin-left: 10px;
+}
+
+.members h4.type,
+.members h4.added,
+.members h4.deprecated {
+    margin-top: 1px;
+}
+
+h4.type {
+    color: #717171;
+}
+
+h4.added {
+    color: #508820;
+}
+
+h4.deprecated {
+    color: #880000;
 }
 
 .namespace {

@@ -41,7 +41,7 @@
 (defprotocol Foop
   "An example protocol."
   (foop [x] "A protocol function belonging to the protocol Foom.")
-  (barp [x y] "Another protocol function."))
+  (^:deprecated barp [x y] "Another protocol function."))
 
 (defmulti foom
   "An example multimethod."
