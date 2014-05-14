@@ -321,13 +321,16 @@ h4.deprecated {
     padding-top: 0.5em;
 }
 
-div.doc {
-    margin-top: 10px;
+.doc {
+    margin: 10px 0;
+}
+
+.namespace-index .doc {
     margin-bottom: 20px;
 }
 
-pre.doc {
-    margin: 10px 0;
+.namespace-index .namespace .doc {
+    margin-bottom: 10px;
 }
 
 .src-link a {

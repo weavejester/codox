@@ -53,3 +53,8 @@
   :type)
 
 (defn ^:no-doc hidden [x])
+
+(defn markfoo
+  "A docstring that selectively uses **markdown**."
+  {:doc/format :markdown}
+  [x])

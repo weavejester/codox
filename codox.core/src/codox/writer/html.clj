@@ -1,9 +1,11 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
-  (:import java.net.URLEncoder)
+  (:import [java.net URLEncoder]
+           [org.pegdown PegDownProcessor])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
+            [me.raynes.cegdown :as md]
             [codox.utils :as util]))
 
 (def ^:private url-regex
@@ -12,6 +14,18 @@
 (defn- add-anchors [text]
   (if text
     (str/replace text url-regex "<a href=\"$1\">$1</a>")))
+
+(defmulti format-doc
+  "Format the docstring of a var or namespace into HTML."
+  (fn [project metadata] (or (:doc/format metadata) (:format project)))
+  :default :plaintext)
+
+(defmethod format-doc :plaintext [_ metadata]
+  [:pre (add-anchors (h (:doc metadata)))])
+
+(defmethod format-doc :markdown [_ metadata]
+  (if-let [doc (:doc metadata)]
+    (.markdownToHtml (PegDownProcessor.) doc)))
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -149,7 +163,7 @@
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
-        [:pre.doc (add-anchors (h (util/summary (:doc namespace))))]
+        [:div.doc (format-doc project (update-in namespace [:doc] util/summary))]
         [:div.index
          [:p "Public variables and functions:"]
          (unordered-list
@@ -160,7 +174,7 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- var-docs [var & [source-link]]
+(defn- var-docs [project var]
   [:div.public.anchor {:id (h (var-id var))}
    [:h3 (h (:name var))]
    (if-not (= (:type var) :var)
@@ -172,16 +186,15 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
-   [:pre.doc (add-anchors (h (:doc var)))]
+   [:div.doc (format-doc project var)]
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
-      [:div.inner (map var-docs members)]])
-   (if source-link [:div.src-link source-link])])
-
-(defn- var-source-link [project var]
-  (if (:src-dir-uri project)
-    (link-to (var-source-uri project var) "view source")))
+      [:div.inner
+       (let [project (dissoc project :src-dir-uri)]
+         (map (partial var-docs project) members))]])
+   (if (:src-dir-uri project)
+     [:div.src-link (link-to (var-source-uri project var) "view source")])])
 
 (defn- namespace-page [project namespace]
   (html5
@@ -194,9 +207,9 @@
     (vars-menu namespace)
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
-     [:pre.doc (add-anchors (h (:doc namespace)))]
+     [:div.doc (format-doc project namespace)]
      (for [var (sorted-public-vars namespace)]
-       (var-docs var (var-source-link project var)))]]))
+       (var-docs project var))]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
