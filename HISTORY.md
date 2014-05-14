@@ -1,3 +1,8 @@
+## 0.8.1 (2014-05-14)
+
+* CSS fix for added/deprecated protocol methods
+* Added `:no-doc` support for namespaces in Clojure
+
 ## 0.8.0 (2014-05-09)
 
 * Hierarchical visualization for protocol functions
