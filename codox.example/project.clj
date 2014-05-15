@@ -11,6 +11,6 @@
    :src-linenum-anchor-prefix "L"
    :src-uri-mapping {#"src/clojure" #(str "codox.example/src/clojure/" %)}}
   :profiles
-  {:md   {:codox {:format :markdown}}
+  {:md   {:codox {:defaults {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.5.1"]]
           :codox {:language :clojurescript}}})

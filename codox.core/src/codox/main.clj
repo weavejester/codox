@@ -41,17 +41,28 @@
 
 (def init-dir (System/getProperty "user.dir"))
 
+(defn add-var-defaults [vars defaults]
+  (for [var vars]
+    (-> (merge defaults var)
+        (update-in [:members] add-var-defaults defaults))))
+
+(defn add-ns-defaults [namespaces defaults]
+  (for [namespace namespaces]
+    (-> (merge defaults namespace)
+        (update-in [:publics] add-var-defaults defaults))))
+
 (defn generate-docs
   "Generate documentation from source files."
   ([]
      (generate-docs {}))
-  ([{:keys [language root sources include exclude]
-     :or   {language :clojure, sources ["src"], root init-dir}
+  ([{:keys [language root sources include exclude defaults]
+     :or   {language :clojure, sources ["src"], root init-dir, defaults {}}
      :as   options}]
      (let [write-fn   (writer options)
            namespaces (-> (namespace-readers language)
                           (apply sources)
                           (ns-filter include exclude)
-                          (add-source-paths root sources))]
+                          (add-source-paths root sources)
+                          (add-ns-defaults defaults))]
        (write-fn
         (assoc options :namespaces namespaces)))))

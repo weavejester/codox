@@ -16,10 +16,10 @@
 
 (defmulti format-doc
   "Format the docstring of a var or namespace into HTML."
-  (fn [project metadata] (or (:doc/format metadata) (:format project)))
+  :doc/format
   :default :plaintext)
 
-(defmethod format-doc :plaintext [_ metadata]
+(defmethod format-doc :plaintext [metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
 (def ^:private pegdown
@@ -32,7 +32,7 @@
            Extensions/FENCED_CODE_BLOCKS)
    2000))
 
-(defmethod format-doc :markdown [_ metadata]
+(defmethod format-doc :markdown [metadata]
   [:div.markdown
    (if-let [doc (:doc metadata)]
      (.markdownToHtml pegdown doc))])
@@ -173,7 +173,7 @@
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
-        [:div.doc (format-doc project (update-in namespace [:doc] util/summary))]
+        [:div.doc (format-doc (update-in namespace [:doc] util/summary))]
         [:div.index
          [:p "Public variables and functions:"]
          (unordered-list
@@ -196,7 +196,7 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
-   [:div.doc (format-doc project var)]
+   [:div.doc (format-doc var)]
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
@@ -217,7 +217,7 @@
     (vars-menu namespace)
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
-     [:div.doc (format-doc project namespace)]
+     [:div.doc (format-doc namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project var))]]))
 
