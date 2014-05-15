@@ -10,8 +10,8 @@ pre, code {
 
 h2 {
    font-weight: normal;
-   font-size: 18pt;
-   padding: 8px 0 2px 0;
+   font-size: 28px;
+   padding: 10px 0 2px 0;
    margin: 0;
 }
 
@@ -336,6 +336,11 @@ h4.deprecated {
 .markdown {
     line-height: 18px;
     font-size: 14px;
+    padding-bottom: 1em;
+}
+
+.public .markdown {
+    padding-bottom: 0;
 }
 
 .markdown pre, .markdown code {
