@@ -2,10 +2,9 @@
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
-           [org.pegdown PegDownProcessor])
+           [org.pegdown PegDownProcessor Extensions])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [me.raynes.cegdown :as md]
             [codox.utils :as util]))
 
 (def ^:private url-regex
@@ -23,9 +22,19 @@
 (defmethod format-doc :plaintext [_ metadata]
   [:pre (add-anchors (h (:doc metadata)))])
 
+(def ^:private pegdown
+  (PegDownProcessor.
+   (bit-or Extensions/AUTOLINKS
+           Extensions/QUOTES
+           Extensions/SMARTS
+           Extensions/STRIKETHROUGH
+           Extensions/TABLES
+           Extensions/FENCED_CODE_BLOCKS)
+   2000))
+
 (defmethod format-doc :markdown [_ metadata]
   (if-let [doc (:doc metadata)]
-    (.markdownToHtml (PegDownProcessor.) doc)))
+    (.markdownToHtml pegdown doc)))
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
