@@ -177,6 +177,35 @@ metadata key:
 ```
 
 
+## Docstring Formats
+
+By default, docstrings are rendered by Codox as fixed-width plain
+text, as they would be on a terminal. However, you can override this
+behavior by specifying an explicit format for your docstrings.
+
+Currently there are only two formats for docstrings: plaintext and
+markdown. The markdown format includes extensions for code blocks,
+tables, and, like the plaintext format, URLs are automatically encoded
+as links.
+
+You can specify docstring formats via a var's metadata, using the
+`:doc/format` option:
+
+```clojure
+(defn foo
+  "A **markdown** formatted docstring."
+  {:doc/format :markdown}
+  [x])
+```
+
+Or you can specify the docstring format globally by adding it to the
+defaults map in your project.clj file:
+
+```clojure
+:codox {:defaults {:doc/format :markdown}}
+```
+
+
 ## License
 
 Copyright © 2014 James Reeves
