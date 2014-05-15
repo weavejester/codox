@@ -347,13 +347,16 @@ h4.deprecated {
     padding-bottom: 0;
 }
 
-.markdown pre, .markdown code {
+.markdown code, .src-link a {
     background: #f6f6f6;
     border: 1px solid #e4e4e4;
     border-radius: 2px;
 }
 
 .markdown pre {
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
     padding: 5px 10px;
     margin: 0 10px;
 }
@@ -373,18 +376,15 @@ h4.deprecated {
 }
 
 .doc table td, .doc table th {
-    border: 1px solid #e4e4e4;
+    border: 1px solid #dddddd;
     padding: 4px 6px;
 }
 
 .doc table th {
-    background: #f6f6f6;
+    background: #f2f2f2;
 }
 
 .src-link a {
-    background: #f6f6f6;
-    border: 1px solid #e4e4e4;
-    border-radius: 2px;
     font-size: 70%;
     padding: 1px 4px;
     text-decoration: none;
