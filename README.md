@@ -127,7 +127,7 @@ add a mapping like:
 (Note that the ending "/" is required in "src/".)
 
 
-### Metadata Options
+## Metadata Options
 
 To force Codox to skip a public var, add `:no-doc true`
 to the var's metadata. For example:
