@@ -26,3 +26,9 @@
    1  |  2 
    3  |  4 "
   {:doc/format :markdown})
+
+
+(defn some-function
+  "Some function defined in the namespace."
+  {:doc/format :markdown}
+  [x])

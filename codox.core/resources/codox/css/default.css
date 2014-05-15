@@ -11,7 +11,7 @@ pre, code {
 h2 {
    font-weight: normal;
    font-size: 18pt;
-   padding: 7px 0 0 0;
+   padding: 8px 0 2px 0;
    margin: 0;
 }
 
@@ -331,6 +331,45 @@ h4.deprecated {
 
 .namespace-index .namespace .doc {
     margin-bottom: 10px;
+}
+
+.markdown {
+    line-height: 18px;
+    font-size: 14px;
+}
+
+.markdown pre, .markdown code {
+    background: #f6f6f6;
+    border: 1px solid #e4e4e4;
+    border-radius: 2px;
+}
+
+.markdown pre {
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+
+.markdown pre code {
+    background: transparent;
+    border: none;
+}
+
+.doc ul, .doc ol {
+    padding-left: 30px;
+}
+
+.doc table {
+    border-collapse: collapse;
+    margin: 0 10px;
+}
+
+.doc table td, .doc table th {
+    border: 1px solid #e4e4e4;
+    padding: 4px 6px;
+}
+
+.doc table th {
+    background: #f6f6f6;
 }
 
 .src-link a {

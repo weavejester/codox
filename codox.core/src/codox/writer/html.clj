@@ -20,7 +20,7 @@
   :default :plaintext)
 
 (defmethod format-doc :plaintext [_ metadata]
-  [:pre (add-anchors (h (:doc metadata)))])
+  [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
 (def ^:private pegdown
   (PegDownProcessor.
@@ -33,8 +33,9 @@
    2000))
 
 (defmethod format-doc :markdown [_ metadata]
-  (if-let [doc (:doc metadata)]
-    (.markdownToHtml pegdown doc)))
+  [:div.markdown
+   (if-let [doc (:doc metadata)]
+     (.markdownToHtml pegdown doc))])
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
