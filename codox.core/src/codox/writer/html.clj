@@ -164,7 +164,7 @@
    (include-js "js/page_effects.js")))
 
 (defn- project-title [project]
-  (str (str/capitalize (:name project)) " " (:version project)))
+  (str (:name project) " " (:version project)))
 
 (defn- header [project]
   [:div#header

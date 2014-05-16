@@ -7,7 +7,8 @@
   :plugins [[codox "0.8.3"]]
   :source-paths ["src/clojure"]
   :codox
-  {:src-dir-uri "http://github.com/weavejester/codox/blob/master/"
+  {:project {:name "Example Project", :version "1.0.0"}
+   :src-dir-uri "http://github.com/weavejester/codox/blob/master/"
    :src-linenum-anchor-prefix "L"
    :src-uri-mapping {#"src/clojure" #(str "codox.example/src/clojure/" %)}}
   :profiles

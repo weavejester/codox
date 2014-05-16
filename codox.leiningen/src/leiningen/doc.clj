@@ -2,14 +2,15 @@
   (:refer-clojure :exclude [doc])
   (:require [leinjacker.deps :as deps]
             [leinjacker.eval :as eval]
-            [leiningen.core.project :as project]))
+            [leiningen.core.project :as project]
+            [clojure.string :as str]))
 
 (defn- get-options [project]
-  (-> project
-      (select-keys [:name :version :description])
-      (merge {:sources (:source-paths project ["src"])
-              :root    (:root project)}
-             (:codox project))))
+  (merge {:sources (:source-paths project ["src"])}
+         (-> project :codox)
+         {:name (str/capitalize (:name project))}
+         (select-keys project [:root :version :description])
+         (-> project :codox :project)))
 
 (defn doc
   "Generate API documentation from source code."
