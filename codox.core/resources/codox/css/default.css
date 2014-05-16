@@ -36,7 +36,7 @@ h2 {
    overflow: auto;
    background: #fff;
    color: #333;
-   padding: 0 1em;
+   padding: 0 18px;
 }
 
 .sidebar {
@@ -47,15 +47,15 @@ h2 {
 }
 
 #namespaces {
-   background: #e6e6e6;
-   border-right: solid 1px #bbb;
+   background: #e2e2e2;
+   border-right: solid 1px #cccccc;
    left: 0;
    width: 250px;
 }
 
 #vars {
-   background: #eeeeee;
-   border-right: solid 1px #ccc;
+   background: #f2f2f2;
+   border-right: solid 1px #cccccc;
    left: 251px;
    width: 200px;
 }
@@ -74,7 +74,7 @@ h2 {
    background: -o-linear-gradient(top, #555 0%, #222 100%);
    background: -ms-linear-gradient(top, #555 0%, #222 100%);
    background: linear-gradient(top, #555 0%, #222 100%);
-   box-shadow: 0 0 10px #555;
+   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
    z-index: 100;
 }
 
@@ -114,9 +114,9 @@ h2 {
 
 .sidebar h3 {
    margin: 0;
-   padding: 10px 0.5em 0 0.5em;
-   font-size: 14pt;
-   font-weight: normal
+   padding: 10px 10px 0 10px;
+   font-size: 19px;
+   font-weight: normal;
 }
 
 .sidebar ul {
