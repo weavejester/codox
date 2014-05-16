@@ -217,8 +217,9 @@ h2 {
 }
 
 .public {
-   margin-top: 1.8em;
-   margin-bottom: 2.4em;
+   padding-top: 12px;
+   margin-top: 15px;
+   margin-bottom: 28px;
 }
 
 .public:last-child {
