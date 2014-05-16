@@ -24,7 +24,10 @@
   foo | bar
   ----|----
    1  |  2 
-   3  |  4 "
+   3  |  4
+
+  We can also use wikilinks to reference existing vars, like [[example/foo]] or
+  the [[Foop]] protocol."
   {:doc/format :markdown})
 
 

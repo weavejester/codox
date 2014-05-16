@@ -58,3 +58,8 @@
   "A docstring that selectively uses **markdown**."
   {:doc/format :markdown}
   [x])
+
+(defn markbar
+  "See [[foo]], and also [[example2/bar]]."
+  {:doc/format :markdown}
+  [x])

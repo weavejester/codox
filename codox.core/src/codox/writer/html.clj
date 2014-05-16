@@ -2,10 +2,14 @@
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
-           [org.pegdown PegDownProcessor Extensions])
+           [org.pegdown PegDownProcessor Extensions LinkRenderer LinkRenderer$Rendering]
+           [org.pegdown.ast WikiLinkNode])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [codox.utils :as util]))
+
+(defn- var-id [var]
+  (str "var-" (-> var name URLEncoder/encode (str/replace "%" "."))))
 
 (def ^:private url-regex
   #"((https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])")
@@ -16,10 +20,10 @@
 
 (defmulti format-doc
   "Format the docstring of a var or namespace into HTML."
-  :doc/format
+  (fn [project ns var] (:doc/format var))
   :default :plaintext)
 
-(defmethod format-doc :plaintext [metadata]
+(defmethod format-doc :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
 (def ^:private pegdown
@@ -29,13 +33,24 @@
            Extensions/SMARTS
            Extensions/STRIKETHROUGH
            Extensions/TABLES
-           Extensions/FENCED_CODE_BLOCKS)
+           Extensions/FENCED_CODE_BLOCKS
+           Extensions/WIKILINKS)
    2000))
 
-(defmethod format-doc :markdown [metadata]
+(defn- find-wikilink [project ns text]
+  (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
+    (str (namespace var) ".html#" (var-id var))))
+
+(defn- link-renderer [project ns]
+  (proxy [LinkRenderer] []
+    (render [^WikiLinkNode node]
+      (let [text (.getText node)]
+        (LinkRenderer$Rendering. (find-wikilink project ns text) text)))))
+
+(defmethod format-doc :markdown [project ns metadata]
   [:div.markdown
    (if-let [doc (:doc metadata)]
-     (.markdownToHtml pegdown doc))])
+     (.markdownToHtml pegdown doc (link-renderer project ns)))])
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -43,11 +58,8 @@
 (defn- ns-filepath [output-dir namespace]
   (str output-dir "/" (ns-filename namespace)))
 
-(defn- var-id [var]
-  (str "var-" (-> var :name str URLEncoder/encode (str/replace "%" "."))))
-
 (defn- var-uri [namespace var]
-  (str (ns-filename namespace) "#" (var-id var)))
+  (str (ns-filename namespace) "#" (var-id (:name var))))
 
 (defn- get-mapping-fn [mappings path]
   (some (fn [[re f]] (if (re-find re path) f)) mappings))
@@ -173,7 +185,7 @@
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
-        [:div.doc (format-doc (update-in namespace [:doc] util/summary))]
+        [:div.doc (format-doc project nil (update-in namespace [:doc] util/summary))]
         [:div.index
          [:p "Public variables and functions:"]
          (unordered-list
@@ -184,8 +196,8 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
-(defn- var-docs [project var]
-  [:div.public.anchor {:id (h (var-id var))}
+(defn- var-docs [project namespace var]
+  [:div.public.anchor {:id (h (var-id (:name var)))}
    [:h3 (h (:name var))]
    (if-not (= (:type var) :var)
      [:h4.type (name (:type var))])
@@ -196,13 +208,13 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
-   [:div.doc (format-doc var)]
+   [:div.doc (format-doc project namespace var)]
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
       [:div.inner
        (let [project (dissoc project :src-dir-uri)]
-         (map (partial var-docs project) members))]])
+         (map (partial var-docs project namespace) members))]])
    (if (:src-dir-uri project)
      (if (:path var)
        [:div.src-link (link-to (var-source-uri project var) "view source")]
@@ -219,9 +231,9 @@
     (vars-menu namespace)
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
-     [:div.doc (format-doc namespace)]
+     [:div.doc (format-doc project nil namespace)]
      (for [var (sorted-public-vars namespace)]
-       (var-docs project var))]]))
+       (var-docs project namespace var))]]))
 
 (defn- copy-resource [output-dir src dest]
   (io/copy (io/input-stream (io/resource src))
