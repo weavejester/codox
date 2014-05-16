@@ -350,6 +350,8 @@ p:first-child {
 .markdown {
     line-height: 18px;
     font-size: 14px;
+    max-width: 680px;
+    overflow-x: visible;
 }
 
 .namespace-docs .markdown {
