@@ -19,7 +19,7 @@
    `codox.reader/read-namespaces`), and a sequence of source directory paths,
    returns a File object indicating the file from the repo root."
   [file sources]
-  (if file
+  (if (and file (not (.isAbsolute (io/file file))))
     (->> (map #(io/file % file) sources)
          (filter #(.exists %))
          first)))

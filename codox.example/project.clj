@@ -13,4 +13,5 @@
   :profiles
   {:md   {:codox {:defaults {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.5.1"]]
-          :codox {:language :clojurescript}}})
+          :codox {:language :clojurescript}}
+   :no-src {:codox ^:replace {}}})

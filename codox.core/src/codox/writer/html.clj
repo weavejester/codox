@@ -204,7 +204,9 @@
        (let [project (dissoc project :src-dir-uri)]
          (map (partial var-docs project) members))]])
    (if (:src-dir-uri project)
-     [:div.src-link (link-to (var-source-uri project var) "view source")])])
+     (if (:path var)
+       [:div.src-link (link-to (var-source-uri project var) "view source")]
+       (println "Could not generate source link for" (:name var))))])
 
 (defn- namespace-page [project namespace]
   (html5
