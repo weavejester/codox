@@ -205,6 +205,18 @@ defaults map in your project.clj file:
 :codox {:defaults {:doc/format :markdown}}
 ```
 
+Markdown docstrings also support wikilink-style relative links, for
+referencing other vars. Vars in the current namespace will be matched
+first, and then Codox will try and find a best match out of all the
+vars its documenting.
+
+```clojure
+(defn bar
+  "See [[foo]] and [[user/square]] for other examples."
+  {:doc/format :markdown}
+  [x])
+```
+
 
 ## License
 
