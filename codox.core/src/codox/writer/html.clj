@@ -201,6 +201,8 @@
    [:h3 (h (:name var))]
    (if-not (= (:type var) :var)
      [:h4.type (name (:type var))])
+   (if (:dynamic var)
+     [:h4.dynamic "dynamic"])
    (if-let [added (:added var)]
      [:h4.added "added in " added])
    (if-let [deprecated (:deprecated var)]

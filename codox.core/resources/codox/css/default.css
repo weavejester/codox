@@ -257,6 +257,7 @@ h2 {
 }
 
 .public h4.type,
+.public h4.dynamic,
 .public h4.added,
 .public h4.deprecated {
     margin: 0;
@@ -276,6 +277,10 @@ h2 {
 
 h4.type {
     color: #717171;
+}
+
+h4.dynamic {
+    color: #9933aa;
 }
 
 h4.added {

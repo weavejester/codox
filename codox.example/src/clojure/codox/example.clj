@@ -63,3 +63,7 @@
   "See [[foo]], and also [[example2/bar]]."
   {:doc/format :markdown}
   [x])
+
+(def ^:dynamic *conn*
+  "A dynamic var."
+  nil)

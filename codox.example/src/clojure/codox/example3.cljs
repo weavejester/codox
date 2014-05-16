@@ -54,3 +54,7 @@
   "A docstring that selectively uses **markdown**."
   {:doc/format :markdown}
   [x])
+
+(def ^:dynamic *conn*
+  "A dynamic var."
+  nil)

@@ -43,7 +43,8 @@
 
 (defn- read-var [vars var]
   (-> (meta var)
-      (select-keys [:name :file :line :arglists :doc :added :deprecated :doc/format])
+      (select-keys [:name :file :line :arglists :doc :dynamic
+                    :added :deprecated :doc/format])
       (update-in [:doc] correct-indent)
       (assoc :type (var-type var))
       (assoc :members (map (partial read-var vars)

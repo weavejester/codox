@@ -37,7 +37,7 @@
 
 (defn- read-var [file vars var]
   (-> var
-      (select-keys [:name :line :doc :added :deprecated :doc/format])
+      (select-keys [:name :line :doc :dynamic :added :deprecated :doc/format])
       (update-in [:doc] correct-indent)
       (update-in [:arglists] second)
       (assoc :file    (.getPath file)
