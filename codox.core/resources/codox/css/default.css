@@ -6,6 +6,7 @@ body {
 pre, code {
    font-family: Monaco, DejaVu Sans Mono, Consolas, monospace;
    font-size: 9pt;
+   margin: 15px 0;
 }
 
 h2 {
@@ -323,11 +324,19 @@ h4.deprecated {
 }
 
 .usage code:first-child {
-    padding-top: 0.5em;
+    padding-top: 10px;
+}
+
+p {
+    margin: 15px 0;
+}
+
+p:first-child {
+    margin-top: 10px;
 }
 
 .doc {
-    margin: 10px 0;
+    margin: 0;
 }
 
 .namespace-index .doc {
@@ -341,15 +350,14 @@ h4.deprecated {
 .markdown {
     line-height: 18px;
     font-size: 14px;
-    padding-bottom: 1em;
+}
+
+.namespace-docs .markdown {
+    padding-bottom: 15px;
 }
 
 .markdown p:last-child {
     margin-bottom: 0;
-}
-
-.public .markdown {
-    padding-bottom: 0;
 }
 
 .markdown code, .src-link a {

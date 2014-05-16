@@ -181,7 +181,7 @@
     (namespaces-menu project)
     [:div#content.namespace-index
      [:h2 (h (project-title project))]
-     [:div.doc (h (:description project))]
+     [:div.doc [:p (h (:description project))]]
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
