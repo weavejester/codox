@@ -1,3 +1,9 @@
+## 0.8.3 (2014-05-16)
+
+* Added wikilink-style links to vars in Markdown docstrings
+* Show `:dynamic` metadata in docs
+* Vars with invalid file metadata don't cause crashes anymore
+
 ## 0.8.2 (2014-05-15)
 
 * Markdown support for var and namespace docstrings
