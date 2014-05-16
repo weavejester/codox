@@ -1,3 +1,7 @@
+## 0.8.2 (2014-05-15)
+
+* Markdown support for var and namespace docstrings
+
 ## 0.8.1 (2014-05-14)
 
 * CSS fix for added/deprecated protocol methods
