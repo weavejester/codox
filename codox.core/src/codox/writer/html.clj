@@ -190,7 +190,7 @@
          [:p "Public variables and functions:"]
          (unordered-list
           (for [var (sorted-public-vars namespace)]
-            (link-to (var-uri namespace var) (h (:name var)))))]])]]))
+            (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]

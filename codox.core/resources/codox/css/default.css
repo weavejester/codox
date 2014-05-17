@@ -302,21 +302,26 @@ h4.deprecated {
 }
 
 .index {
-   padding: 0;
-   font-size: 80%;
-   margin: 15px 0;
+    padding: 0;
+    font-size: 80%;
+    margin: 15px 0;
+    line-height: 16px;
 }
 
 .index * {
-   display: inline;
+    display: inline;
+}
+
+.index p {
+    padding-right: 3px;
 }
 
 .index li {
-   padding: 0 .5em;
+    padding-right: 5px;
 }
 
 .index ul {
-   padding-left: 0;
+    padding-left: 0;
 }
 
 .usage code {
@@ -332,7 +337,7 @@ p {
     margin: 15px 0;
 }
 
-p:first-child {
+.public p:first-child {
     margin-top: 10px;
 }
 
@@ -351,6 +356,9 @@ p:first-child {
 .markdown {
     line-height: 18px;
     font-size: 14px;
+}
+
+.markdown, .namespace .index {
     max-width: 680px;
     overflow-x: visible;
 }
