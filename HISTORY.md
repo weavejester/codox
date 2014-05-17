@@ -1,3 +1,9 @@
+## 0.8.4 (2014-05-17)
+
+* Added `:project` map to override project name, version and description
+* `:defaults` map now accepts default `:doc` option
+* Various minor CSS fixes and improvements
+
 ## 0.8.3 (2014-05-16)
 
 * Added wikilink-style links to vars in Markdown docstrings
