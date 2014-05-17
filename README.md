@@ -47,6 +47,8 @@ ClojureScript by setting the `:language` key:
 :codox {:language :clojurescript}
 ```
 
+### Inputs
+
 By default Codox looks for source files in the `src` subdirectory, but
 you can change this by placing the following in your `project.clj`
 file:
@@ -75,6 +77,8 @@ To include only one or more namespaces, set them with the `:include` key:
 :codox {:include [library.core library.io]}
 ```
 
+### Outputs
+
 To write output to a directory other than the default `doc` directory, use the
 `:output-dir` key:
 
@@ -88,6 +92,16 @@ writer function in the `:writer` key:
 ```clojure
 :codox {:writer codox.writer.html/write-docs}
 ```
+
+By default the writer will include the project name, version and
+description in the output. You can override these by specifying a
+`:project` map in your Codox configuration:
+
+```clojure
+:codoc {:project {:name "Example", :version "1.0", :description "N/A"}}
+```
+
+### Source Links
 
 If you have the source available at a URI and would like to have links
 to the function's source file in the documentation, you can set the
