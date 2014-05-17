@@ -1,6 +1,6 @@
 (ns codox.reader.clojurescript
   "Read raw documentation information from ClojureScript source directory."
-  (:use [codox.utils :only [correct-indent]])
+  (:use [codox.utils :only [assoc-some update-some correct-indent]])
   (:require [clojure.java.io :as io]
             [cljs.analyzer :as an]
             [clojure.string :as str]))
@@ -38,12 +38,12 @@
 (defn- read-var [file vars var]
   (-> var
       (select-keys [:name :line :doc :dynamic :added :deprecated :doc/format])
-      (update-in [:doc] correct-indent)
-      (update-in [:arglists] second)
-      (assoc :file    (.getPath file)
-             :type    (var-type var)
-             :members (map (partial read-var file vars)
-                           (protocol-methods var vars)))))
+      (update-some :doc correct-indent)
+      (update-some :arglists second)
+      (assoc-some  :file    (.getPath file)
+                   :type    (var-type var)
+                   :members (map (partial read-var file vars)
+                                 (protocol-methods var vars)))))
 
 
 (defn- namespace-vars [analysis namespace]

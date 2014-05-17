@@ -77,6 +77,13 @@ To include only one or more namespaces, set them with the `:include` key:
 :codox {:include [library.core library.io]}
 ```
 
+Codox constructs documentation from metadata on vars and namespaces.
+You can specify a set of default metadata using the defaults map:
+
+```clojure
+:codox {:defaults {:doc "FIXME: write docs"}}
+```
+
 ### Outputs
 
 To write output to a directory other than the default `doc` directory, use the

@@ -3,6 +3,21 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]))
 
+(defn assoc-some
+  "Associates a key with a value in a map, if and only if the value is not nil."
+  ([m k v]
+     (if (nil? v) m (assoc m k v)))
+  ([m k v & kvs]
+     (reduce (fn [m [k v]] (assoc-some m k v))
+             (assoc-some m k v)
+             (partition 2 kvs))))
+
+(defn update-some
+  "Updates a key in a map with a function, if and only if the return value from
+  the function is not nil."
+  [m k f & args]
+  (assoc-some m k (apply f (m k) args)))
+
 (defn- find-minimum [coll]
   (if (seq coll)
     (apply min coll)))

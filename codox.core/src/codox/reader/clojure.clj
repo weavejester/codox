@@ -1,7 +1,7 @@
 (ns codox.reader.clojure
   "Read raw documentation information from Clojure source directory."
   (:import java.util.jar.JarFile)
-  (:use [codox.utils :only (correct-indent)])
+  (:use [codox.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
             [clojure.tools.namespace :as ns]
             [clojure.string :as str]))
@@ -45,10 +45,10 @@
   (-> (meta var)
       (select-keys [:name :file :line :arglists :doc :dynamic
                     :added :deprecated :doc/format])
-      (update-in [:doc] correct-indent)
-      (assoc :type (var-type var))
-      (assoc :members (map (partial read-var vars)
-                           (protocol-methods var vars)))))
+      (update-some :doc correct-indent)
+      (assoc-some  :type    (var-type var)
+                   :members (seq (map (partial read-var vars)
+                                      (protocol-methods var vars))))))
 
 (defn- read-publics [namespace]
   (let [vars (sorted-public-vars namespace)]
@@ -66,7 +66,7 @@
         (meta)
         (assoc :name namespace)
         (assoc :publics (read-publics namespace))
-        (update-in [:doc] correct-indent)
+        (update-some :doc correct-indent)
         (list))
     (catch Exception e
       (println
