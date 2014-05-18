@@ -327,6 +327,7 @@ h4.deprecated {
 .usage code {
     display: block;
     color: #008;
+    margin: 2px 0;
 }
 
 .usage code:first-child {
@@ -337,8 +338,8 @@ p {
     margin: 15px 0;
 }
 
-.public p:first-child {
-    margin-top: 10px;
+.public p:first-child, .public pre.plaintext {
+    margin-top: 12px;
 }
 
 .doc {
