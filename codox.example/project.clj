@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.3.0"]]
-  :plugins [[codox "0.8.4"]]
+  :plugins [[codox "0.8.5"]]
   :source-paths ["src/clojure"]
   :codox
   {:project {:name "Example Project", :version "1.0.0"}

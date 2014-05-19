@@ -1,3 +1,7 @@
+## 0.8.5 (2014-05-19)
+
+* Minor CSS fixes
+
 ## 0.8.4 (2014-05-17)
 
 * Added `:project` map to override project name, version and description
