@@ -5,6 +5,6 @@ lib/
 classes/
 target/
 checkouts/
-.lein-failures
-.lein-deps-sum
+.lein-*
+.nrepl-port
 doc
