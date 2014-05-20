@@ -49,7 +49,8 @@
 (defn add-ns-defaults [namespaces defaults]
   (for [namespace namespaces]
     (-> (merge defaults namespace)
-        (update-in [:publics] add-var-defaults defaults))))
+        (update-in [:publics] add-var-defaults defaults)
+        (update-in [:privates] add-var-defaults defaults))))
 
 (defn generate-docs
   "Generate documentation from source files."
