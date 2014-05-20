@@ -8,7 +8,8 @@
 
 (defn foo
   "This is an example function."
-  [x y & z])
+  ([x])
+  ([x y & z]))
 
 (defmacro bar
   "This is an example macro."
