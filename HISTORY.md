@@ -1,3 +1,7 @@
+## 0.8.6 (2014-05-20)
+
+* Fixed disappearing `:arglists` in ClojureScript docs
+
 ## 0.8.5 (2014-05-19)
 
 * Minor CSS fixes
