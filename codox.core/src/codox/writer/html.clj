@@ -141,6 +141,9 @@
 (defn- sorted-public-vars [namespace]
   (sort-by (comp str/lower-case :name) (:publics namespace)))
 
+(defn- sorted-private-vars [namespace]
+  (sort-by (comp str/lower-case :name) (:privates namespace)))
+
 (defn- vars-menu [namespace]
   [:div#vars.sidebar
    [:h3 (link-to "#top" [:span.inner "Public Vars"])]
@@ -154,7 +157,20 @@
                class   (if branch? "depth-2 branch" "depth-2")
                inner   [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
            [:li {:class class}
-            (link-to (var-uri namespace mem) inner)]))))]])
+            (link-to (var-uri namespace mem) inner)]))))]
+   (if (seq (:privates namespace))
+     [:h3 (link-to "#top" [:span.inner "Private Vars"])])
+   [:ul
+    (for [var (sorted-private-vars namespace)]
+      (list*
+        [:li.depth-1
+         (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]])]
+        (for [mem (:members var)]
+          (let [branch? (not= mem (last (:members var)))
+                class (if branch? "depth-2 branch" "depth-2")
+                inner [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
+            [:li {:class class}
+             (link-to (var-uri namespace mem) inner)]))))]])
 
 (def ^{:private true} default-includes
   (list
@@ -190,7 +206,13 @@
          [:p "Public variables and functions:"]
          (unordered-list
           (for [var (sorted-public-vars namespace)]
-            (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]))
+            (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]
+        (if (seq (:privates namespace))
+          [:div.index
+           [:p "Private variables and functions:"]
+           (unordered-list
+             (for [var (sorted-private-vars namespace)]
+               (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))])])]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
@@ -235,6 +257,8 @@
      [:h2#top.anchor (h (:name namespace))]
      [:div.doc (format-doc project nil namespace)]
      (for [var (sorted-public-vars namespace)]
+       (var-docs project namespace var))
+     (for [var (sorted-private-vars namespace)]
        (var-docs project namespace var))]]))
 
 (defn- copy-resource [output-dir src dest]

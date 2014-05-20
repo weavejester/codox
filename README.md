@@ -175,6 +175,17 @@ ClojureScript.* For example:
 (ns ^:no-doc hidden-ns)
 ```
 
+To force Codox to document a private var, add `:doc-private true`
+to the var's metadata. For example:
+
+```clojure
+(defn- privatefn
+  "This function needs some explanation."
+  {:doc-private true}
+  [x]
+  x)
+```
+
 To denote the library version the var was added in, use the `:added`
 metadata key:
 
