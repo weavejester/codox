@@ -10,3 +10,11 @@
 
 ;; Test for issue #43
 (alter-meta! #'quz assoc :file "/tmp/form-init1234.clj")
+
+;; Test for issue #57
+(defn marklinks
+  "Let's try some [links][1].
+
+  [1]: http://example.com"
+  {:doc/format :markdown}
+  [x])

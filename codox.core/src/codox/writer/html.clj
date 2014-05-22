@@ -43,9 +43,16 @@
 
 (defn- link-renderer [project ns]
   (proxy [LinkRenderer] []
-    (render [^WikiLinkNode node]
-      (let [text (.getText node)]
-        (LinkRenderer$Rendering. (find-wikilink project ns text) text)))))
+    (render
+      ([node]
+         (if (instance? WikiLinkNode node)
+           (let [text (.getText node)]
+             (LinkRenderer$Rendering. (find-wikilink project ns text) text))
+           (proxy-super render node)))
+      ([node text]
+         (proxy-super render node text))
+      ([node url title text]
+         (proxy-super render node url title text)))))
 
 (defmethod format-doc :markdown [project ns metadata]
   [:div.markdown
