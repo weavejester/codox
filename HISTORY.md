@@ -1,3 +1,8 @@
+## 0.8.7 (2014-05-22)
+
+* Fixed bug when rendering some Markdown links
+* Stopped wrapping of long var names
+
 ## 0.8.6 (2014-05-20)
 
 * Fixed disappearing `:arglists` in ClojureScript docs
