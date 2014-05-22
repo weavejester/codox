@@ -18,3 +18,5 @@
   [1]: http://example.com"
   {:doc/format :markdown}
   [x])
+
+(def really-long-function-name-with-hyphens)
