@@ -34,7 +34,8 @@
            Extensions/STRIKETHROUGH
            Extensions/TABLES
            Extensions/FENCED_CODE_BLOCKS
-           Extensions/WIKILINKS)
+           Extensions/WIKILINKS
+           Extensions/DEFINITIONS)
    2000))
 
 (defn- find-wikilink [project ns text]

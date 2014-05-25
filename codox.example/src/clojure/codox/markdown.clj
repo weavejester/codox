@@ -19,12 +19,28 @@
       (defn foo [x]
         (+ x 1))
 
-  And extensions like auto-linked URLs (http://example.com) and tabular data:
+  [Inline links](http://example.com) and [reference links][1].
+
+  [1]: http://example.com
+
+  Extensions like auto-linked URLs (http://example.com) and tabular data:
 
   foo | bar
   ----|----
    1  |  2 
    3  |  4
+
+  Definition lists:
+
+  foo
+  : a variable
+
+  :bar
+  : a keyword definition
+
+  baz
+  : a longer description that goes on for several lines, demonstrating that
+    terms in a definition list can have definitions that span multiple lines.
 
   We can also use wikilinks to reference existing vars, like [[example/foo]] or
   the [[Foop]] protocol."

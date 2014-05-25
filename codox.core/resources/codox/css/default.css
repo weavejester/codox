@@ -410,6 +410,22 @@ p {
     background: #f2f2f2;
 }
 
+.doc dl {
+    margin: 0 10px 20px 10px;
+}
+
+.doc dl dt {
+    font-weight: bold;
+    margin: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.doc dl dd {
+    padding: 5px 0;
+    margin: 0 0 5px 10px;
+}
+
 .src-link a {
     font-size: 70%;
     padding: 1px 4px;
