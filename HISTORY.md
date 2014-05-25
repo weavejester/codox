@@ -1,3 +1,8 @@
+## 0.8.8 (2014-05-25)
+
+* Added Markdown extensions for definition lists and abbreviations
+* Minor CSS fixes
+
 ## 0.8.7 (2014-05-22)
 
 * Fixed bug when rendering some Markdown links
