@@ -257,6 +257,11 @@ h2 {
 .members .public {
     margin-top: 0;
     margin-bottom: 1em;
+    padding-top: 6px;
+}
+
+.members .public:first-child {
+    padding-top: 0;
 }
 
 .public h4.type,
