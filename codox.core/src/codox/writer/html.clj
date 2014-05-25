@@ -35,7 +35,8 @@
            Extensions/TABLES
            Extensions/FENCED_CODE_BLOCKS
            Extensions/WIKILINKS
-           Extensions/DEFINITIONS)
+           Extensions/DEFINITIONS
+           Extensions/ABBREVIATIONS)
    2000))
 
 (defn- find-wikilink [project ns text]

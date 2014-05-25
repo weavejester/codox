@@ -43,7 +43,13 @@
     terms in a definition list can have definitions that span multiple lines.
 
   We can also use wikilinks to reference existing vars, like [[example/foo]] or
-  the [[Foop]] protocol."
+  the [[Foop]] protocol.
+
+  Any abbreviations, like HTML or HTTP, that have corresponding abbreviations,
+  will be marked with `<abbr>` tags.
+
+  *[HTML]: Hyper Text Markup Language
+  *[HTTP]: Hyper Text Transfer Protocol"
   {:doc/format :markdown})
 
 
