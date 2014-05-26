@@ -29,40 +29,49 @@
     (assoc (first namespaces) :publics (mapcat :publics namespaces))))
 
 (defn- cljs-read-namespaces [& paths]
+  ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
   (require 'codox.reader.clojurescript)
   (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
     (merge-namespaces
      (concat (apply reader paths)
              (apply read-macro-namespaces paths)))))
 
-(def namespace-readers
+(def ^:private namespace-readers
   {:clojure       clj/read-namespaces
    :clojurescript cljs-read-namespaces})
 
-(def init-dir (System/getProperty "user.dir"))
-
-(defn add-var-defaults [vars defaults]
+(defn- add-var-defaults [vars defaults]
   (for [var vars]
     (-> (merge defaults var)
         (update-in [:members] add-var-defaults defaults))))
 
-(defn add-ns-defaults [namespaces defaults]
+(defn- add-ns-defaults [namespaces defaults]
   (for [namespace namespaces]
     (-> (merge defaults namespace)
         (update-in [:publics] add-var-defaults defaults))))
+
+(defn- read-namespaces
+  [{:keys [language root sources include exclude defaults]}]
+  (-> (namespace-readers language)
+      (apply sources)
+      (ns-filter include exclude)
+      (add-source-paths root sources)
+      (add-ns-defaults defaults)))
+
+(def defaults
+  {:language   :clojure
+   :root       (System/getProperty "user.dir")
+   :sources    ["src"]
+   :output-dir "doc"
+   :defaults   {}})
 
 (defn generate-docs
   "Generate documentation from source files."
   ([]
      (generate-docs {}))
-  ([{:keys [language root sources include exclude defaults]
-     :or   {language :clojure, sources ["src"], root init-dir, defaults {}}
-     :as   options}]
-     (let [write-fn   (writer options)
-           namespaces (-> (namespace-readers language)
-                          (apply sources)
-                          (ns-filter include exclude)
-                          (add-source-paths root sources)
-                          (add-ns-defaults defaults))]
+  ([options]
+     (let [options    (merge defaults options)
+           write-fn   (writer options)
+           namespaces (read-namespaces options)]
        (write-fn
         (assoc options :namespaces namespaces)))))

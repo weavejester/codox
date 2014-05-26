@@ -266,7 +266,7 @@
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [project]
-  (doto (:output-dir project "doc")
+  (doto (:output-dir project)
     (mkdirs "css" "js")
     (copy-resource "codox/css/default.css" "css/default.css")
     (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
