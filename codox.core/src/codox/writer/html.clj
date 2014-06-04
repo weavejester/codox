@@ -12,7 +12,7 @@
   (str "var-" (-> var name URLEncoder/encode (str/replace "%" "."))))
 
 (def ^:private url-regex
-  #"((https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])")
+  #"((https?|ftp|file)://[-A-Za-z0-9+()&@#/%?=~_|!:,.;]+[-A-Za-z0-9+()&@#/%=~_|])")
 
 (defn- add-anchors [text]
   (if text
