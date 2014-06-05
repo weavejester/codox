@@ -1,3 +1,8 @@
+## 0.8.9 (2014-06-05)
+
+* Fixed URLs containing parentheses in plaintext format
+* Allow namespaces in wikilink syntax
+
 ## 0.8.8 (2014-05-25)
 
 * Added Markdown extensions for definition lists and abbreviations
