@@ -40,8 +40,11 @@
    2000))
 
 (defn- find-wikilink [project ns text]
-  (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
-    (str (namespace var) ".html#" (var-id var))))
+  (let [ns-strs (map (comp str :name) (:namespaces project))]
+    (if (contains? (set ns-strs) text)
+      (str text ".html")
+      (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
+        (str (namespace var) ".html#" (var-id var))))))
 
 (defn- link-renderer [project ns]
   (proxy [LinkRenderer] []
