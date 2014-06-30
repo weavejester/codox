@@ -6,6 +6,6 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/tools.namespace "0.2.4"]
-                 [org.clojure/clojurescript "0.0-2202"]
+                 [org.clojure/clojurescript "0.0-2234"]
                  [hiccup "1.0.5"]
                  [org.pegdown/pegdown "1.4.2"]])
