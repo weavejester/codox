@@ -45,7 +45,6 @@
                    :members (map (partial read-var file vars)
                                  (protocol-methods var vars)))))
 
-
 (defn- namespace-vars [analysis namespace]
   (->> (get-in analysis [::an/namespaces namespace :defs])
        (map (fn [[name opts]] (assoc opts :name name)))))
@@ -62,12 +61,12 @@
   (try
     (let [analysis (an/analyze-file (io/file path file))]
       (apply merge
-        (for [namespace (keys (::an/namespaces analysis))
-              :let [doc (get-in analysis [::an/namespaces namespace :doc])]]
+        (for [namespace (keys (::an/namespaces analysis))]
           {namespace
-           {:name     namespace
-            :publics (read-publics analysis namespace file)
-            :doc     (correct-indent doc)}})))
+           (-> (get-in analysis [::an/namespaces namespace])
+               (assoc :name namespace)
+               (assoc :publics (read-publics analysis namespace file))
+               (update-some :doc correct-indent))})))
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"

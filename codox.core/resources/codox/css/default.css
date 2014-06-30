@@ -266,17 +266,24 @@ h2 {
     padding-top: 0;
 }
 
+h4.type,
+h4.dynamic,
+h4.added,
+h4.deprecated {
+    float: left;
+    margin: 3px 10px 15px 0;
+    font-size: 15px;
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
 .public h4.type,
 .public h4.dynamic,
 .public h4.added,
 .public h4.deprecated {
-    margin: 0;
-    float: left;
-    font-variant: small-caps;
     font-size: 13px;
     font-weight: bold;
-    margin-top: 3px;
-    margin-left: 10px;
+    margin: 3px 0 0 10px;
 }
 
 .members h4.type,
@@ -352,6 +359,7 @@ p {
 
 .doc {
     margin: 0 0 26px 0;
+    clear: both;
 }
 
 .public .doc {

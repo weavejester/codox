@@ -208,6 +208,13 @@
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
 
+(defn- added-and-deprecated-docs [var]
+  (list
+   (if-let [added (:added var)]
+     [:h4.added "added in " added])
+   (if-let [deprecated (:deprecated var)]
+     [:h4.deprecated "deprecated" (if (string? deprecated) (str " in " deprecated))])))
+
 (defn- var-docs [project namespace var]
   [:div.public.anchor {:id (h (var-id (:name var)))}
    [:h3 (h (:name var))]
@@ -215,10 +222,7 @@
      [:h4.type (name (:type var))])
    (if (:dynamic var)
      [:h4.dynamic "dynamic"])
-   (if-let [added (:added var)]
-     [:h4.added "added in " added])
-   (if-let [deprecated (:deprecated var)]
-     [:h4.deprecated "deprecated" (if (string? deprecated) (str " in " deprecated))])
+   (added-and-deprecated-docs var)
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
@@ -245,6 +249,7 @@
     (vars-menu namespace)
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
+     (added-and-deprecated-docs namespace)
      [:div.doc (format-doc project nil namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))

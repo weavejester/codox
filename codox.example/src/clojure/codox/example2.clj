@@ -1,4 +1,5 @@
-(ns codox.example2)
+(ns codox.example2
+  {:added "1.1", :deprecated "2.0"})
 
 (defn foo [x y & z])
 

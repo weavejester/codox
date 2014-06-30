@@ -1,5 +1,6 @@
 (ns codox.example
-  "ClojureScript version.")
+  "ClojureScript version."
+  {:added "1.1", :deprecated "2.0"})
 
 (defn foo
   "This is a function in Clojure and ClojureScript."

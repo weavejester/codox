@@ -50,7 +50,8 @@
 
   *[HTML]: Hyper Text Markup Language
   *[HTTP]: Hyper Text Transfer Protocol"
-  {:doc/format :markdown})
+  {:doc/format :markdown
+   :deprecated "1.3"})
 
 
 (defn some-function
