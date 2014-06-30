@@ -1,3 +1,8 @@
+## 0.8.10 (2014-06-30)
+
+* Fixed spacing between vars, add subtle separator line
+* Added support for `:added` and `:deprecated` metadata on namespaces
+
 ## 0.8.9 (2014-06-05)
 
 * Fixed URLs containing parentheses in plaintext format
