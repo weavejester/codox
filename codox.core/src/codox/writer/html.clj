@@ -281,4 +281,5 @@
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
     (write-index project)
     (write-namespaces project))
-  nil)
+  (println "Generated HTML docs in"
+           (.getAbsolutePath (io/file (:output-dir project)))))
