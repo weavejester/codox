@@ -72,6 +72,10 @@ function sidebarContentWidth(element) {
 }
 
 function resizeSidebars() {
+    if ($('body').width() < 500) {
+        return;
+    }
+
     var nsWidth  = sidebarContentWidth('#namespaces') + 30
     var varWidth = 0
 

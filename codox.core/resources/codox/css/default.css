@@ -453,3 +453,28 @@ p {
     text-decoration: none;
     color: #5555bb;
 }
+
+@media (max-width: 600px) {
+
+  body {
+    margin: 0;
+  }
+
+  #header, #content, .sidebar {
+     position: static;
+  }
+
+  #header {
+    height: auto;
+  }
+  .sidebar {
+    overflow: visible;
+    width: auto !important;
+  }
+  #content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+}
+

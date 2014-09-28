@@ -171,6 +171,8 @@
 (def ^{:private true} default-includes
   (list
    [:meta {:charset "UTF-8"}]
+   [:meta {:name "viewport" :content "width=device-width"}]
+
    (include-css "css/default.css")
    (include-js "js/jquery.min.js")
    (include-js "js/page_effects.js")))
