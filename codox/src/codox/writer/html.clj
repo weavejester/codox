@@ -352,6 +352,9 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
+   (if (:type-sig var)
+     [:div.type-sig
+      [:code (h (pr-str (:type-sig var)))]])
    [:div.doc (format-docstring project namespace var)]
    (if-let [members (seq (:members var))]
      [:div.members
