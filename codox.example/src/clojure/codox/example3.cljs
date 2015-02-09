@@ -59,3 +59,8 @@
 (def ^:dynamic *conn*
   "A dynamic var."
   nil)
+
+(def froo
+  "A derefable thing created using reify."
+  (reify IDeref
+    (-deref [_] "froo")))
