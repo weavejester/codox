@@ -28,8 +28,9 @@
   (let [value (var-get var)]
     (and (map? value) (:on-interface value))))
 
-(defn- protocol-method? [var]
-  (:protocol (meta var)))
+(defn- protocol-method? [vars var]
+  (if-let [p (:protocol (meta var))]
+    (some #{p} vars)))
 
 (defn- protocol-methods [protocol vars]
   (filter #(= protocol (:protocol (meta %))) vars))
@@ -55,7 +56,7 @@
     (->> vars
          (remove proxy?)
          (remove no-doc?)
-         (remove protocol-method?)
+         (remove (partial protocol-method? vars))
          (map (partial read-var vars))
          (sort-by (comp str/lower-case :name)))))
 
