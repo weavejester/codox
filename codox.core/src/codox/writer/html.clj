@@ -2,6 +2,7 @@
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
+           [java.io File]
            [org.pegdown PegDownProcessor Extensions LinkRenderer LinkRenderer$Rendering]
            [org.pegdown.ast WikiLinkNode])
   (:require [clojure.java.io :as io]
@@ -76,15 +77,20 @@
 (defn- get-mapping-fn [mappings path]
   (some (fn [[re f]] (if (re-find re path) f)) mappings))
 
+(defn- uri-path [path]
+  (str/replace (str path) File/separator "/"))
+
 (defn- var-source-uri
   [{:keys [src-dir-uri src-uri-mapping src-linenum-anchor-prefix]}
    {:keys [path file line]}]
-  (str src-dir-uri
-       (if-let [mapping-fn (get-mapping-fn src-uri-mapping (str path))]
-         (mapping-fn file)
-         path)
-       (if src-linenum-anchor-prefix
-         (str "#" src-linenum-anchor-prefix line))))
+  (let [path (uri-path path)
+        file (uri-path file)]
+    (str src-dir-uri
+         (if-let [mapping-fn (get-mapping-fn src-uri-mapping path)]
+           (mapping-fn file)
+           path)
+         (if src-linenum-anchor-prefix
+           (str "#" src-linenum-anchor-prefix line)))))
 
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
