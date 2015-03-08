@@ -53,6 +53,7 @@
   (let [vars (namespace-vars analysis namespace)]
     (->> vars
          (remove :protocol)
+         (remove :anonymous)
          (remove no-doc?)
          (map (partial read-var file vars))
          (sort-by (comp str/lower-case :name)))))
