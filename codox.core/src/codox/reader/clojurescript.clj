@@ -58,9 +58,13 @@
          (map (partial read-var file vars))
          (sort-by (comp str/lower-case :name)))))
 
+(defn- analyze-file [file]
+  (binding [an/*analyze-deps* false]
+    (an/analyze-file file)))
+
 (defn- read-file [path file]
   (try
-    (let [analysis (an/analyze-file (io/file path file))]
+    (let [analysis (analyze-file (io/file path file))]
       (apply merge
         (for [namespace (keys (::an/namespaces analysis))]
           {namespace

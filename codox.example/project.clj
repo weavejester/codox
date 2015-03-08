@@ -16,4 +16,5 @@
   {:md   {:codox {:defaults {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.6.0"]]
           :codox {:language :clojurescript}}
+   :om   {:dependencies [[org.omcljs/om "0.8.8"]]}
    :no-src {:codox ^:replace {}}})

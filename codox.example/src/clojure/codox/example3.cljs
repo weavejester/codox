@@ -4,7 +4,8 @@
   Some more detailed description down here.
 
   An inline link: http://example.com
-  An inline HTTPS link: https://example.com")
+  An inline HTTPS link: https://example.com"
+  (:require om.core))
 
 (defn foo
   "This is an example function."
