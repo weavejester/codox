@@ -55,6 +55,7 @@
          (remove :protocol)
          (remove :anonymous)
          (remove no-doc?)
+         (remove :anonymous)
          (map (partial read-var file vars))
          (sort-by (comp str/lower-case :name)))))
 
@@ -69,9 +70,9 @@
         (for [namespace (keys (::an/namespaces analysis))]
           {namespace
            (-> (get-in analysis [::an/namespaces namespace])
-               (assoc :name namespace)
-               (assoc :publics (read-publics analysis namespace file))
-               (update-some :doc correct-indent))})))
+             (assoc :name namespace)
+             (assoc :publics (read-publics analysis namespace file))
+             (update-some :doc correct-indent))})))
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
