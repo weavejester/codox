@@ -60,15 +60,14 @@
 
 (defn- read-file [path file]
   (try
-    (binding [an/*analyze-deps* false]
-      (let [analysis (an/analyze-file (io/file path file))]
-        (apply merge
-          (for [namespace (keys (::an/namespaces analysis))]
-            {namespace
-             (-> (get-in analysis [::an/namespaces namespace])
-               (assoc :name namespace)
-               (assoc :publics (read-publics analysis namespace file))
-               (update-some :doc correct-indent))}))))
+    (let [analysis (an/analyze-file (io/file path file))]
+      (apply merge
+        (for [namespace (keys (::an/namespaces analysis))]
+          {namespace
+           (-> (get-in analysis [::an/namespaces namespace])
+             (assoc :name namespace)
+             (assoc :publics (read-publics analysis namespace file))
+             (update-some :doc correct-indent))})))
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
