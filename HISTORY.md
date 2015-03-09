@@ -1,3 +1,11 @@
+## 0.8.11 (2015-03-08)
+
+* Outputs message when docs are generated
+* Fixed imported protocol methods being ignored
+* Fixed path separator for source links generated under Windows
+* Fixed anonymous vars showing up in ClojureScript docs
+* Fixed dependencies showing up in ClojureScript docs
+
 ## 0.8.10 (2014-06-30)
 
 * Fixed spacing between vars, add subtle separator line
