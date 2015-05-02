@@ -1,3 +1,7 @@
+## 0.8.12 (2015-05-02)
+
+* Fixed error caused by CLJ-1242 when documenting vars holding sorted maps
+
 ## 0.8.11 (2015-03-08)
 
 * Outputs message when docs are generated
