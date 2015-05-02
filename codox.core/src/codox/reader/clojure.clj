@@ -26,7 +26,9 @@
 
 (defn- protocol? [var]
   (let [value (var-get var)]
-    (and (map? value) (:on-interface value))))
+    (and (map? value)
+         (not (sorted? value)) ; workaround for CLJ-1242
+         (:on-interface value))))
 
 (defn- protocol-method? [vars var]
   (if-let [p (:protocol (meta var))]
