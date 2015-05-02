@@ -74,7 +74,8 @@
        (format "Could not generate clojure documentation for %s - root cause: %s %s"
                namespace
                (.getName (class e))
-               (.getMessage e))))))
+               (.getMessage e)))
+      (.printStackTrace e))))
 
 (defn- jar-file? [file]
   (and (.isFile file)

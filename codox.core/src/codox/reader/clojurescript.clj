@@ -77,7 +77,8 @@
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
                file
                (.getName (class e))
-               (.getMessage e))))))
+               (.getMessage e)))
+      (.printStackTrace e))))
 
 (defn read-namespaces
   "Read ClojureScript namespaces from a source directory (defaults to
