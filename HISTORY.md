@@ -1,3 +1,7 @@
+## 0.8.13 (2015-07-11)
+
+* Updated tools.namespace to support .cljc files in Clojure 1.7
+
 ## 0.8.12 (2015-05-02)
 
 * Fixed error caused by CLJ-1242 when documenting vars holding sorted maps
