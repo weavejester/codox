@@ -3,7 +3,7 @@
   (:import java.util.jar.JarFile)
   (:use [codox.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
-            [clojure.tools.namespace :as ns]
+            [clojure.tools.namespace.find :as ns]
             [clojure.string :as str]))
 
 (defn- sorted-public-vars [namespace]
