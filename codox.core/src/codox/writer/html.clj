@@ -232,6 +232,9 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
+   (if (:core.typed/type var)
+     [:div.core.typed/type
+      [:code (h (pr-str (:core.typed/type var)))]])
    [:div.doc (format-doc project namespace var)]
    (if-let [members (seq (:members var))]
      [:div.members

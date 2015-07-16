@@ -1,10 +1,31 @@
 (ns codox.reader.clojure
   "Read raw documentation information from Clojure source directory."
-  (:import java.util.jar.JarFile)
+  (:import java.util.jar.JarFile
+           java.io.FileNotFoundException)
   (:use [codox.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
             [clojure.tools.namespace.find :as ns]
             [clojure.string :as str]))
+
+(defn try-require [namespace]
+  (try
+    (require namespace)
+    (catch FileNotFoundException _ nil)))
+
+(defn core-typed? []
+  (find-ns 'clojure.core.typed.check))
+
+(defn var->symbol [var]
+  (let [{:keys [ns name]} (meta var)]
+    (symbol (format "%s/%s" (str ns) (str name)))))
+
+; need to use ns-resolve in the following two fns because core.typed
+; gets required dynamically
+(defn typecheck-namespace [namespace]
+  ((find-var 'clojure.core.typed/check-ns-info) namespace))
+
+(defn typecheck-var [var]
+  ((find-var 'clojure.core.typed/check-form-info) var))
 
 (defn- sorted-public-vars [namespace]
   (->> (ns-publics namespace)
@@ -44,12 +65,19 @@
    (protocol? var)    :protocol
    :else              :var))
 
+(defn core-typed-type [var]
+  (let [{:keys [delayed-errors ret]} (typecheck-var var)]
+    (if (empty? delayed-errors)
+      (:t ret))))
+
 (defn- read-var [vars var]
   (-> (meta var)
       (select-keys [:name :file :line :arglists :doc :dynamic
                     :added :deprecated :doc/format])
       (update-some :doc correct-indent)
       (assoc-some  :type    (var-type var)
+                   :core.typed/type (if (core-typed?)
+                                      (core-typed-type var))
                    :members (seq (map (partial read-var vars)
                                       (protocol-methods var vars))))))
 
@@ -63,6 +91,9 @@
          (sort-by (comp str/lower-case :name)))))
 
 (defn- read-ns [namespace]
+  (try-require 'clojure.core.typed.check)
+  (when (core-typed?)
+    (typecheck-namespace namespace))
   (try
     (require namespace)
     (-> (find-ns namespace)
