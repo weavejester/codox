@@ -1,3 +1,8 @@
+## 0.8.14 (2015-08-29)
+
+* If `doc/intro.md` exists, it will be used as the body of the
+  index/"Introduction" page. The page can be changed via `:intro-page` 
+  
 ## 0.8.13 (2015-07-11)
 
 * Updated tools.namespace to support .cljc files in Clojure 1.7

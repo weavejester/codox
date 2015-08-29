@@ -148,6 +148,21 @@ add a mapping like:
 
 (Note that the ending "/" is required in "src/".)
 
+### User Documentation
+
+It's often useful to provide user documentation such as overviews,
+getting started pages, tutorials, and user guides in addition to api
+docs generated from the source.
+
+By default, if a `doc/intro.md` file exists it will be used as the
+body of the main index page.
+
+To change the intro page to a different file, use the `:intro-page`
+key. For example, to use `README.md` as the intro page: 
+
+```clojure
+:codox {:output-dir "README.md"}
+```
 
 ## Metadata Options
 

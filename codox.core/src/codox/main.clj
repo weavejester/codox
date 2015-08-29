@@ -63,7 +63,8 @@
    :root       (System/getProperty "user.dir")
    :sources    ["src"]
    :output-dir "doc"
-   :defaults   {}})
+   :defaults   {}
+   :intro-page "doc/intro.md"})
 
 (defn generate-docs
   "Generate documentation from source files."
