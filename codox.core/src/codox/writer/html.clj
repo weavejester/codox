@@ -141,10 +141,17 @@
        [:span.top {:style (str "height: " height "px;")}]
        [:span.bottom]])))
 
+(defn- intro-file [project]
+  (let [f (io/file (or (:intro-page project) "doc/intro.md"))]
+    (if (and (.exists f) (not (.isDirectory f)))
+      f)))
+
 (defn- namespaces-menu [project & [current]]
   (let [namespaces (:namespaces project)
         ns-map     (index-by :name namespaces)]
     [:div#namespaces.sidebar
+     (if (intro-file project)
+       [:h3 (link-to "intro.html" [:span.inner "Introduction"])])
      [:h3 (link-to "index.html" [:span.inner "Namespaces"])]
      [:ul
       (for [[name depth height branch?] (namespace-hierarchy namespaces)]
@@ -271,6 +278,22 @@
 (defn- write-index [output-dir project]
   (spit (io/file output-dir "index.html") (index-page project)))
 
+
+(defn- intro-page [project]
+  (html5
+   [:head
+    default-includes
+    [:title (h (:name namespace)) " documentation"]]
+   [:body
+    (header project)
+    (namespaces-menu project namespace)
+    [:div#content.namespace-docs
+     (if-let [f (intro-file project)]
+       (.markdownToHtml pegdown (slurp f)))]]))
+
+(defn- write-intro [output-dir project]
+  (spit (io/file output-dir "intro.html") (intro-page project)))
+
 (defn- write-namespaces
   [output-dir project]
   (doseq [namespace (:namespaces project)]
@@ -286,6 +309,7 @@
     (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
     (write-index project)
-    (write-namespaces project))
+    (write-namespaces project)
+    (write-intro project))
   (println "Generated HTML docs in"
            (.getAbsolutePath (io/file (:output-dir project)))))
