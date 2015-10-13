@@ -8,4 +8,4 @@
                  [org.clojure/tools.namespace "0.3.0"]
                  [org.clojure/clojurescript "1.7.112"]
                  [hiccup "1.0.5"]
-                 [org.pegdown/pegdown "1.4.2"]])
+                 [org.pegdown/pegdown "1.6.0"]])
