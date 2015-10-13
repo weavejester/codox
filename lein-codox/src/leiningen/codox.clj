@@ -1,5 +1,4 @@
-(ns leiningen.doc
-  (:refer-clojure :exclude [doc])
+(ns leiningen.codox
   (:require [leinjacker.deps :as deps]
             [leinjacker.eval :as eval]
             [leiningen.core.project :as project]
@@ -12,7 +11,7 @@
          (select-keys project [:root :version :description])
          (-> project :codox :project)))
 
-(defn doc
+(defn codox
   "Generate API documentation from source code."
   [project]
   (let [project (if (get-in project [:profiles :codox])
