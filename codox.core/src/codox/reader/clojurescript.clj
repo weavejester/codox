@@ -3,11 +3,17 @@
   (:use [codox.utils :only [assoc-some update-some correct-indent]])
   (:require [clojure.java.io :as io]
             [cljs.analyzer :as an]
+            [cljs.analyzer.api :as ana]
             [clojure.string :as str]))
 
 (defn- cljs-file? [file]
   (and (.isFile file)
        (-> file .getName (.endsWith ".cljs"))))
+
+(defn- remove-quote [x]
+  (if (and (list? x) (= (first x) 'quote))
+    (second x)
+    x))
 
 (defn- strip-parent [parent]
   (let [len (inc (count (.getPath parent)))]
@@ -38,19 +44,16 @@
 (defn- read-var [file vars var]
   (-> var
       (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
+      (update-some :name (comp symbol name))
+      (update-some :arglists remove-quote)
       (update-some :doc correct-indent)
-      (update-some :arglists second)
       (assoc-some  :file    (.getPath file)
                    :type    (var-type var)
                    :members (map (partial read-var file vars)
                                  (protocol-methods var vars)))))
 
-(defn- namespace-vars [analysis namespace]
-  (->> (get-in analysis [::an/namespaces namespace :defs])
-       (map (fn [[name opts]] (assoc opts :name name)))))
-
-(defn- read-publics [analysis namespace file]
-  (let [vars (namespace-vars analysis namespace)]
+(defn- read-publics [state namespace file]
+  (let [vars (vals (ana/ns-publics state namespace))]
     (->> vars
          (remove :protocol)
          (remove :anonymous)
@@ -59,19 +62,21 @@
          (sort-by (comp str/lower-case :name)))))
 
 (defn- analyze-file [file]
-  (binding [an/*analyze-deps* false]
-    (an/analyze-file file)))
+  (let [state (ana/empty-state)]
+    (binding [an/*analyze-deps* false]
+      (ana/analyze-file state file {}))
+    state))
 
 (defn- read-file [path file]
   (try
-    (let [analysis (analyze-file (io/file path file))]
-      (apply merge
-        (for [namespace (keys (::an/namespaces analysis))]
-          {namespace
-           (-> (get-in analysis [::an/namespaces namespace])
-               (assoc :name namespace)
-               (assoc :publics (read-publics analysis namespace file))
-               (update-some :doc correct-indent))})))
+    (let [source  (io/file path file)
+          ns-name (:ns (ana/parse-ns source))
+          state   (analyze-file source)]
+      {ns-name
+       (-> (ana/find-ns state ns-name)
+           (select-keys [:name :doc])
+           (update-some :doc correct-indent)
+           (assoc :publics (read-publics state ns-name file)))})
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"

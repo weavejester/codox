@@ -14,7 +14,8 @@
    :src-uri-mapping {#"src/clojure" #(str "codox.example/src/clojure/" %)}}
   :profiles
   {:md   {:codox {:defaults {:doc/format :markdown}}}
-   :cljs {:dependencies [[org.clojure/clojure "1.6.0"]]
+   :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
+                         [org.clojure/clojurescript "1.7.122"]]
           :codox {:language :clojurescript}}
    :om   {:dependencies [[org.omcljs/om "0.8.8"]]}
    :no-src {:codox ^:replace {}}
