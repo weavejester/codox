@@ -1,3 +1,9 @@
+## 0.8.14 (2015-10-13)
+
+* Added regex support to :include and :exclude options
+* Fixed Codox not working with ClojureScript versions due to analyzer API changes
+* Updated Pegdown dependency
+
 ## 0.8.13 (2015-07-11)
 
 * Updated tools.namespace to support .cljc files in Clojure 1.7
