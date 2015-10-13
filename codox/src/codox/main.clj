@@ -62,7 +62,7 @@
   {:language   :clojure
    :root       (System/getProperty "user.dir")
    :sources    ["src"]
-   :output-dir "doc"
+   :output-dir "target/doc"
    :defaults   {}})
 
 (defn generate-docs

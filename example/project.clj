@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :plugins [[lein-codox "0.9.0-SNAPSHOT"]]
   :source-paths ["src/clojure"]
+  :target-path "target/%s/"
   :codox
   {:project {:name "Example Project", :version "1.0.0"}
    :defaults {:doc "FIXME: write docs"}

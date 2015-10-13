@@ -1,11 +1,13 @@
 (ns leiningen.codox
-  (:require [leinjacker.deps :as deps]
-            [leinjacker.eval :as eval]
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [leiningen.core.project :as project]
-            [clojure.string :as str]))
+            [leinjacker.deps :as deps]
+            [leinjacker.eval :as eval]))
 
 (defn- get-options [project]
-  (merge {:sources (:source-paths project ["src"])}
+  (merge {:sources    (:source-paths project ["src"])
+          :output-dir (str (io/file (:target-path project "target") "doc"))}
          (-> project :codox)
          {:name (str/capitalize (:name project))}
          (select-keys project [:root :version :description])
