@@ -1,3 +1,7 @@
+## 0.8.15 (2015-10-14)
+
+* Add asm-all as explicit dependency to fix issue with core.async
+
 ## 0.8.14 (2015-10-13)
 
 * Added regex support to :include and :exclude options
