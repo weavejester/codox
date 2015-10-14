@@ -6,11 +6,12 @@
             [leinjacker.eval :as eval]))
 
 (defn- get-options [project]
-  (merge {:sources    (:source-paths project ["src"])
-          :output-dir (str (io/file (:target-path project "target") "doc"))}
+  (merge {:source-paths (:source-paths project ["src"])
+          :output-path  (str (io/file (:target-path project "target") "doc"))}
          (-> project :codox)
-         {:name (str/capitalize (:name project))}
-         (select-keys project [:root :version :description])
+         {:name      (str/capitalize (:name project))
+          :root-path (:root project)}
+         (select-keys project [:version :description])
          (-> project :codox :project)))
 
 (defn codox

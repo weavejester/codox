@@ -279,13 +279,12 @@
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
-  [project]
-  (doto (:output-dir project)
+  [{:keys [output-path] :as project}]
+  (doto output-path
     (mkdirs "css" "js")
     (copy-resource "codox/css/default.css" "css/default.css")
     (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
     (write-index project)
     (write-namespaces project))
-  (println "Generated HTML docs in"
-           (.getAbsolutePath (io/file (:output-dir project)))))
+  (println "Generated HTML docs in" (.getAbsolutePath (io/file output-path))))

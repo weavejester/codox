@@ -51,19 +51,19 @@
         (update-in [:publics] add-var-defaults defaults))))
 
 (defn- read-namespaces
-  [{:keys [language root sources include exclude defaults]}]
+  [{:keys [language root-path source-paths include exclude defaults]}]
   (-> (namespace-readers language)
-      (apply sources)
+      (apply source-paths)
       (ns-filter include exclude)
-      (add-source-paths root sources)
+      (add-source-paths root-path source-paths)
       (add-ns-defaults defaults)))
 
 (def defaults
-  {:language   :clojure
-   :root       (System/getProperty "user.dir")
-   :sources    ["src"]
-   :output-dir "target/doc"
-   :defaults   {}})
+  {:language     :clojure
+   :root-path    (System/getProperty "user.dir")
+   :source-paths ["src"]
+   :output-path  "target/doc"
+   :defaults     {}})
 
 (defn generate-docs
   "Generate documentation from source files."
