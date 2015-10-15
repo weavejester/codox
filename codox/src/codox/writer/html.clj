@@ -218,7 +218,7 @@
     (header project)
     (primary-sidebar project)
     [:div#content.namespace-index
-     [:h2 (h (project-title project))]
+     [:h1 (h (project-title project))]
      [:div.doc [:p (h (:description project))]]
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
@@ -292,7 +292,7 @@
     (primary-sidebar project namespace)
     (vars-sidebar namespace)
     [:div#content.namespace-docs
-     [:h2#top.anchor (h (:name namespace))]
+     [:h1#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
      [:div.doc (format-docstring project nil namespace)]
      (for [var (sorted-public-vars namespace)]
