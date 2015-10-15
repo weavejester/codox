@@ -61,11 +61,11 @@ h1 {
    width: 200px;
 }
 
-.namespace-index {
+#content.namespace-index, #content.document {
    left: 251px;
 }
 
-.namespace-docs {
+#content.namespace-docs {
    left: 452px;
 }
 

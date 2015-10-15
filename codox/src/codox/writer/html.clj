@@ -245,7 +245,7 @@
    [:body
     (header project)
     (primary-sidebar project doc)
-    [:div#content.namespace-index
+    [:div#content.document
      [:div.doc (format-document project doc)]]]))
 
 (defn- var-usage [var]

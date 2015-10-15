@@ -80,14 +80,19 @@ function resizeSidebars() {
     }
 
     // snap to grid
-    var snap = 30;
-    primaryWidth   = Math.ceil(primaryWidth / snap) * snap;
-    secondaryWidth = Math.ceil(secondaryWidth / snap) * snap;
+    var snap = 30
+    primaryWidth   = Math.ceil(primaryWidth / snap) * snap
+    secondaryWidth = Math.ceil(secondaryWidth / snap) * snap
 
     $('.primary').css('width', primaryWidth)
-    $('.secondary').css('width', secondaryWidth)
-    $('.secondary, .namespace-index').css('left', primaryWidth + 1)
-    $('.namespace-docs').css('left', primaryWidth + secondaryWidth + 2)
+    $('.secondary').css('width', secondaryWidth).css('left', primaryWidth + 1)
+
+    if (secondaryWidth > 0) {
+        $('#content').css('left', primaryWidth + secondaryWidth + 2)
+    }
+    else {
+        $('#content').css('left', primaryWidth + 1)
+    }
 }
 
 $(window).ready(resizeSidebars)
