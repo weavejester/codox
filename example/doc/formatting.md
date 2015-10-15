@@ -1,7 +1,7 @@
 # Formatting
 
 We're going to cover all the standard formatting, like *italics*, **bolds**,
-`:inline-code` ~~strikethrough~~ and \"smart quotes\" -- so we can check the
+`:inline-code` ~~strikethrough~~ and "smart quotes" -- so we can check the
 styling in the docs.
 
 - Let's check
@@ -15,7 +15,7 @@ styling in the docs.
 We should also check code block formatting:
 
     (defn foo [x]
-    (+ x 1))
+      (+ x 1))
 
 [Inline links](http://example.com) and [reference links][1].
 
@@ -38,7 +38,7 @@ foo
 
 baz
 : a longer description that goes on for several lines, demonstrating that
-terms in a definition list can have definitions that span multiple lines.
+  terms in a definition list can have definitions that span multiple lines.
 
 We can also use wikilinks to reference existing vars, like [[example/foo]] or
 the [[Foop]] protocol, or to reference namespaces, like [[codox.example]].
