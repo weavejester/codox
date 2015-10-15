@@ -396,6 +396,19 @@ p {
     line-height: 18px;
 }
 
+.markdown h2 {
+    font-weight: normal;
+    font-size: 25px;
+}
+
+#content .markdown h3 {
+    font-size: 20px;
+}
+
+.markdown h4 {
+    font-size: 15px;
+}
+
 .doc, .public, .namespace .index {
     max-width: 680px;
     overflow-x: visible;

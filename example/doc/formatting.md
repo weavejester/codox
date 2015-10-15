@@ -12,6 +12,13 @@ styling in the docs.
 2. ordered
 2. lists
 
+# Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+
 We should also check code block formatting:
 
     (defn foo [x]
