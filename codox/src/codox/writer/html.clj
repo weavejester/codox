@@ -239,7 +239,7 @@
     (header project)
     (primary-sidebar project)
     [:div#content.namespace-index
-     (.markdownToHtml pegdown (:content doc))]]))
+     [:div.doc [:div.markdown (.markdownToHtml pegdown (:content doc))]]]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
