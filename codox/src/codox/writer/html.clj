@@ -172,7 +172,7 @@
             [:li {:class class} [:div.no-link inner]])))])))
 
 (defn- primary-sidebar [project & [current-ns]]
-  [:div#namespaces.sidebar
+  [:div.sidebar.primary
    (topics-menu project)
    (namespaces-menu project current-ns)])
 
@@ -180,7 +180,7 @@
   (sort-by (comp str/lower-case :name) (:publics namespace)))
 
 (defn- vars-sidebar [namespace]
-  [:div#vars.sidebar
+  [:div.sidebar.secondary
    [:h3 (link-to "#top" [:span.inner "Public Vars"])]
    [:ul
     (for [var (sorted-public-vars namespace)]

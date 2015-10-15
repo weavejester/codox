@@ -47,14 +47,14 @@ h2 {
    overflow: auto;
 }
 
-#namespaces {
+.sidebar.primary {
    background: #e2e2e2;
    border-right: solid 1px #cccccc;
    left: 0;
    width: 250px;
 }
 
-#vars {
+.sidebar.secondary {
    background: #f2f2f2;
    border-right: solid 1px #cccccc;
    left: 251px;
@@ -193,12 +193,12 @@ h2 {
     border-left: 1px solid #aaa;
 }
 
-#namespaces li.current a {
+.sidebar.primary li.current a {
    border-left: 3px solid #a33;
    color: #a33;
 }
 
-#vars li.current a {
+.sidebar.secondary li.current a {
    border-left: 3px solid #33a;
    color: #33a;
 }
