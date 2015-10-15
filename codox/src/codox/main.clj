@@ -59,6 +59,9 @@
       (add-source-paths root-path source-paths)
       (add-ns-defaults defaults)))
 
+(defn- read-documents [{:keys [doc-paths]}]
+  (if (seq doc-paths) (apply text/read-documents doc-paths)))
+
 (def defaults
   {:language     :clojure
    :root-path    (System/getProperty "user.dir")
@@ -75,7 +78,7 @@
      (let [options    (merge defaults options)
            write-fn   (writer options)
            namespaces (read-namespaces options)
-           documents  (apply text/read-documents (:doc-path options))]
+           documents  (read-documents options)]
        (write-fn (assoc options
                         :namespaces namespaces
                         :documents  documents)))))

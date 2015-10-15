@@ -148,13 +148,14 @@
        [:span.bottom]])))
 
 (defn- topics-menu [project current-doc]
-  (list
-   [:h3.no-link [:span.inner "Topics"]]
-   [:ul
-    (for [doc (:documents project)]
-      [:li.depth-1
-       {:class (if (= doc current-doc) " current")}
-       (link-to (doc-filename doc) [:div.inner [:span (h (:title doc))]])])]))
+  (if-let [docs (seq (:documents project))]
+    (list
+     [:h3.no-link [:span.inner "Topics"]]
+     [:ul
+      (for [doc docs]
+        [:li.depth-1
+         {:class (if (= doc current-doc) " current")}
+         (link-to (doc-filename doc) [:div.inner [:span (h (:title doc))]])])])))
 
 (defn- namespaces-menu [project current-ns]
   (let [namespaces (:namespaces project)
