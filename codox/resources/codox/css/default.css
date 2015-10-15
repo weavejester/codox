@@ -12,8 +12,8 @@ pre, code {
 h1 {
    font-weight: normal;
    font-size: 28px;
-   padding: 10px 0 2px 0;
-   margin: 0;
+   margin: 10px 0 2px 0;
+   padding: 0;
 }
 
 #header, #content, .sidebar {
