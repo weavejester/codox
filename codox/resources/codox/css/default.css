@@ -16,6 +16,11 @@ h1 {
    padding: 0;
 }
 
+.document h1, .namespace-index h1 {
+    font-size: 30px;
+    margin-top: 12px;
+}
+
 #header, #content, .sidebar {
    position: fixed;
 }
@@ -66,6 +71,10 @@ h1 {
 
 #content.namespace-docs {
    left: 452px;
+}
+
+#content.document {
+    padding-bottom: 10%;
 }
 
 #header {
