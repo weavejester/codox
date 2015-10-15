@@ -149,7 +149,7 @@
 
 (defn- topics-menu [project current-doc]
   (list
-   [:h3 "Topics"]
+   [:h3.no-link [:span.inner "Topics"]]
    [:ul
     (for [doc (:documents project)]
       [:li.depth-1
@@ -160,7 +160,7 @@
   (let [namespaces (:namespaces project)
         ns-map     (index-by :name namespaces)]
     (list
-     [:h3 (link-to "index.html" [:span.inner "Namespaces"])]
+     [:h3.no-link [:span.inner "Namespaces"]]
      [:ul
       (for [[name depth height branch?] (namespace-hierarchy namespaces)]
         (let [class  (str "depth-" depth (if branch? " branch"))

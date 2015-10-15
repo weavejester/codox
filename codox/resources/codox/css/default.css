@@ -120,8 +120,13 @@ h1 {
    font-weight: normal;
 }
 
+.sidebar h3.no-link {
+    color: #636363;
+   font-weight: lighter;
+}
+
 .sidebar ul {
-   padding: 0.5em 0em;
+   padding: 10px 0 15px 0;
    margin: 0;
 }
 
