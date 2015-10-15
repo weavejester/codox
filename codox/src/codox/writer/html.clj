@@ -47,7 +47,7 @@
       (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
         (str (namespace var) ".html#" (var-id var))))))
 
-(defn- link-renderer [project ns]
+(defn- link-renderer [project & [ns]]
   (proxy [LinkRenderer] []
     (render
       ([node]
@@ -232,10 +232,10 @@
 
 (defmulti format-document
   "Format a document into HTML."
-  :format)
+  (fn [project doc] (:format doc)))
 
-(defmethod format-document :markdown [doc]
-  [:div.markdown (.markdownToHtml pegdown (:content doc))])
+(defmethod format-document :markdown [project doc]
+  [:div.markdown (.markdownToHtml pegdown (:content doc) (link-renderer project))])
 
 (defn- document-page [project doc]
   (html5
@@ -246,7 +246,7 @@
     (header project)
     (primary-sidebar project)
     [:div#content.namespace-index
-     [:div.doc (format-document doc)]]]))
+     [:div.doc (format-document project doc)]]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
