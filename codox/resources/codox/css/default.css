@@ -375,8 +375,11 @@ p {
 }
 
 .markdown {
-    line-height: 18px;
     font-size: 14px;
+}
+
+.markdown p, .markdown li, .markdown dt, .markdown dd, .markdown td {
+    line-height: 18px;
 }
 
 .doc, .public, .namespace .index {
