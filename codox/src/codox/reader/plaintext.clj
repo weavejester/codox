@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]))
 
 (defn basename [file]
-  (second (re-find #"(?:^|/)(.*?)\.(.*?)$" (str file))))
+  (second (re-find #"([^/]*)\.(.*?)$" (str file))))
 
 (defn file-extension [file]
   (re-find #"\..*?$" (str file)))
