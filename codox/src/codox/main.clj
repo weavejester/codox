@@ -1,7 +1,8 @@
 (ns codox.main
   "Main namespace for generating documentation"
   (:use [codox.utils :only (ns-filter add-source-paths)])
-  (:require [codox.reader.clojure :as clj]))
+  (:require [codox.reader.clojure :as clj]
+            [codox.reader.plaintext :as text]))
 
 (defn- writer [{:keys [writer]}]
   (let [writer-sym (or writer 'codox.writer.html/write-docs)
@@ -62,6 +63,7 @@
   {:language     :clojure
    :root-path    (System/getProperty "user.dir")
    :source-paths ["src"]
+   :doc-paths    ["doc"]
    :output-path  "target/doc"
    :defaults     {}})
 
@@ -72,6 +74,8 @@
   ([options]
      (let [options    (merge defaults options)
            write-fn   (writer options)
-           namespaces (read-namespaces options)]
-       (write-fn
-        (assoc options :namespaces namespaces)))))
+           namespaces (read-namespaces options)
+           documents  (apply text/read-documents (:doc-path options))]
+       (write-fn (assoc options
+                        :namespaces namespaces
+                        :documents  documents)))))
