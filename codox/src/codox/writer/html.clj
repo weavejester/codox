@@ -19,12 +19,12 @@
   (if text
     (str/replace text url-regex "<a href=\"$1\">$1</a>")))
 
-(defmulti format-doc
+(defmulti format-docstring
   "Format the docstring of a var or namespace into HTML."
   (fn [project ns var] (:doc/format var))
   :default :plaintext)
 
-(defmethod format-doc :plaintext [_ _ metadata]
+(defmethod format-docstring :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
 (def ^:private pegdown
@@ -60,7 +60,7 @@
       ([node url title text]
          (proxy-super render node url title text)))))
 
-(defmethod format-doc :markdown [project ns metadata]
+(defmethod format-docstring :markdown [project ns metadata]
   [:div.markdown
    (if-let [doc (:doc metadata)]
      (.markdownToHtml pegdown doc (link-renderer project ns)))])
@@ -223,12 +223,19 @@
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
-        [:div.doc (format-doc project nil (update-in namespace [:doc] util/summary))]
+        [:div.doc (format-docstring project nil (update-in namespace [:doc] util/summary))]
         [:div.index
          [:p "Public variables and functions:"]
          (unordered-list
           (for [var (sorted-public-vars namespace)]
             (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]))
+
+(defmulti format-document
+  "Format a document into HTML."
+  :format)
+
+(defmethod format-document :markdown [doc]
+  [:div.markdown (.markdownToHtml pegdown (:content doc))])
 
 (defn- document-page [project doc]
   (html5
@@ -239,7 +246,7 @@
     (header project)
     (primary-sidebar project)
     [:div#content.namespace-index
-     [:div.doc [:div.markdown (.markdownToHtml pegdown (:content doc))]]]]))
+     [:div.doc (format-document doc)]]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
@@ -263,7 +270,7 @@
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
-   [:div.doc (format-doc project namespace var)]
+   [:div.doc (format-docstring project namespace var)]
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
@@ -287,7 +294,7 @@
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
-     [:div.doc (format-doc project nil namespace)]
+     [:div.doc (format-docstring project nil namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
 
