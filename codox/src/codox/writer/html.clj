@@ -68,11 +68,14 @@
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
 
+(defn- ns-filepath [output-dir namespace]
+  (str output-dir "/" (ns-filename namespace)))
+
 (defn- doc-filename [doc]
   (str (:name doc) ".html"))
 
-(defn- ns-filepath [output-dir namespace]
-  (str output-dir "/" (ns-filename namespace)))
+(defn- doc-filepath [output-dir doc]
+  (str output-dir "/" (doc-filename doc)))
 
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id (:name var))))
@@ -227,6 +230,17 @@
           (for [var (sorted-public-vars namespace)]
             (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]))
 
+(defn- document-page [project doc]
+  (html5
+   [:head
+    default-includes
+    [:title (h (:title doc))]]
+   [:body
+    (header project)
+    (primary-sidebar project)
+    [:div#content.namespace-index
+     (.markdownToHtml pegdown (:content doc))]]))
+
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
     (list* (:name var) arglist)))
@@ -288,11 +302,15 @@
 (defn- write-index [output-dir project]
   (spit (io/file output-dir "index.html") (index-page project)))
 
-(defn- write-namespaces
-  [output-dir project]
+(defn- write-namespaces [output-dir project]
   (doseq [namespace (:namespaces project)]
     (spit (ns-filepath output-dir namespace)
           (namespace-page project namespace))))
+
+(defn- write-documents [output-dir project]
+  (doseq [document (:documents project)]
+    (spit (doc-filepath output-dir document)
+          (document-page project document))))
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
@@ -303,5 +321,6 @@
     (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
     (write-index project)
-    (write-namespaces project))
+    (write-namespaces project)
+    (write-documents project))
   (println "Generated HTML docs in" (.getAbsolutePath (io/file output-path))))
