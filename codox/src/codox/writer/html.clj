@@ -68,6 +68,9 @@
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
 
+(defn- doc-filename [doc]
+  (str (:name doc) ".html"))
+
 (defn- ns-filepath [output-dir namespace]
   (str output-dir "/" (ns-filename namespace)))
 
@@ -141,10 +144,19 @@
        [:span.top {:style (str "height: " height "px;")}]
        [:span.bottom]])))
 
-(defn- namespaces-menu [project & [current]]
+(defn- topics-menu [project]
+  (list
+   [:h3 "Topics"]
+   [:ul
+    (for [doc (:documents project)]
+      [:li.depth-1
+       (link-to (doc-filename doc)
+                [:div.inner [:span (h (:title doc))]])])]))
+
+(defn- namespaces-menu [project current-ns]
   (let [namespaces (:namespaces project)
         ns-map     (index-by :name namespaces)]
-    [:div#namespaces.sidebar
+    (list
      [:h3 (link-to "index.html" [:span.inner "Namespaces"])]
      [:ul
       (for [[name depth height branch?] (namespace-hierarchy namespaces)]
@@ -152,14 +164,19 @@
               short  (last (split-ns name))
               inner  [:div.inner (ns-tree-part height) [:span (h short)]]]
           (if-let [ns (ns-map name)]
-            (let [class (str class (if (= ns current) " current"))]
+            (let [class (str class (if (= ns current-ns) " current"))]
               [:li {:class class} (link-to (ns-filename ns) inner)])
-            [:li {:class class} [:div.no-link inner]])))]]))
+            [:li {:class class} [:div.no-link inner]])))])))
+
+(defn- primary-sidebar [project & [current-ns]]
+  [:div#namespaces.sidebar
+   (topics-menu project)
+   (namespaces-menu project current-ns)])
 
 (defn- sorted-public-vars [namespace]
   (sort-by (comp str/lower-case :name) (:publics namespace)))
 
-(defn- vars-menu [namespace]
+(defn- vars-sidebar [namespace]
   [:div#vars.sidebar
    [:h3 (link-to "#top" [:span.inner "Public Vars"])]
    [:ul
@@ -167,12 +184,12 @@
       (list*
        [:li.depth-1
         (link-to (var-uri namespace var) [:div.inner [:span (h (:name var))]])]
-       (for [mem (:members var)]
-         (let [branch? (not= mem (last (:members var)))
-               class   (if branch? "depth-2 branch" "depth-2")
-               inner   [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
-           [:li {:class class}
-            (link-to (var-uri namespace mem) inner)]))))]])
+      (for [mem (:members var)]
+        (let [branch? (not= mem (last (:members var)))
+              class   (if branch? "depth-2 branch" "depth-2")
+              inner   [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
+          [:li {:class class}
+           (link-to (var-uri namespace mem) inner)]))))]])
 
 (def ^{:private true} default-includes
   (list
@@ -196,7 +213,7 @@
     [:title (h (project-title project)) " API documentation"]]
    [:body
     (header project)
-    (namespaces-menu project)
+    (primary-sidebar project)
     [:div#content.namespace-index
      [:h2 (h (project-title project))]
      [:div.doc [:p (h (:description project))]]
@@ -251,8 +268,8 @@
     [:title (h (:name namespace)) " documentation"]]
    [:body
     (header project)
-    (namespaces-menu project namespace)
-    (vars-menu namespace)
+    (primary-sidebar project namespace)
+    (vars-sidebar namespace)
     [:div#content.namespace-docs
      [:h2#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)

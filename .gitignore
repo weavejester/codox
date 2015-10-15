@@ -7,4 +7,3 @@ target/
 checkouts/
 .lein-*
 .nrepl-port
-doc
