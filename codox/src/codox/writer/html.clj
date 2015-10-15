@@ -147,14 +147,14 @@
        [:span.top {:style (str "height: " height "px;")}]
        [:span.bottom]])))
 
-(defn- topics-menu [project]
+(defn- topics-menu [project current-doc]
   (list
    [:h3 "Topics"]
    [:ul
     (for [doc (:documents project)]
       [:li.depth-1
-       (link-to (doc-filename doc)
-                [:div.inner [:span (h (:title doc))]])])]))
+       {:class (if (= doc current-doc) " current")}
+       (link-to (doc-filename doc) [:div.inner [:span (h (:title doc))]])])]))
 
 (defn- namespaces-menu [project current-ns]
   (let [namespaces (:namespaces project)
@@ -171,10 +171,10 @@
               [:li {:class class} (link-to (ns-filename ns) inner)])
             [:li {:class class} [:div.no-link inner]])))])))
 
-(defn- primary-sidebar [project & [current-ns]]
+(defn- primary-sidebar [project & [current]]
   [:div.sidebar.primary
-   (topics-menu project)
-   (namespaces-menu project current-ns)])
+   (topics-menu project current)
+   (namespaces-menu project current)])
 
 (defn- sorted-public-vars [namespace]
   (sort-by (comp str/lower-case :name) (:publics namespace)))
@@ -244,7 +244,7 @@
     [:title (h (:title doc))]]
    [:body
     (header project)
-    (primary-sidebar project)
+    (primary-sidebar project doc)
     [:div#content.namespace-index
      [:div.doc (format-document project doc)]]]))
 
