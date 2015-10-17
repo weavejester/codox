@@ -98,6 +98,9 @@ h2 {
 
 #header h1 .project-version {
     font-weight: normal;
+}
+
+.project-version {
     padding-left: 5px;
 }
 
