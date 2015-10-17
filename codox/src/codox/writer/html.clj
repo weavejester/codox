@@ -172,8 +172,14 @@
               [:li {:class class} (link-to (ns-filename ns) inner)])
             [:li {:class class} [:div.no-link inner]])))])))
 
+(defn- index-link [project on-index?]
+  [:ul.index-link
+   [:li.depth-1 {:class (if on-index? "current")}
+    (link-to "index.html" [:div.inner "Index"])]])
+
 (defn- primary-sidebar [project & [current]]
   [:div.sidebar.primary
+   (index-link project (nil? current))
    (topics-menu project current)
    (namespaces-menu project current)])
 
