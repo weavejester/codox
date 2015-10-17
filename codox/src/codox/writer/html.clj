@@ -222,9 +222,9 @@
        [:h1 (h title)]
        [:div.doc [:p (h (:description project))]]
        [:h2 "Topics"]
-       (unordered-list
+       [:ul.topics
         (for [doc (:documents project)]
-          (link-to (doc-filename doc) (h (:title doc)))))
+          [:li (link-to (doc-filename doc) (h (:title doc)))])]
        [:h2 "Namespaces"]
        (for [namespace (sort-by :name (:namespaces project))]
          [:div.namespace
