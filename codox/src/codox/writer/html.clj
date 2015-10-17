@@ -221,6 +221,11 @@
       [:div#content.namespace-index
        [:h1 (h title)]
        [:div.doc [:p (h (:description project))]]
+       [:h2 "Topics"]
+       (unordered-list
+        (for [doc (:documents project)]
+          (link-to (doc-filename doc) (h (:title doc)))))
+       [:h2 "Namespaces"]
        (for [namespace (sort-by :name (:namespaces project))]
          [:div.namespace
           [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
