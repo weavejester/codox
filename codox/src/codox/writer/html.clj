@@ -229,10 +229,12 @@
     [:div#content.namespace-index
      [:h1 (project-title project)]
      [:div.doc [:p (h (:description project))]]
-     [:h2 "Topics"]
-     [:ul.topics
-      (for [doc (sort-by :name (:documents project))]
-        [:li (link-to (doc-filename doc) (h (:title doc)))])]
+     (if-let [docs (seq (:documents project))]
+       (list
+        [:h2 "Topics"]
+        [:ul.topics
+         (for [doc (sort-by :name docs)]
+           [:li (link-to (doc-filename doc) (h (:title doc)))])]))
      [:h2 "Namespaces"]
      (for [namespace (sort-by :name (:namespaces project))]
        [:div.namespace
