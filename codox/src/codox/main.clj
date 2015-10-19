@@ -52,12 +52,12 @@
         (update-in [:publics] add-var-defaults defaults))))
 
 (defn- read-namespaces
-  [{:keys [language root-path source-paths include exclude defaults]}]
+  [{:keys [language root-path source-paths include exclude metadata]}]
   (-> (namespace-readers language)
       (apply source-paths)
       (ns-filter include exclude)
       (add-source-paths root-path source-paths)
-      (add-ns-defaults defaults)))
+      (add-ns-defaults metadata)))
 
 (defn- read-documents [{:keys [doc-paths]}]
   (if (seq doc-paths) (apply text/read-documents doc-paths)))
@@ -68,7 +68,7 @@
    :source-paths ["src"]
    :doc-paths    ["doc"]
    :output-path  "target/doc"
-   :defaults     {}})
+   :metadata     {}})
 
 (defn generate-docs
   "Generate documentation from source files."

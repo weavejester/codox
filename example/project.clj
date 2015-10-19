@@ -9,11 +9,11 @@
   :target-path "target/%s/"
   :codox
   {:project {:name "Example Project", :version "1.0.0"}
-   :defaults {:doc "FIXME: write docs"}
+   :metadata {:doc "FIXME: write docs"}
    :source-uri
    "https://github.com/weavejester/codox/blob/master/codox.example/{filepath}#L{line}"}
   :profiles
-  {:md   {:codox {:defaults {:doc/format :markdown}}}
+  {:md   {:codox {:metadata {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
                          [org.clojure/clojurescript "1.7.122"]]
           :codox {:language :clojurescript}}

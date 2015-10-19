@@ -79,10 +79,10 @@ To include only one or more namespaces, set them with the `:include` key:
 ```
 
 Codox constructs documentation from metadata on vars and namespaces.
-You can specify a set of default metadata using the defaults map:
+You can specify a set of default metadata using the `:metadata` map:
 
 ```clojure
-:codox {:defaults {:doc "FIXME: write docs"}}
+:codox {:metadata {:doc "FIXME: write docs"}}
 ```
 
 ### Documentation Files
@@ -231,10 +231,10 @@ You can specify docstring formats via a var's metadata, using the
 ```
 
 Or you can specify the docstring format globally by adding it to the
-defaults map in your project.clj file:
+`:metadata` map in your project.clj file:
 
 ```clojure
-:codox {:defaults {:doc/format :markdown}}
+:codox {:metadata {:doc/format :markdown}}
 ```
 
 Markdown docstrings also support wikilink-style relative links, for
