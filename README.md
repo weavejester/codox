@@ -97,7 +97,7 @@ For excluding only internal namespaces, it's sometimes useful to use
 negative lookahead:
 
 ```clojure
-:codox {:namespaces "#"^library\.(?!internal)"}
+:codox {:namespaces ["#"^library\.(?!internal)"]}
 ```
 
 To override the namespaces list and include all namespaces, use `:all`
