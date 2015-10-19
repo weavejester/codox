@@ -1,4 +1,4 @@
-## 0.9.0 (TBD)
+## 0.9.0 (2015-10-19)
 
 * Added support for including markdown doc files in output
 * Changed the top header style to be bigger and flatter

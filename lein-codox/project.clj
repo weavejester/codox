@@ -1,4 +1,4 @@
-(defproject lein-codox "0.9.0-SNAPSHOT"
+(defproject lein-codox "0.9.0"
   :description "Codox Leiningen plugin"
   :url "https://github.com/weavejester/codox"
   :scm {:dir ".."}

@@ -21,6 +21,6 @@
                   (project/merge-profiles project [:codox])
                   project)]
     (eval/eval-in-project
-     (deps/add-if-missing project '[codox "0.9.0-SNAPSHOT"])
+     (deps/add-if-missing project '[codox "0.9.0"])
      `(codox.main/generate-docs '~(get-options project))
      `(require 'codox.main))))
