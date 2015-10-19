@@ -48,11 +48,11 @@ ClojureScript by setting the `:language` key:
 :codox {:language :clojurescript}
 ```
 
-### Inputs
+### Source Files
 
-By default Codox looks for source files in the `src` subdirectory, but
-you can change this by placing the following in your `project.clj`
-file:
+By default Codox looks for source files in the `:source-paths` of your
+project, but you can change this just for Codox by placing the
+following in your `project.clj` file:
 
 ```clojure
 :codox {:source-paths ["path/to/source"]}
@@ -85,7 +85,24 @@ You can specify a set of default metadata using the defaults map:
 :codox {:defaults {:doc "FIXME: write docs"}}
 ```
 
-### Outputs
+### Documentation Files
+
+As well as source files, Codox also tries to include documentation
+files as well. By default it looks for these in the `doc` directory,
+but you can change this with:
+
+```clojure
+:codox {:doc-paths ["path/to/docs"]}
+```
+
+Documentation files will appear in the output sorted by their
+filename, so if you want a particular order, prefix your files with
+`01`, `02`, etc.
+
+Currently only markdown files (`.md` or `.markdown`) are supported.
+
+
+### Output Files
 
 To write output to a directory other than the default, use the
 `:output-path` key:
