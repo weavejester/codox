@@ -31,6 +31,25 @@ This will generate API documentation in the "target/doc" subdirectory
 (or wherever your project `:target-path` is set to).
 
 
+## Breaking Changes in 0.9
+
+In preparation for a 1.0 release, Codox 0.9 has a number of breaking
+changes:
+
+* The Leiningen plugin has been changed from `codox` to `lein-codox`
+* The Leiningen task has been changed from `lein doc` to `lein codox`
+* The default output path has been changed from `doc` to `target/doc`
+* The `:sources` option has been renamed to `:source-paths`
+* The `:output-dir` option has been renamed to `:output-path`
+* The `:defaults` option has been renamed to `:metadata`
+* The `:include` and `:exclude` options have been replaced with `:namespaces`
+* All the `:src-*` options have been replaced with `:source-uri`
+
+See the "Source Files" section for information on the `:namespaces`
+option, and the "Source Links" section for information on the
+`:source-uri` option.
+
+
 ## AOT Compilation
 
 AOT-compiled namespaces will lose their metadata, which mean you'll
