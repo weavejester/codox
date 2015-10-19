@@ -1,3 +1,17 @@
+## 0.9.0 (TBD)
+
+* Added support for including markdown doc files in output
+* Changed the top header style to be bigger and flatter
+* Renamed `codox.leiningen` package to `lein-codox`
+* Renamed `codox.core` package to `codox`
+* Renamed `lein doc` task to `lein codox`
+* Changed default output path from `doc` to to `target/doc`
+* Renamed `:sources` option to `:source-paths`
+* Renamed `:output-dir` option to `:output-path`
+* Renamed `:defaults` option to `:metadata`
+* Replaced the `:include` and `:exclude` options with the `:namespaces` option
+* Replaced the `:src-*` options with the `:source-uri` option
+
 ## 0.8.15 (2015-10-14)
 
 * Add asm-all as explicit dependency to fix issue with core.async
