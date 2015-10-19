@@ -27,7 +27,8 @@ Then run:
 lein codox
 ```
 
-This will generate API documentation in the "target/doc" subdirectory.
+This will generate API documentation in the "target/doc" subdirectory
+(or wherever your project `:target-path` is set to).
 
 
 ## AOT Compilation
