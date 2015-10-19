@@ -18,16 +18,16 @@ Include the following plugin in your `project.clj` file or your global
 profile:
 
 ```clojure
-:plugins [[codox "0.8.15"]]
+:plugins [[codox "0.9.0-SNAPSHOT"]]
 ```
 
 Then run:
 
 ```
-lein doc
+lein codox
 ```
 
-This will generate API documentation in the "doc" subdirectory.
+This will generate API documentation in the "target/doc" subdirectory.
 
 
 ## AOT Compilation
@@ -55,7 +55,7 @@ you can change this by placing the following in your `project.clj`
 file:
 
 ```clojure
-:codox {:sources ["path/to/source"]}
+:codox {:source-paths ["path/to/source"]}
 ```
 
 To exclude a namespace, use the `:exclude` key:
@@ -87,11 +87,11 @@ You can specify a set of default metadata using the defaults map:
 
 ### Outputs
 
-To write output to a directory other than the default `doc` directory, use the
-`:output-dir` key:
+To write output to a directory other than the default, use the
+`:output-path` key:
 
 ```clojure
-:codox {:output-dir "doc/codox"}
+:codox {:output-path "codox"}
 ```
 
 To use a different output writer, specify the fully qualified symbol of the
@@ -113,40 +113,33 @@ description in the output. You can override these by specifying a
 
 If you have the source available at a URI and would like to have links
 to the function's source file in the documentation, you can set the
-`:src-dir-uri` key:
+`:source-uri` key:
 
 ```clojure
-:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master/"}
+:codox {:source-uri "https://github.com/foo/bar/blob/master/{filepath}#L{line}"}
 ```
 
-(Note that the ending "/" is required from version 0.6.5 onward.)
+The URI is a template that may contain the following keys:
 
-Some code hosting sites, such as Github, set an anchor for each line
-of code. If you set the `:src-linenum-anchor-prefix project` key, the
-function's "Source" link will point directly to the line of code where
-the function is declared. This value should be whatever is prepended
-to the raw line number in the anchors for each line; on Github this is
-"L":
+* `{filepath}`  - the file path from the root of the repository
+* `{classpath}` - the relative path of the file within the source directory
+* `{line}`      - the line number of the source file
 
-```clojure
-:codox {:src-dir-uri "http://github.com/clojure/clojure/blob/master/"
-        :src-linenum-anchor-prefix "L"}
-```
-
-For more control, you can assign mapping functions to source paths
-that match a regular expression. This is particularly useful for
-created source links from generated source code, such as is the case
-with [cljx](https://github.com/lynaghk/cljx).
+You can also assign different URI templates to different paths of your
+source tree. This is particularly useful for created source links from
+generated source code, such as is the case with [cljx][].
 
 For example, perhaps your Clojure source files are generated in
-`target/classes`. To link back to the original .cljx file, you could
-add a mapping like:
+`target/classes`. To link back to the original .cljx file, you could do:
 
 ```clojure
-:codox {:src-uri-mapping {#"target/classes" #(str "src/" % "x")}}
+:codox
+{:source-uri
+ {#"target/classes" "https://github.com/foo/bar/blob/master/src/{classpath}x#L{line}"
+  #".*"             "https://github.com/foo/bar/blob/master/{filepath}#L{line}"}
 ```
 
-(Note that the ending "/" is required in "src/".)
+[cljx]: https://github.com/lynaghk/cljx
 
 
 ## Metadata Options
@@ -242,7 +235,7 @@ vars its documenting.
 
 ## License
 
-Copyright © 2014 James Reeves
+Copyright © 2015 James Reeves
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
