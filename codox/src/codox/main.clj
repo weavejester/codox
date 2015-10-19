@@ -1,6 +1,6 @@
 (ns codox.main
   "Main namespace for generating documentation"
-  (:use [codox.utils :only (ns-filter add-source-paths)])
+  (:use [codox.utils :only (add-source-paths)])
   (:require [codox.reader.clojure :as clj]
             [codox.reader.plaintext :as text]))
 
@@ -51,11 +51,22 @@
     (-> (merge defaults namespace)
         (update-in [:publics] add-var-defaults defaults))))
 
+(defn- ns-matches? [{ns-name :name} pattern]
+  (cond
+    (instance? java.util.regex.Pattern pattern) (re-find pattern (str ns-name))
+    (string? pattern) (= pattern (str ns-name))
+    (symbol? pattern) (= pattern (symbol ns-name))))
+
+(defn- filter-namespaces [namespaces ns-filters]
+  (if (and ns-filters (not= ns-filters :all))
+    (filter #(some (partial ns-matches? %) ns-filters) namespaces)
+    namespaces))
+
 (defn- read-namespaces
-  [{:keys [language root-path source-paths include exclude metadata]}]
+  [{:keys [language root-path source-paths namespaces metadata]}]
   (-> (namespace-readers language)
       (apply source-paths)
-      (ns-filter include exclude)
+      (filter-namespaces namespaces)
       (add-source-paths root-path source-paths)
       (add-ns-defaults metadata)))
 
@@ -68,6 +79,7 @@
    :source-paths ["src"]
    :doc-paths    ["doc"]
    :output-path  "target/doc"
+   :namespaces   :all
    :metadata     {}})
 
 (defn generate-docs

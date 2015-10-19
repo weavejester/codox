@@ -10,6 +10,7 @@
   :codox
   {:project {:name "Example Project", :version "1.0.0"}
    :metadata {:doc "FIXME: write docs"}
+   :namespaces :all
    :source-uri
    "https://github.com/weavejester/codox/blob/master/codox.example/{filepath}#L{line}"}
   :profiles

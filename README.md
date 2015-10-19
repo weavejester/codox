@@ -58,24 +58,31 @@ following in your `project.clj` file:
 :codox {:source-paths ["path/to/source"]}
 ```
 
-To exclude a namespace, use the `:exclude` key:
+The `:namespaces` option can be used to restrict the documentation to
+a specific set of namespaces:
 
 ```clojure
-:codox {:exclude my.private.ns}
+:codox {:namespaces [library.core library.io]}
 ```
 
-Sequences work too:
+Regular expressions can also be used for more general matching:
 
 ```clojure
-:codox {:exclude [my.private.ns another.private.ns]
+:codox {:namespaces [#"^library\."]}
 ```
 
-To include only one or more namespaces, set them with the `:include` key:
+For excluding only internal namespaces, it's sometimes useful to use
+negative lookahead:
 
 ```clojure
-;; Again, a single symbol or a collection are both valid
-:codox {:include library.core}
-:codox {:include [library.core library.io]}
+:codox {:namespaces "#"^library\.(?!internal)"}
+```
+
+To override the namespaces list and include all namespaces, use `:all`
+(the default):
+
+```clojure
+:codox {:namespaces :all}
 ```
 
 Codox constructs documentation from metadata on vars and namespaces.
