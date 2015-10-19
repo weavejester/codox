@@ -80,23 +80,21 @@
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id (:name var))))
 
-(defn- get-mapping-fn [mappings path]
-  (some (fn [[re f]] (if (re-find re path) f)) mappings))
+(defn- get-source-uri [source-uris path]
+  (some (fn [[re f]] (if (re-find re path) f)) source-uris))
 
 (defn- uri-path [path]
   (str/replace (str path) File/separator "/"))
 
 (defn- var-source-uri
-  [{:keys [src-dir-uri src-uri-mapping src-linenum-anchor-prefix]}
+  [{:keys [source-uri]}
    {:keys [path file line]}]
   (let [path (uri-path path)
-        file (uri-path file)]
-    (str src-dir-uri
-         (if-let [mapping-fn (get-mapping-fn src-uri-mapping path)]
-           (mapping-fn file)
-           path)
-         (if src-linenum-anchor-prefix
-           (str "#" src-linenum-anchor-prefix line)))))
+        uri  (if (map? source-uri) (get-source-uri source-uri path) source-uri)]
+    (-> uri
+        (str/replace "{filepath}"  path)
+        (str/replace "{classpath}" (uri-path file))
+        (str/replace "{line}"      (str line)))))
 
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
@@ -291,9 +289,9 @@
      [:div.members
       [:h4 "members"]
       [:div.inner
-       (let [project (dissoc project :src-dir-uri)]
+       (let [project (dissoc project :source-uri)]
          (map (partial var-docs project namespace) members))]])
-   (if (:src-dir-uri project)
+   (if (:source-uri project)
      (if (:path var)
        [:div.src-link (link-to (var-source-uri project var) "view source")]
        (println "Could not generate source link for" (:name var))))])

@@ -10,9 +10,8 @@
   :codox
   {:project {:name "Example Project", :version "1.0.0"}
    :defaults {:doc "FIXME: write docs"}
-   :src-dir-uri "http://github.com/weavejester/codox/blob/master/"
-   :src-linenum-anchor-prefix "L"
-   :src-uri-mapping {#"src/clojure" #(str "codox.example/src/clojure/" %)}}
+   :source-uri
+   "https://github.com/weavejester/codox/blob/master/codox.example/{filepath}#L{line}"}
   :profiles
   {:md   {:codox {:defaults {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
