@@ -451,12 +451,16 @@ p {
     border-radius: 2px;
 }
 
-.markdown pre {
+.markdown pre, pre.deps {
     background: #f4f4f4;
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     padding: 5px 10px;
     margin: 0 10px;
+}
+
+pre.deps {
+    display: inline-block;
 }
 
 .markdown pre code {
