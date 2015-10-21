@@ -145,6 +145,13 @@
        [:span.top {:style (str "height: " height "px;")}]
        [:span.bottom]])))
 
+(defn- index-link [project on-index?]
+  (list
+   [:h3.no-link [:span.inner "Project"]]
+   [:ul.index-link
+    [:li.depth-1 {:class (if on-index? "current")}
+     (link-to "index.html" [:div.inner "Index"])]]))
+
 (defn- topics-menu [project current-doc]
   (if-let [docs (seq (:documents project))]
     (list
@@ -169,11 +176,6 @@
             (let [class (str class (if (= ns current-ns) " current"))]
               [:li {:class class} (link-to (ns-filename ns) inner)])
             [:li {:class class} [:div.no-link inner]])))])))
-
-(defn- index-link [project on-index?]
-  [:ul.index-link
-   [:li.depth-1 {:class (if on-index? "current")}
-    (link-to "index.html" [:div.inner "Index"])]])
 
 (defn- primary-sidebar [project & [current]]
   [:div.sidebar.primary
