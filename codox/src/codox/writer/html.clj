@@ -37,7 +37,10 @@
            Extensions/FENCED_CODE_BLOCKS
            Extensions/WIKILINKS
            Extensions/DEFINITIONS
-           Extensions/ABBREVIATIONS)
+           Extensions/ABBREVIATIONS
+           Extensions/ATXHEADERSPACE
+           Extensions/RELAXEDHRULES
+           Extensions/EXTANCHORLINKS)
    2000))
 
 (defn- find-wikilink [project ns text]

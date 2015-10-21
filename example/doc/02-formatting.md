@@ -12,6 +12,10 @@ styling in the docs.
 2. ordered
 2. lists
 
+Let's check to make sure that a
+#hashtag at the beginning of a line is not a header
+
+---
 # Header 1
 ## Header 2
 ### Header 3
