@@ -464,6 +464,12 @@ pre.deps {
     border: none;
 }
 
+.markdown hr {
+    border-style: solid;
+    border-top: none;
+    color: #ccc;
+}
+
 .doc ul, .doc ol {
     padding-left: 30px;
 }
