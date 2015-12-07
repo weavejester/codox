@@ -162,7 +162,7 @@ to the function's source file in the documentation, you can set the
 `:source-uri` key:
 
 ```clojure
-:codox {:source-uri "https://github.com/foo/bar/blob/master/{filepath}#L{line}"}
+:codox {:source-uri "https://github.com/foo/bar/blob/{version}/{filepath}#L{line}"}
 ```
 
 The URI is a template that may contain the following keys:
@@ -170,6 +170,7 @@ The URI is a template that may contain the following keys:
 * `{filepath}`  - the file path from the root of the repository
 * `{classpath}` - the relative path of the file within the source directory
 * `{line}`      - the line number of the source file
+* `{version}`   - the version of the project
 
 You can also assign different URI templates to different paths of your
 source tree. This is particularly useful for created source links from
