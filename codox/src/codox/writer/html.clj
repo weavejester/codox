@@ -90,14 +90,15 @@
   (str/replace (str path) File/separator "/"))
 
 (defn- var-source-uri
-  [{:keys [source-uri]}
+  [{:keys [source-uri version]}
    {:keys [path file line]}]
   (let [path (uri-path path)
         uri  (if (map? source-uri) (get-source-uri source-uri path) source-uri)]
     (-> uri
         (str/replace "{filepath}"  path)
         (str/replace "{classpath}" (uri-path file))
-        (str/replace "{line}"      (str line)))))
+        (str/replace "{line}"      (str line))
+        (str/replace "{version}"   version))))
 
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
