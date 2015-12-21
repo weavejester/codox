@@ -10,7 +10,7 @@ Include the following plugin in your `project.clj` file or your global
 profile:
 
 ```clojure
-:plugins [[lein-codox "0.9.0"]]
+:plugins [[lein-codox "0.9.1"]]
 ```
 
 Then run:

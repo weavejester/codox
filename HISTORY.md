@@ -1,3 +1,9 @@
+## 0.9.1 (2015-12-21)
+
+* Add `{version}` parameter to `:source-uri` option
+* Ensure hashtags are not rendered as headers in markdown
+* Relax rules for markdown horizontal rules
+
 ## 0.9.0 (2015-10-19)
 
 * Added support for including markdown doc files in output
