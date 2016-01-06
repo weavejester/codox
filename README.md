@@ -152,7 +152,7 @@ description in the output. You can override these by specifying a
 `:project` map in your Codox configuration:
 
 ```clojure
-:codoc {:project {:name "Example", :version "1.0", :description "N/A"}}
+:codox {:project {:name "Example", :version "1.0", :description "N/A"}}
 ```
 
 ### Source Links
