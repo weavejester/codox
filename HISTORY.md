@@ -1,3 +1,9 @@
+## 0.9.2 (2016-02-03)
+
+* Add `{basename}` parameter to `:source-uri` option
+* Add Enlive-style HTML transformations
+* Fix an issue with document paths under Windows
+
 ## 0.9.1 (2015-12-21)
 
 * Add `{version}` parameter to `:source-uri` option
