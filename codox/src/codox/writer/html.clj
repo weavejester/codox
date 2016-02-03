@@ -7,7 +7,34 @@
            [org.pegdown.ast WikiLinkNode])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
+            [net.cgrand.enlive-html :as enlive-html]
+            [net.cgrand.jsoup :as jsoup]
             [codox.utils :as util]))
+
+(def enlive-operations
+  {:append enlive-html/append})
+
+(defn- enlive-transformer [[op & args]]
+  (apply (enlive-operations op) (map enlive-html/html args)))
+
+(defn- enlive-transform [nodes transforms]
+  (reduce
+   (fn [out [s t]]
+     (enlive-html/transform out s (enlive-transformer t)))
+   nodes
+   (partition 2 transforms)))
+
+(defn- enlive-emit [nodes]
+  (apply str (enlive-html/emit* nodes)))
+
+(defn- enlive-parse [s]
+  (let [stream (io/input-stream (.getBytes s "UTF-8"))]
+    (enlive-html/html-resource stream {:parser jsoup/parser})))
+
+(defn- transform-html [project s]
+  (-> (enlive-parse s)
+      (enlive-transform (-> project :html :transforms))
+      (enlive-emit)))
 
 (defn- var-id [var]
   (str "var-" (-> var name URLEncoder/encode (str/replace "%" "."))))
@@ -338,17 +365,17 @@
     (.mkdirs (io/file output-dir dir))))
 
 (defn- write-index [output-dir project]
-  (spit (io/file output-dir "index.html") (index-page project)))
+  (spit (io/file output-dir "index.html") (transform-html project (index-page project))))
 
 (defn- write-namespaces [output-dir project]
   (doseq [namespace (:namespaces project)]
     (spit (ns-filepath output-dir namespace)
-          (namespace-page project namespace))))
+          (transform-html project (namespace-page project namespace)))))
 
 (defn- write-documents [output-dir project]
   (doseq [document (:documents project)]
     (spit (doc-filepath output-dir document)
-          (document-page project document))))
+          (transform-html project (document-page project document)))))
 
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
