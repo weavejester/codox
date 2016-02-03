@@ -14,7 +14,11 @@
    :source-uri
    "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{line}"
    :html
-   {:transforms [[:head] [:append [:script "console.log('hello world');"]]]}}
+   {:transforms [[:head] [:prepend [:script "console.log('hello');"]]
+                 [:head] [:append  [:script "console.log('world');"]]
+                 [:head :title] [:substitute [:title "Made up title"]]
+                 [:pre.deps] [:before [:p "Before test"]]
+                 [:pre.deps] [:after  [:p "After test"]]]}}
   :profiles
   {:md   {:codox {:metadata {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
