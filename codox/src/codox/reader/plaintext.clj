@@ -1,8 +1,9 @@
 (ns codox.reader.plaintext
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [codox.utils :as util]))
 
 (defn basename [file]
-  (second (re-find #"([^/]*)\.(.*?)$" (str file))))
+  (second (re-find #"([^/]*)\.(.*?)$" (util/uri-path file))))
 
 (defn file-extension [file]
   (re-find #"\..*?$" (str file)))

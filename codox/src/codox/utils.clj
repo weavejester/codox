@@ -58,12 +58,12 @@
            (unindent)
            (str (first lines) "\n")))))
 
-(defn- unix-path [path]
-  (.replace path "\\" "/"))
+(defn uri-path [path]
+  (str/replace (str path) java.io.File/separator "/"))
 
 (defn- normalize-path [path root]
-  (let [root (str (unix-path root) "/")
-        path (unix-path (.getAbsolutePath (io/file path)))]
+  (let [root (str (uri-path root) "/")
+        path (uri-path (.getAbsolutePath (io/file path)))]
     (if (.startsWith path root)
       (.substring path (.length root))
       path)))

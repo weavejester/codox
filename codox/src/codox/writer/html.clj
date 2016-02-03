@@ -117,20 +117,17 @@
 (defn- get-source-uri [source-uris path]
   (some (fn [[re f]] (if (re-find re path) f)) source-uris))
 
-(defn- uri-path [path]
-  (str/replace (str path) File/separator "/"))
-
 (defn- uri-basename [path]
   (second (re-find #"/([^/]+?)$" path)))
 
 (defn- var-source-uri
   [{:keys [source-uri version]}
    {:keys [path file line]}]
-  (let [path (uri-path path)
+  (let [path (util/uri-path path)
         uri  (if (map? source-uri) (get-source-uri source-uri path) source-uri)]
     (-> uri
         (str/replace "{filepath}"  path)
-        (str/replace "{classpath}" (uri-path file))
+        (str/replace "{classpath}" (util/uri-path file))
         (str/replace "{basename}"  (uri-basename path))
         (str/replace "{line}"      (str line))
         (str/replace "{version}"   version))))
