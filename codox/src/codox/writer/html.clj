@@ -120,6 +120,9 @@
 (defn- uri-path [path]
   (str/replace (str path) File/separator "/"))
 
+(defn- uri-basename [path]
+  (second (re-find #"/([^/]+?)$" path)))
+
 (defn- var-source-uri
   [{:keys [source-uri version]}
    {:keys [path file line]}]
@@ -128,6 +131,7 @@
     (-> uri
         (str/replace "{filepath}"  path)
         (str/replace "{classpath}" (uri-path file))
+        (str/replace "{basename}"  (uri-basename path))
         (str/replace "{line}"      (str line))
         (str/replace "{version}"   version))))
 

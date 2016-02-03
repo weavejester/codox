@@ -12,7 +12,7 @@
    :metadata {:doc "FIXME: write docs"}
    :namespaces :all
    :source-uri
-   "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{line}"
+   "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{basename}-{line}"
    :html
    {:transforms [[:head] [:prepend [:script "console.log('hello');"]]
                  [:head] [:append  [:script "console.log('world');"]]
