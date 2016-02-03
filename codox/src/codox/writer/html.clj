@@ -12,7 +12,11 @@
             [codox.utils :as util]))
 
 (def enlive-operations
-  {:append enlive-html/append})
+  {:append     enlive-html/append
+   :prepend    enlive-html/prepend
+   :after      enlive-html/after
+   :before     enlive-html/before
+   :substitute enlive-html/substitute})
 
 (defn- enlive-transformer [[op & args]]
   (apply (enlive-operations op) (map enlive-html/html args)))
