@@ -188,6 +188,36 @@ For example, perhaps your Clojure source files are generated in
 
 [cljx]: https://github.com/lynaghk/cljx
 
+### HTML Transformations
+
+The HTML writer can be customized using [Enlive][]-style
+transformations. You can use these to modify the HTML documents
+produced in arbitrary ways, but the most common use is to add in new
+stylesheets or scripts.
+
+The transforms live in the `:transforms` key, in the `:html` map, and
+consist of a vector that matches selectors to transformations, in the
+same way that `let` matches symbols to values.
+
+For example, the following code adds a new `<script>` element as the
+last child of the `<head>` element:
+
+```clojure
+:html {:transforms [[:head] [:append [:script "console.log('foo');"]]]}
+```
+
+The selectors follow the [Enlive selector syntax][].
+
+The transformations are a little different. There are five transforms,
+`:append`, `:prepend`, `:after`, `:before` and `:substitute`. These
+match to the corresponding [Enlive transformations][], but expect
+[Hiccup][]-style arguments.
+
+[enlive]: https://github.com/cgrand/enlive
+[enlive selector syntax]: https://github.com/cgrand/enlive#selector-syntax
+[enlive transformations]: https://github.com/cgrand/enlive#transformations
+[hiccup]: https://github.com/weavejester/hiccup
+
 
 ## Metadata Options
 
