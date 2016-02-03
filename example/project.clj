@@ -12,7 +12,9 @@
    :metadata {:doc "FIXME: write docs"}
    :namespaces :all
    :source-uri
-   "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{line}"}
+   "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{line}"
+   :html
+   {:transforms [[:head] [:append [:script "console.log('hello world');"]]]}}
   :profiles
   {:md   {:codox {:metadata {:doc/format :markdown}}}
    :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
