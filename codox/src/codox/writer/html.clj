@@ -217,13 +217,17 @@
       {:class (if (= ns current-ns) "current")}
       (link-to (ns-filename ns) [:div.inner [:span (h (:name ns))]])])])
 
+(defn- namespace-list-type [project]
+  (let [default (if (> (-> project :namespaces count) 1) :nested :flat)]
+    (get-in project [:html :namespace-list] default)))
+
 (defn- namespaces-menu [project current-ns]
   (let [namespaces (:namespaces project)]
     (list
      [:h3.no-link [:span.inner "Namespaces"]]
-     (if (= (-> project :html :namespace-list) :flat)
-       (flat-namespaces namespaces current-ns)
-       (nested-namespaces namespaces current-ns)))))
+     (case (namespace-list-type project)
+       :flat   (flat-namespaces namespaces current-ns)
+       :nested (nested-namespaces namespaces current-ns)))))
 
 (defn- primary-sidebar [project & [current]]
   [:div.sidebar.primary
