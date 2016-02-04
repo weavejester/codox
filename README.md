@@ -219,6 +219,18 @@ match to the corresponding [Enlive transformations][], but expect
 [enlive transformations]: https://github.com/cgrand/enlive#transformations
 [hiccup]: https://github.com/weavejester/hiccup
 
+### HTML Output Options
+
+The HTML writer also has one other customization option.
+
+By default the namespace list is nested, unless there is only one
+namespace in the library. To override this, set the `:namespace-list`
+option in the `:html` map to either `:nested` or `:flat`.
+
+```clojure
+:html {:namespace-list :flat}
+```
+
 
 ## Metadata Options
 
