@@ -134,12 +134,15 @@ h2 {
     margin: 0;
     padding: 10px 13px 0 13px;
     font-size: 19px;
-    font-weight: normal;
+    font-weight: lighter;
+}
+
+.sidebar h3 a {
+    color: #444;
 }
 
 .sidebar h3.no-link {
     color: #636363;
-    font-weight: lighter;
 }
 
 .sidebar ul {
