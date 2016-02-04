@@ -260,6 +260,9 @@
       (symbol (name p))
       p)))
 
+(defn- add-ending [^String s ^String ending]
+  (if (.endsWith s ending) s (str s ending)))
+
 (defn- index-page [project]
   (html5
    [:head
@@ -270,7 +273,7 @@
     (primary-sidebar project)
     [:div#content.namespace-index
      [:h1 (project-title project)]
-     [:div.doc [:p (h (:description project))]]
+     [:div.doc [:p (h (-> project :description (add-ending ".")))]]
      (if-let [package (package project)]
        (list
         [:h2 "Installation"]
