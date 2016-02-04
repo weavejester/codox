@@ -274,7 +274,7 @@
      (if-let [package (package project)]
        (list
         [:h2 "Installation"]
-        [:p "To install, add the following dependency to your project file:"]
+        [:p "To install, add the following dependency to your project or build file:"]
         [:pre.deps (h (str "[" package " " (pr-str (:version project)) "]"))]))
      (if-let [docs (seq (:documents project))]
        (list
