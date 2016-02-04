@@ -11,7 +11,7 @@ pre, code {
 
 h1 {
    font-weight: normal;
-   font-size: 28px;
+   font-size: 29px;
    margin: 10px 0 2px 0;
    padding: 0;
 }
@@ -22,7 +22,7 @@ h2 {
 }
 
 .document h1, .namespace-index h1 {
-    font-size: 30px;
+    font-size: 32px;
     margin-top: 12px;
 }
 
