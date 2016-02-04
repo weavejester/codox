@@ -198,12 +198,9 @@
          {:class (if (= doc current-doc) " current")}
          (link-to (doc-filename doc) [:div.inner [:span (h (:title doc))]])])])))
 
-(defn- namespaces-menu [project current-ns]
-  (let [namespaces (:namespaces project)
-        ns-map     (index-by :name namespaces)]
-    (list
-     [:h3.no-link [:span.inner "Namespaces"]]
-     [:ul
+(defn- nested-namespaces [namespaces current-ns]
+  (let [ns-map (index-by :name namespaces)]
+    [:ul
       (for [[name depth height branch?] (namespace-hierarchy namespaces)]
         (let [class  (str "depth-" depth (if branch? " branch"))
               short  (last (split-ns name))
@@ -211,7 +208,22 @@
           (if-let [ns (ns-map name)]
             (let [class (str class (if (= ns current-ns) " current"))]
               [:li {:class class} (link-to (ns-filename ns) inner)])
-            [:li {:class class} [:div.no-link inner]])))])))
+            [:li {:class class} [:div.no-link inner]])))]))
+
+(defn- flat-namespaces [namespaces current-ns]
+  [:ul
+   (for [ns (sort-by :name namespaces)]
+     [:li.depth-1
+      {:class (if (= ns current-ns) "current")}
+      (link-to (ns-filename ns) [:div.inner [:span (h (:name ns))]])])])
+
+(defn- namespaces-menu [project current-ns]
+  (let [namespaces (:namespaces project)]
+    (list
+     [:h3.no-link [:span.inner "Namespaces"]]
+     (if (= (-> project :html :namespace-list) :flat)
+       (flat-namespaces namespaces current-ns)
+       (nested-namespaces namespaces current-ns)))))
 
 (defn- primary-sidebar [project & [current]]
   [:div.sidebar.primary

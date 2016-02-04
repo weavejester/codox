@@ -27,4 +27,5 @@
    :om   {:dependencies [[org.omcljs/om "0.8.8"]]}
    :no-src {:codox ^:replace {}}
    :no-doc {:codox {:doc-paths ^:replace []}}
-   :1.7  {:dependencies [[org.clojure/clojure "1.7.0"]]}})
+   :1.7  {:dependencies [[org.clojure/clojure "1.7.0"]]}
+   :flat {:codox {:html {:namespace-list :flat}}}})
