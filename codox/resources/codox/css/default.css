@@ -506,7 +506,7 @@ pre.deps {
 
 .doc abbr {
     border-bottom: 1px dotted #333;
-    font-variant: none
+    font-variant: none;
     cursor: help;
 }
 
