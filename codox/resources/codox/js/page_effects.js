@@ -71,12 +71,12 @@ function sidebarContentWidth(element) {
     return Math.max.apply(Math, widths)
 }
 
-function calculateSize(width, snap, minimum) {
+function calculateSize(width, snap, margin, minimum) {
     if (width == 0) {
         return 0
     }
     else {
-        return Math.max(minimum, Math.ceil(width / snap) * snap)
+        return Math.max(minimum, (Math.ceil(width / snap) * snap) + (margin * 2))
     }
 }
 
@@ -89,8 +89,8 @@ function resizeSidebars() {
     }
 
     // snap to grid
-    primaryWidth   = calculateSize(primaryWidth, 32, 160)
-    secondaryWidth = calculateSize(secondaryWidth, 32, 160)
+    primaryWidth   = calculateSize(primaryWidth, 32, 13, 160)
+    secondaryWidth = calculateSize(secondaryWidth, 32, 13, 160)
 
     $('.primary').css('width', primaryWidth)
     $('.secondary').css('width', secondaryWidth).css('left', primaryWidth + 1)
