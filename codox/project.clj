@@ -1,4 +1,4 @@
-(defproject codox "0.9.2"
+(defproject codox "0.9.3"
   :description "Generate documentation from Clojure source files"
   :url "https://github.com/weavejester/codox"
   :scm {:dir ".."}

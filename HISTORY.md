@@ -1,3 +1,9 @@
+## 0.9.3 (2016-02-04)
+
+* Tweak styling and design slightly
+* Add option for a flat rather than nested namespace menu
+* Projects with only one namespace are flat by default
+
 ## 0.9.2 (2016-02-03)
 
 * Add `{basename}` parameter to `:source-uri` option
