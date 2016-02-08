@@ -20,12 +20,15 @@
                  [:pre.deps] [:before [:p "Before test"]]
                  [:pre.deps] [:after  [:p "After test"]]]}}
   :profiles
-  {:md   {:codox {:metadata {:doc/format :markdown}}}
-   :cljs {:dependencies [[org.clojure/clojure "1.7.0"]
-                         [org.clojure/clojurescript "1.7.189"]]
-          :codox {:language :clojurescript}}
-   :om   {:dependencies [[org.omcljs/om "0.8.8"]]}
+  {:md     {:codox {:metadata {:doc/format :markdown}}}
+   :cljs   {:dependencies [[org.clojure/clojure "1.7.0"]
+                           [org.clojure/clojurescript "1.7.189"]]
+            :codox {:language :clojurescript}}
+   :om     {:dependencies [[org.omcljs/om "0.8.8"]]}
+   :typed  {:dependencies [[org.clojure/clojure "1.7.0"]
+                           [org.clojure/core.typed "0.3.22"]]
+            :plugins [[lein-typed "0.3.5"]]
+            :source-paths ^:replace ["src-typed/clojure"]}
    :no-src {:codox ^:replace {}}
    :no-doc {:codox {:doc-paths ^:replace []}}
-   :1.7  {:dependencies [[org.clojure/clojure "1.7.0"]]}
-   :flat {:codox {:html {:namespace-list :flat}}}})
+   :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}})
