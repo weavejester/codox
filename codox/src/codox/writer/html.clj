@@ -291,7 +291,8 @@
     (primary-sidebar project)
     [:div#content.namespace-index
      [:h1 (project-title project)]
-     [:div.doc [:p (h (-> project :description (add-ending ".")))]]
+     (if-let [description (:description project)]
+       [:div.doc [:p (h (add-ending description "."))]])
      (if-let [package (package project)]
        (list
         [:h2 "Installation"]
