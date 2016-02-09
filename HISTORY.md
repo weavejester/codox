@@ -1,3 +1,8 @@
+## 0.9.4 (2016-02-09)
+
+* Add support for core.typed type signatures
+* Fix exception when project doesn't have a description
+
 ## 0.9.3 (2016-02-04)
 
 * Tweak styling and design slightly
