@@ -343,8 +343,8 @@
    (if-let [deprecated (:deprecated var)]
      [:h4.deprecated "deprecated" (if (string? deprecated) (str " in " deprecated))])))
 
-(defn- remove-typed-namespaces [x]
-  (if (and (symbol? x) (= (namespace x) "clojure.core.typed"))
+(defn- remove-namespaces [x namespaces]
+  (if (and (symbol? x) (contains? namespaces (namespace x)))
     (symbol (name x))
     x))
 
@@ -354,11 +354,12 @@
 (defn- pprint-str [x]
   (with-out-str (pp/pprint x)))
 
-(defn- type-sig [var]
-  (->> (:type-sig var)
-       (normalize-types)
-       (walk/postwalk remove-typed-namespaces)
-       (pprint-str)))
+(defn- type-sig [namespace var]
+  (let [implied-namespaces #{(str (:name namespace)) "clojure.core.typed"}]
+    (->> (:type-sig var)
+         (normalize-types)
+         (walk/postwalk #(remove-namespaces % implied-namespaces))
+         (pprint-str))))
 
 (defn- var-docs [project namespace var]
   [:div.public.anchor {:id (h (var-id (:name var)))}
@@ -370,7 +371,7 @@
    (added-and-deprecated-docs var)
    (if (:type-sig var)
      [:div.type-sig
-      [:pre (h (type-sig var))]])
+      [:pre (h (type-sig namespace var))]])
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
