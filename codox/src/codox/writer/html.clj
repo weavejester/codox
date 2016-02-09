@@ -6,7 +6,9 @@
            [org.pegdown PegDownProcessor Extensions LinkRenderer LinkRenderer$Rendering]
            [org.pegdown.ast WikiLinkNode])
   (:require [clojure.java.io :as io]
+            [clojure.pprint :as pp]
             [clojure.string :as str]
+            [clojure.walk :as walk]
             [net.cgrand.enlive-html :as enlive-html]
             [net.cgrand.jsoup :as jsoup]
             [codox.utils :as util]))
@@ -341,6 +343,23 @@
    (if-let [deprecated (:deprecated var)]
      [:h4.deprecated "deprecated" (if (string? deprecated) (str " in " deprecated))])))
 
+(defn- remove-typed-namespaces [x]
+  (if (and (symbol? x) (= (namespace x) "clojure.core.typed"))
+    (symbol (name x))
+    x))
+
+(defn- normalize-types [types]
+  (read-string (pr-str types)))
+
+(defn- pprint-str [x]
+  (with-out-str (pp/pprint x)))
+
+(defn- type-sig [var]
+  (->> (:type-sig var)
+       (normalize-types)
+       (walk/postwalk remove-typed-namespaces)
+       (pprint-str)))
+
 (defn- var-docs [project namespace var]
   [:div.public.anchor {:id (h (var-id (:name var)))}
    [:h3 (h (:name var))]
@@ -349,12 +368,12 @@
    (if (:dynamic var)
      [:h4.dynamic "dynamic"])
    (added-and-deprecated-docs var)
+   (if (:type-sig var)
+     [:div.type-sig
+      [:pre (h (type-sig var))]])
    [:div.usage
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
-   (if (:type-sig var)
-     [:div.type-sig
-      [:code (h (pr-str (:type-sig var)))]])
    [:div.doc (format-docstring project namespace var)]
    (if-let [members (seq (:members var))]
      [:div.members
