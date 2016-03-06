@@ -435,5 +435,4 @@
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
     (write-index project)
     (write-namespaces project)
-    (write-documents project))
-  (println "Generated HTML docs in" (.getAbsolutePath (io/file output-path))))
+    (write-documents project)))

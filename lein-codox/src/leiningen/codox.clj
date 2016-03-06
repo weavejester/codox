@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
             [leiningen.core.project :as project]
+            [leiningen.core.main :as main]
             [leinjacker.deps :as deps]
             [leinjacker.eval :as eval]))
 
@@ -20,8 +21,10 @@
   [project]
   (let [project (if (get-in project [:profiles :codox])
                   (project/merge-profiles project [:codox])
-                  project)]
+                  project)
+        options (get-options project)]
     (eval/eval-in-project
      (deps/add-if-missing project '[codox "0.9.4"])
-     `(codox.main/generate-docs '~(get-options project))
-     `(require 'codox.main))))
+     `(codox.main/generate-docs '~options)
+     `(require 'codox.main))
+    (main/info "Generated HTML docs in" (:output-path options))))
