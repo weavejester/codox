@@ -6,6 +6,8 @@ source code.
 
 ## Usage
 
+### Leiningen
+
 Include the following plugin in your `project.clj` file or your global
 profile:
 
@@ -22,6 +24,31 @@ lein codox
 This will generate API documentation in the "target/doc" subdirectory
 (or wherever your project `:target-path` is set to).
 
+### Boot
+
+Add boot-codox to your build.boot dependencies and require the namespace:
+```
+(set-env! :dependencies '[[boot-codox "0.9.4" :scope "test"]])
+(require '[codox.boot :refer [codox]])
+```
+
+You can see the options available on the command line:
+
+```
+$ boot codox -h
+```
+
+or in the REPL:
+
+```
+boot.user=> (doc codox)
+```
+
+Remember to output files to the target directory with boot's built-in `target` task:
+
+```
+$ boot codox target
+```
 
 ## Breaking Changes in 0.9
 
