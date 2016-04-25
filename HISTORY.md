@@ -1,3 +1,8 @@
+## 0.9.5 (2016-04-25)
+
+* Add support for Boot
+* Fix `pre` markdown margins
+
 ## 0.9.4 (2016-02-09)
 
 * Add support for core.typed type signatures

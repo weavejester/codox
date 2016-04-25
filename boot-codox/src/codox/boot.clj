@@ -7,7 +7,7 @@
 
 (defn- pod-deps
   []
-  (remove pod/dependency-loaded? '[[codox "0.9.4"]]))
+  (remove pod/dependency-loaded? '[[codox "0.9.5"]]))
 
 (defn- init
   [fresh-pod]
