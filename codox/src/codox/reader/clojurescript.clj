@@ -64,7 +64,8 @@
 (defn- analyze-file [file]
   (let [state (ana/empty-state)]
     (binding [an/*analyze-deps* false]
-      (ana/analyze-file state file {}))
+      (ana/no-warn
+        (ana/analyze-file state file {})))
     state))
 
 (defn- read-file [path file]
