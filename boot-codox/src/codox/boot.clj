@@ -16,6 +16,7 @@
 (deftask codox
   "Generate documentation in a pod."
   [n  name                STRING str    "The project name"
+   e  description         STRING str    "The project description"
    v  version             STRING str    "The project version"
    o  output-path         PATH   str    "The directory where the documentation will be generated"
    s  source-paths        PATHS  #{str} "Source paths from which to create documentation (defaults to :source-paths in Boot env)"
@@ -41,6 +42,7 @@
         (pod/with-eval-in worker-pod
           (->> {:name ~name
                 :version ~version
+                :description ~description
                 :source-paths ~source-paths
                 :output-path ~(.getPath docs-dir)
                 :source-uri ~source-uri
