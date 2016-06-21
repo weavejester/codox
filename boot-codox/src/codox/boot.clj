@@ -24,6 +24,7 @@
    d  doc-paths           PATHS  #{str} "Path to documentation files"
    l  language            LANG   kw     "Library language. (defaults to :clojure)"
    f  filter-namespaces   NS     #{sym} "Namespace restriction for documentation generation (defaults to all namespaces)"
+   m  metadata            META   edn    "Metadata settings in edn format"
    w  writer              WRITER sym    "Custom output writer"]
   (when-not name
     (util/fail "No codox project name specified\n")
@@ -49,6 +50,7 @@
                 :doc-paths ~doc-paths
                 :language ~language
                 :namespaces (quote ~filter-namespaces)
+                :metadata ~metadata
                 :writer (quote ~writer)}
             ;; Remove unspecified options
             (into {} (remove (comp nil? second)))
