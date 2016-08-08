@@ -8,6 +8,7 @@
   (comp
     (codox
       :name "Example Project"
+      :description "FIXME: write description"
       :version "1.0.0"
       :source-uri "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{basename}-{line}")
     (target)))
