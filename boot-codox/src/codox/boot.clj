@@ -5,12 +5,10 @@
             [boot.pod :as pod]
             [boot.util :as util]))
 
-(defn- pod-deps
-  []
+(defn- pod-deps []
   (remove pod/dependency-loaded? '[[codox "0.9.5"]]))
 
-(defn- init
-  [fresh-pod]
+(defn- init [fresh-pod]
   (pod/require-in fresh-pod '[codox.main]))
 
 (deftask codox
@@ -41,19 +39,19 @@
             docs-dir (io/file tmp-dir output-path)]
 
         (pod/with-eval-in worker-pod
-          (->> {:name ~name
-                :version ~version
-                :description ~description
+          (->> {:name         ~name
+                :version      ~version
+                :description  ~description
                 :source-paths ~source-paths
-                :output-path ~(.getPath docs-dir)
-                :source-uri ~source-uri
-                :doc-paths ~doc-paths
-                :language ~language
-                :namespaces (quote ~filter-namespaces)
-                :metadata ~metadata
-                :writer (quote ~writer)}
-            ;; Remove unspecified options
-            (into {} (remove (comp nil? second)))
+                :output-path  ~(.getPath docs-dir)
+                :source-uri   ~source-uri
+                :doc-paths    ~doc-paths
+                :language     ~language
+                :namespaces   (quote ~filter-namespaces)
+                :metadata     ~metadata
+                :writer       (quote ~writer)}
+            (remove (comp nil? second))
+            (into {})
             (codox.main/generate-docs)))
 
         (util/info (str "Generated HTML docs in " output-path "\n"))
