@@ -1,3 +1,9 @@
+## 0.9.6 (2016-08-09)
+
+* Suppress ClojureScript analyzer warnings
+* Add `:description` option to boot-codox
+* Add edn `:metadata` option to boot-codox
+
 ## 0.9.5 (2016-04-25)
 
 * Add support for Boot
