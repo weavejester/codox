@@ -96,10 +96,30 @@
       ([node url title text]
          (proxy-super render node url title text)))))
 
+(defn- line-indent [line]
+  (count (take-while #{\space} line)))
+
+(defn- find-min-indent [lines]
+  (->> lines
+       (remove str/blank?)
+       (map line-indent)
+       (reduce min 0)))
+
+(defn- remove-indent [line indentation]
+  (subs line (min indentation (count line))))
+
+(defn- remove-extraneous-indentation [doc]
+  (let [[first-line & lines] (str/split doc #"\n")
+        indentation (find-min-indent lines)]
+    (->> lines
+         (map #(remove-indent % indentation))
+         (cons first-line)
+         (str/join "\n"))))
+
 (defmethod format-docstring :markdown [project ns metadata]
   [:div.markdown
    (if-let [doc (:doc metadata)]
-     (.markdownToHtml pegdown doc (link-renderer project ns)))])
+     (.markdownToHtml pegdown (remove-extraneous-indentation doc) (link-renderer project ns)))])
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
