@@ -260,7 +260,10 @@
    [:meta {:charset "UTF-8"}]
    (include-css "css/default.css")
    (include-js "js/jquery.min.js")
-   (include-js "js/page_effects.js")))
+   (include-js "js/page_effects.js")
+   (include-js "js/highlight.min.js")
+   (include-css "css/highlight.css")
+   [:script "hljs.initHighlightingOnLoad();"]))
 
 (defn- project-title [project]
   [:span.project-title
@@ -433,6 +436,8 @@
     (copy-resource "codox/css/default.css" "css/default.css")
     (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
     (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
+    (copy-resource "codox/highlight/highlight.min.js" "js/highlight.min.js")
+    (copy-resource "codox/highlight/default.css" "css/highlight.css")
     (write-index project)
     (write-namespaces project)
     (write-documents project)))
