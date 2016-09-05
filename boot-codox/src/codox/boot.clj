@@ -6,7 +6,7 @@
             [boot.util :as util]))
 
 (defn- pod-deps []
-  (remove pod/dependency-loaded? '[[codox "0.9.6"]]))
+  (remove pod/dependency-loaded? '[[codox "0.9.7"]]))
 
 (defn- init [fresh-pod]
   (pod/require-in fresh-pod '[codox.main]))

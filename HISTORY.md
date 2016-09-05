@@ -1,3 +1,7 @@
+## 0.9.7 (2016-09-05)
+
+* Add syntax highlighting via highlight.js
+
 ## 0.9.6 (2016-08-09)
 
 * Suppress ClojureScript analyzer warnings
