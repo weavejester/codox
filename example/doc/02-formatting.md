@@ -28,6 +28,18 @@ We should also check code block formatting:
     (defn foo [x]
       (+ x 1))
 
+Even within fenced code blocks:
+
+```clojure
+(defn foo-1 [x]
+  (+ x 1))
+```
+
+~~~clojure
+(defn foo-2 [x]
+  (+ x 1))
+~~~
+
 [Inline links](http://example.com) and [reference links][1].
 
 [1]: http://example.com
