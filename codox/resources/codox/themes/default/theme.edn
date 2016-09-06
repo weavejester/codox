@@ -1,0 +1,6 @@
+{:transforms
+ [[:head] [:append
+           [:link {:rel "stylesheet", :type "text/css" :href "css/default.css"}]
+           [:link {:rel "stylesheet", :type "text/css" :href "css/highlight.css"}]
+           [:script {:type "text/javascript", :src "js/jquery.min.js"}]
+           [:script {:type "text/javascript", :src "js/page_effects.js"}]]]}
