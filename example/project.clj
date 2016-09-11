@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.3.0"]]
+  :dependencies [[org.clojure/clojure "1.5.1"]]
   :plugins [[lein-codox "0.9.7"]]
   :source-paths ["src/clojure"]
   :target-path "target/%s/"
@@ -21,6 +21,8 @@
                  [:pre.deps] [:after  [:p "After test"]]]}}
   :profiles
   {:md     {:codox {:metadata {:doc/format :markdown}}}
+   :theme  {:codox {:metadata {:doc/format :markdown}
+                    :theme :test}}
    :cljs   {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/clojurescript "1.7.189"]]
             :codox {:language :clojurescript}}

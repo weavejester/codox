@@ -5,7 +5,8 @@
            [java.io File]
            [org.pegdown PegDownProcessor Extensions LinkRenderer LinkRenderer$Rendering]
            [org.pegdown.ast WikiLinkNode])
-  (:require [clojure.java.io :as io]
+  (:require [codox.writer.html.themes :as themes]
+            [clojure.java.io :as io]
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.walk :as walk]
@@ -258,11 +259,7 @@
 (def ^{:private true} default-includes
   (list
    [:meta {:charset "UTF-8"}]
-   (include-css "css/default.css")
-   (include-js "js/jquery.min.js")
-   (include-js "js/page_effects.js")
    (include-js "js/highlight.min.js")
-   (include-css "css/highlight.css")
    [:script "hljs.initHighlightingOnLoad();"]))
 
 (defn- project-title [project]
@@ -407,10 +404,6 @@
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
 
-(defn- copy-resource [output-dir src dest]
-  (io/copy (io/input-stream (io/resource src))
-           (io/file output-dir dest)))
-
 (defn- mkdirs [output-dir & dirs]
   (doseq [dir dirs]
     (.mkdirs (io/file output-dir dir))))
@@ -431,13 +424,10 @@
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [{:keys [output-path] :as project}]
-  (doto output-path
-    (mkdirs "css" "js")
-    (copy-resource "codox/css/default.css" "css/default.css")
-    (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
-    (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
-    (copy-resource "codox/highlight/highlight.min.js" "js/highlight.min.js")
-    (copy-resource "codox/highlight/default.css" "css/highlight.css")
-    (write-index project)
-    (write-namespaces project)
-    (write-documents project)))
+  (let [project (themes/prepare project)]
+    (doto output-path
+      (mkdirs "css" "js")
+      (themes/copy-theme-resources project)
+      (write-index project)
+      (write-namespaces project)
+      (write-documents project))))
