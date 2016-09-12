@@ -3,10 +3,7 @@
             [clojure.java.io :as io]
             [resauce.core :as rs]))
 
-;; ## Resources
-
-(defn- theme-path
-  [theme]
+(defn- theme-path [theme]
   (str "codox/themes/" (name theme)))
 
 (defn- directory-listing
@@ -20,25 +17,21 @@
                                 [[relative-name entry]])]
        [(str prefix child-name) child]))))
 
-(defn- theme-resources
-  [theme]
+(defn- theme-resources [theme]
   (->> (str (theme-path theme) "/public")
        (rs/resources)
        (mapcat directory-listing)))
 
-(defn- copy-resource
-  [output-dir src dest]
+(defn- copy-resource [output-dir src dest]
   (with-open [in (io/input-stream src)]
     (io/copy in (io/file output-dir dest))))
 
-(defn- copy-theme-resources*
-  [output-dir theme]
+(defn- copy-theme-resources* [output-dir theme]
   (doseq [[path uri] (theme-resources theme)
           :let [dest (subs path 1)]]
     (copy-resource output-dir uri dest)))
 
-(defn copy-theme-resources
-  [output-dir {:keys [theme themes] :or {theme :default}}]
+(defn copy-theme-resources [output-dir {:keys [theme themes] :or {theme :default}}]
   (copy-resource
     output-dir
     (io/resource "codox/highlight/highlight.min.js")
@@ -46,18 +39,14 @@
   (doseq [theme (or themes [theme])]
     (copy-theme-resources* output-dir theme)))
 
-;; ## Project
-
-(defn- theme-info
-  [theme]
+(defn- theme-info [theme]
   (some-> (theme-path theme)
           (str "/theme.edn")
           (io/resource)
           (slurp)
           (edn/read-string)))
 
-(defn- prepare-single-theme
-  [project theme]
+(defn- prepare-single-theme [project theme]
   (if-let [{:keys [transforms]} (theme-info theme)]
     (-> project
         (update-in [:html :transforms] concat transforms))
@@ -67,8 +56,7 @@
           "No such codox theme: %s. (Did you forget to add the theme dependency?)"
           theme)))))
 
-(defn prepare
-  [{:keys [theme themes] :or {theme :default} :as project}]
+(defn prepare [{:keys [theme themes] :or {theme :default} :as project}]
   (when (and themes (not (vector? themes)))
     (throw
       (IllegalArgumentException.
