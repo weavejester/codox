@@ -3,8 +3,10 @@
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
            [java.io File]
-           [org.pegdown PegDownProcessor Extensions LinkRenderer LinkRenderer$Rendering]
-           [org.pegdown.ast WikiLinkNode])
+           [org.pegdown
+            PegDownProcessor Extensions FastEncoder
+            LinkRenderer LinkRenderer$Rendering]
+           [org.pegdown.ast ExpLinkNode RefLinkNode WikiLinkNode])
   (:require [codox.writer.html.themes :as themes]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
@@ -84,18 +86,37 @@
       (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
         (str (namespace var) ".html#" (var-id var))))))
 
+(defn- absolute-url? [url]
+  (re-find #"^([a-z]+:)?//" url))
+
+(defn- fix-markdown-url [url]
+  (if-not (absolute-url? url)
+    (str/replace url #"\.(md|markdown)$" ".html")
+    url))
+
+(defn- encode-title [rendering title]
+  (if (str/blank? title)
+    rendering
+    (.withAttribute rendering "title" (FastEncoder/encode title))))
+
 (defn- link-renderer [project & [ns]]
   (proxy [LinkRenderer] []
     (render
       ([node]
-         (if (instance? WikiLinkNode node)
-           (let [text (.getText node)]
-             (LinkRenderer$Rendering. (find-wikilink project ns text) text))
-           (proxy-super render node)))
+       (if (instance? WikiLinkNode node)
+         (let [text (.getText node)]
+           (LinkRenderer$Rendering. (find-wikilink project ns text) text))
+         (proxy-super render node)))
       ([node text]
-         (proxy-super render node text))
+       (if (instance? ExpLinkNode node)
+         (-> (LinkRenderer$Rendering. (fix-markdown-url (.url node)) text)
+             (encode-title (.title node)))
+         (proxy-super render node text)))
       ([node url title text]
-         (proxy-super render node url title text)))))
+       (if (instance? RefLinkNode node)
+         (-> (LinkRenderer$Rendering. (fix-markdown-url url) text)
+             (encode-title title))
+         (proxy-super render node url title text))))))
 
 (defmethod format-docstring :markdown [project ns metadata]
   [:div.markdown
