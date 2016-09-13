@@ -433,20 +433,28 @@ p {
 }
 
 .markdown p, .markdown li, .markdown dt, .markdown dd, .markdown td {
-    line-height: 18px;
+    line-height: 22px;
+}
+
+.markdown li {
+    padding: 3px 0;
 }
 
 .markdown h2 {
     font-weight: normal;
     font-size: 25px;
+    margin: 30px 0 10px 0;
 }
 
-#content .markdown h3 {
+.markdown h3 {
+    font-weight: normal;
     font-size: 20px;
+    margin: 30px 0 0 0;
 }
 
 .markdown h4 {
     font-size: 15px;
+    margin: 22px 0 -4px 0;
 }
 
 .doc, .public, .namespace .index {
