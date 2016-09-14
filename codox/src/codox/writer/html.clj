@@ -277,11 +277,8 @@
           [:li {:class class}
            (link-to (var-uri namespace mem) inner)]))))]])
 
-(def ^{:private true} default-includes
-  (list
-   [:meta {:charset "UTF-8"}]
-   (include-js "js/highlight.min.js")
-   [:script "hljs.initHighlightingOnLoad();"]))
+(def ^:private default-meta
+  [:meta {:charset "UTF-8"}])
 
 (defn- project-title [project]
   [:span.project-title
@@ -305,7 +302,7 @@
 (defn- index-page [project]
   (html5
    [:head
-    default-includes
+    default-meta
     [:title (h (:name project)) " " (h (:version project))]]
    [:body
     (header project)
@@ -346,7 +343,7 @@
 (defn- document-page [project doc]
   (html5
    [:head
-    default-includes
+    default-meta
     [:title (h (:title doc))]]
    [:body
     (header project)
@@ -412,7 +409,7 @@
 (defn- namespace-page [project namespace]
   (html5
    [:head
-    default-includes
+    default-meta
     [:title (h (:name namespace)) " documentation"]]
    [:body
     (header project)

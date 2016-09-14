@@ -19,8 +19,6 @@
                (io/file output-dir path)))))
 
 (defn copy-theme-resources [output-dir {:keys [themes]}]
-  (io/copy (io/input-stream (io/resource "codox/highlight/highlight.min.js"))
-           (io/file output-dir "js/highlight.min.js"))
   (doseq [theme themes]
     (copy-theme-resources* output-dir theme)))
 

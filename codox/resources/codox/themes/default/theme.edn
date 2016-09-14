@@ -2,10 +2,13 @@
  [[:head] [:append
            [:link {:rel "stylesheet", :type "text/css" :href "css/default.css"}]
            [:link {:rel "stylesheet", :type "text/css" :href "css/highlight.css"}]
+           [:script {:type "text/javascript", :src "js/highlight.min.js"}]
            [:script {:type "text/javascript", :src "js/jquery.min.js"}]
-           [:script {:type "text/javascript", :src "js/page_effects.js"}]]]
+           [:script {:type "text/javascript", :src "js/page_effects.js"}]
+           [:script "hljs.initHighlightingOnLoad();"]]]
  :resources
  ["css/default.css"
   "css/highlight.css"
+  "js/highlight.min.js"
   "js/jquery.min.js"
   "js/page_effects.js"]}
