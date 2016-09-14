@@ -23,8 +23,7 @@
                  [:pre.deps] [:after  [:p "After test"]]]}}
   :profiles
   {:md     {:codox {:metadata {:doc/format :markdown}}}
-   :theme  {:codox {:metadata {:doc/format :markdown}
-                    :theme :test}}
+   :theme  {:codox {:themes [:test]}}
    :cljs   {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/clojurescript "1.7.189"]]
             :codox {:language :clojurescript}}
