@@ -7,7 +7,7 @@
             PegDownProcessor Extensions FastEncoder
             LinkRenderer LinkRenderer$Rendering]
            [org.pegdown.ast ExpLinkNode RefLinkNode WikiLinkNode])
-  (:require [codox.writer.html.themes :as themes]
+  (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
             [clojure.string :as str]
@@ -439,13 +439,36 @@
     (spit (doc-filepath output-dir document)
           (transform-html project (document-page project document)))))
 
+(defn- theme-path [theme]
+  (str "codox/theme/" (name theme)))
+
+(defn- read-theme [theme]
+  (some-> (theme-path theme) (str "/theme.edn") io/resource slurp edn/read-string))
+
+(defn- copy-resource [resource output-path]
+  (io/copy (io/input-stream (io/resource resource)) output-path))
+
+(defn- copy-theme-resources [output-dir project]
+  (doseq [theme (:themes project)]
+    (let [root (theme-path theme)]
+      (doseq [path (:resources (read-theme theme))]
+        (copy-resource (str root "/public/" path) (io/file output-dir path))))))
+
+(defn- apply-one-theme [project theme]
+  (if-let [{:keys [transforms]} (read-theme theme)]
+    (update-in project [:html :transforms] concat transforms)
+    (throw (IllegalArgumentException. (format "Could not find Codox theme: %s" theme)))))
+
+(defn- apply-theme-transforms [{:keys [themes] :as project}]
+  (reduce apply-one-theme project themes))
+
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [{:keys [output-path] :as project}]
-  (let [project (themes/prepare project)]
+  (let [project (apply-theme-transforms project)]
     (doto output-path
       (mkdirs "css" "js")
-      (themes/copy-theme-resources project)
+      (copy-theme-resources project)
       (write-index project)
       (write-namespaces project)
       (write-documents project))))
