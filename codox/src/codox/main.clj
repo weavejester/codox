@@ -70,15 +70,20 @@
       (add-source-paths root-path source-paths)
       (add-ns-defaults metadata)))
 
-(defn- read-documents [{:keys [doc-paths]}]
-  (if (seq doc-paths) (apply text/read-documents doc-paths)))
+(defn- read-documents [{:keys [doc-paths doc-files] :or {doc-files :all}}]
+  (cond
+    (not= doc-files :all) (map text/read-file doc-files)
+    (seq doc-paths)       (->> doc-paths
+                               (apply text/read-documents)
+                               (sort-by :name))))
 
 (def defaults
   {:language     :clojure
    :root-path    (System/getProperty "user.dir")
+   :output-path  "target/doc"
    :source-paths ["src"]
    :doc-paths    ["doc"]
-   :output-path  "target/doc"
+   :doc-files    :all
    :namespaces   :all
    :metadata     {}})
 

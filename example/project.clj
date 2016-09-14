@@ -11,6 +11,8 @@
   {:project {:name "Example Project", :version "1.0.0"}
    :metadata {:doc "FIXME: write docs"}
    :namespaces :all
+   :doc-files ["doc/intro.md"
+               "doc/formatting.md"]
    :source-uri
    "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{basename}-{line}"
    :html

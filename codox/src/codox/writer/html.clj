@@ -217,7 +217,7 @@
     (list
      [:h3.no-link [:span.inner "Topics"]]
      [:ul
-      (for [doc (sort-by :name docs)]
+      (for [doc docs]
         [:li.depth-1
          {:class (if (= doc current-doc) " current")}
          (link-to (doc-filename doc) [:div.inner [:span (h (:title doc))]])])])))
@@ -323,7 +323,7 @@
        (list
         [:h2 "Topics"]
         [:ul.topics
-         (for [doc (sort-by :name docs)]
+         (for [doc docs]
            [:li (link-to (doc-filename doc) (h (:title doc)))])]))
      [:h2 "Namespaces"]
      (for [namespace (sort-by :name (:namespaces project))]
