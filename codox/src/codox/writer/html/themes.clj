@@ -18,28 +18,20 @@
       (io/copy (io/input-stream (io/resource (str root "/public/" path)))
                (io/file output-dir path)))))
 
-(defn copy-theme-resources [output-dir {:keys [theme themes] :or {theme :default}}]
+(defn copy-theme-resources [output-dir {:keys [themes]}]
   (io/copy (io/input-stream (io/resource "codox/highlight/highlight.min.js"))
            (io/file output-dir "js/highlight.min.js"))
-  (doseq [theme (or themes [theme])]
+  (doseq [theme themes]
     (copy-theme-resources* output-dir theme)))
 
 (defn- prepare-single-theme [project theme]
   (if-let [{:keys [transforms]} (theme-info theme)]
-    (-> project
-        (update-in [:html :transforms] concat transforms))
+    (update-in project [:html :transforms] concat transforms)
     (throw
       (IllegalArgumentException.
         (format
           "No such codox theme: %s. (Did you forget to add the theme dependency?)"
           theme)))))
 
-(defn prepare [{:keys [theme themes] :or {theme :default} :as project}]
-  (when (and themes (not (vector? themes)))
-    (throw
-      (IllegalArgumentException.
-        (str "Codox ':themes' key has to be a vector (given:"
-             (pr-str themes)
-             ")."))))
-  (let [themes (or themes [theme])]
-    (reduce prepare-single-theme project themes)))
+(defn prepare [{:keys [themes] :as project}]
+  (reduce prepare-single-theme project themes))

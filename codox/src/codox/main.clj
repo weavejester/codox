@@ -85,7 +85,8 @@
    :doc-paths    ["doc"]
    :doc-files    :all
    :namespaces   :all
-   :metadata     {}})
+   :metadata     {}
+   :themes       [:default]})
 
 (defn generate-docs
   "Generate documentation from source files."
