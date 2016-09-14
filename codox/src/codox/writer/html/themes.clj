@@ -3,7 +3,7 @@
             [clojure.java.io :as io]))
 
 (defn- theme-path [theme]
-  (str "codox/themes/" (name theme)))
+  (str "codox/theme/" (name theme)))
 
 (defn- theme-info [theme]
   (some-> (theme-path theme)
