@@ -1,3 +1,10 @@
+## 0.10.0 (2016-09-15)
+
+* Add support for data-driven themes
+* Add `:doc-files` key for explicit ordering of documentation
+* Fix links between markdown documents
+* Tweak spacing in markdown CSS for readability
+
 ## 0.9.7 (2016-09-05)
 
 * Add syntax highlighting via highlight.js
