@@ -457,7 +457,7 @@
       (doseq [path (:resources (read-theme theme))]
         (let [output-file (io/file output-dir path)]
           (make-parent-dir output-file)
-          (copy-resource (str root "/public/" path) output-file))))))
+          (copy-resource (str root "/" path) output-file))))))
 
 (defn- apply-one-theme [project theme]
   (if-let [{:keys [transforms]} (read-theme theme)]
