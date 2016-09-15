@@ -258,6 +258,40 @@ option in the `:html` map to either `:nested` or `:flat`.
 :html {:namespace-list :flat}
 ```
 
+### Themes
+
+Themes are HTML transformations packaged with resources. Because
+they're data-driven and based on transformation of the generated
+documentation, multiple themes can be applied. The default theme is
+`:default`. Themes can be added by changing the `:themes` key:
+
+```clojure
+:themes [:my-custom-theme]
+```
+
+To create a theme, you'll need to place the following resource in the
+classpath, either directly in your project, or via a dependency:
+
+    codox/theme/my-custom-theme/theme.edn
+
+This edn file should contain a map of two keys: `:transforms` and
+`:resources`.
+
+The `:transforms` key contains an ordered collection of HTML
+transformations. See the previous section for more information on the
+syntax.
+
+The `:resources` key contains a list of sub-resources that will be
+copied to the target directory when the documentation is compiled. For
+example, if you define a sub-resource `css/main.css`, then Codox will
+copy the resource `codox/theme/foo/css/main.css` to the file
+`css/main.css` in the target directory.
+
+For a complete example, take a look at the [default theme][] for
+Codox.
+
+[default theme]: https://github.com/weavejester/codox/tree/master/codox/resources/codox/theme/default
+
 
 ## Metadata Options
 
