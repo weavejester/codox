@@ -445,6 +445,9 @@
 (defn- read-theme [theme]
   (some-> (theme-path theme) (str "/theme.edn") io/resource slurp edn/read-string))
 
+(defn- make-parent-dir [file]
+  (-> file io/file .getParentFile .mkdirs))
+
 (defn- copy-resource [resource output-path]
   (io/copy (io/input-stream (io/resource resource)) output-path))
 
@@ -452,7 +455,9 @@
   (doseq [theme (:themes project)]
     (let [root (theme-path theme)]
       (doseq [path (:resources (read-theme theme))]
-        (copy-resource (str root "/public/" path) (io/file output-dir path))))))
+        (let [output-file (io/file output-dir path)]
+          (make-parent-dir output-file)
+          (copy-resource (str root "/public/" path) output-file))))))
 
 (defn- apply-one-theme [project theme]
   (if-let [{:keys [transforms]} (read-theme theme)]
@@ -467,7 +472,6 @@
   [{:keys [output-path] :as project}]
   (let [project (apply-theme-transforms project)]
     (doto output-path
-      (mkdirs "css" "js")
       (copy-theme-resources project)
       (write-index project)
       (write-namespaces project)
