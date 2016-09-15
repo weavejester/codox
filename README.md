@@ -152,10 +152,18 @@ but you can change this with:
 ```
 
 Documentation files will appear in the output sorted by their
-filename, so if you want a particular order, prefix your files with
-`01`, `02`, etc.
+filename. If you want a particular order, one solution is to prefix
+your files with `01`, `02`, etc. Alternatively, you can also define
+the documentation files explicitly:
 
-Currently only markdown files (`.md` or `.markdown`) are supported.
+```clojure
+:codox {:doc-files ["doc/intro.md", "doc/tutorial.md"]}
+```
+
+If `:doc-files` is specifies, then `:doc-paths` is ignored. Currently
+only markdown files (`.md` or `.markdown`) are supported. Any links
+between markdown files will be converted to their HTML equivalents
+automatically.
 
 
 ### Output Files
