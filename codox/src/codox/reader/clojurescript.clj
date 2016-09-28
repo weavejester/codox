@@ -6,9 +6,13 @@
             [cljs.analyzer.api :as ana]
             [clojure.string :as str]))
 
+(defn- cljs-filename? [filename]
+  (or (.endsWith filename ".cljs")
+      (.endsWith filename ".cljc")))
+
 (defn- cljs-file? [file]
   (and (.isFile file)
-       (-> file .getName (.endsWith ".cljs"))))
+       (-> file .getName cljs-filename?)))
 
 (defn- remove-quote [x]
   (if (and (list? x) (= (first x) 'quote))
