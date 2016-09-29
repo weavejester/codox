@@ -219,7 +219,7 @@ For example, perhaps your Clojure source files are generated in
 :codox
 {:source-uri
  {#"target/classes" "https://github.com/foo/bar/blob/master/src/{classpath}x#L{line}"
-  #".*"             "https://github.com/foo/bar/blob/master/{filepath}#L{line}"}
+  #".*"             "https://github.com/foo/bar/blob/master/{filepath}#L{line}"}}
 ```
 
 [cljx]: https://github.com/lynaghk/cljx
@@ -311,7 +311,7 @@ to the var's metadata. For example:
 (defn square
   "Squares the supplied number."
   [x]
-  (* x x)
+  (* x x))
 
 ;; Not documented
 (defn ^:no-doc hidden-square
