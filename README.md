@@ -134,6 +134,14 @@ To override the namespaces list and include all namespaces, use `:all`
 :codox {:namespaces :all}
 ```
 
+The `:exclude-vars` option can be used to exclude vars whose name matches a
+regular expression. Set to `nil` to disable. The default excludes automatically
+generated record constructor functions like `->Foo` and `map->Foo`:
+
+```clojure
+:codox {:exclude-vars #"^(map)?->\p{Upper}"}
+```
+
 Codox constructs documentation from metadata on vars and namespaces.
 You can specify a set of default metadata using the `:metadata` map:
 

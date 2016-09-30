@@ -41,6 +41,15 @@
   {:clojure       clj/read-namespaces
    :clojurescript cljs-read-namespaces})
 
+(defn- remove-excluded-vars [namespaces exclude-vars]
+  (if exclude-vars
+    (map (fn [namespace]
+           (update-in namespace [:publics]
+                      #(remove (comp (partial re-find exclude-vars) name :name)
+                               %)))
+         namespaces)
+    namespaces))
+
 (defn- add-var-defaults [vars defaults]
   (for [var vars]
     (-> (merge defaults var)
@@ -63,10 +72,11 @@
     namespaces))
 
 (defn- read-namespaces
-  [{:keys [language root-path source-paths namespaces metadata]}]
+  [{:keys [language root-path source-paths namespaces metadata exclude-vars]}]
   (-> (namespace-readers language)
       (apply source-paths)
       (filter-namespaces namespaces)
+      (remove-excluded-vars exclude-vars)
       (add-source-paths root-path source-paths)
       (add-ns-defaults metadata)))
 
@@ -85,6 +95,7 @@
    :doc-paths    ["doc"]
    :doc-files    :all
    :namespaces   :all
+   :exclude-vars #"^(map)?->\p{Upper}"
    :metadata     {}
    :themes       [:default]})
 

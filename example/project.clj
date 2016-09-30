@@ -24,6 +24,7 @@
   :profiles
   {:md     {:codox {:metadata {:doc/format :markdown}}}
    :theme  {:codox {:themes [:test]}}
+   :no-exclude {:codox {:exclude-vars nil}}
    :cljs   {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/clojurescript "1.7.189"]]
             :codox {:language :clojurescript}}

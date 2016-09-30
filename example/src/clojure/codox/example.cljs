@@ -9,3 +9,5 @@
 (defn quzquz
   "This is a ClojureScript-only function."
   [x])
+
+(defrecord CljsRecord [aah choo])
