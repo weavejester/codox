@@ -303,8 +303,26 @@ example, if you define a sub-resource `css/main.css`, then Codox will
 copy the resource `codox/theme/foo/css/main.css` to the file
 `css/main.css` in the target directory.
 
-For a complete example, take a look at the [default theme][] for
-Codox.
+Themes can also take parameters. You can put in a keyword as a
+placeholder, and then end users can specify the value that should
+replace the keyword. This is achieved by using a vector instead of a
+keyword to specify the theme:
+
+```clojure
+:themes [[keyword {placeholder value}]]
+```
+
+For example:
+
+```clojure
+:themes [[:my-custom-theme {:some-value "foobar"}]]
+```
+
+Codox will look for the keyword `:some-value` in the theme file, and
+replace it with the string `"foobar"`.
+
+If you want to take a look at a complete theme, try the
+[default theme][] for Codox.
 
 [default theme]: https://github.com/weavejester/codox/tree/master/codox/resources/codox/theme/default
 
