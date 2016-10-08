@@ -6,7 +6,7 @@
            [:script {:type "text/javascript", :src "js/jquery.min.js"}]
            [:script {:type "text/javascript", :src "js/page_effects.js"}]
            [:script "hljs.initHighlightingOnLoad();"]]
-  [:#header :h2] [:prepend "Hey, guess what! "]]
+  [:#header :h2] [:prepend :test-message]]
  :resources
  ["css/default.css"
   "css/highlight.css"

@@ -440,10 +440,22 @@
           (transform-html project (document-page project document)))))
 
 (defn- theme-path [theme]
-  (str "codox/theme/" (name theme)))
+  (let [theme-name (if (vector? theme) (first theme) theme)]
+    (str "codox/theme/" (name theme-name))))
+
+(defn- insert-params [theme-data theme]
+  (if (and (vector? theme) (second theme))
+    (let [[_ params] theme]
+      (assert (map? params) "Theme parameters must be a map")
+      (walk/postwalk #(if (keyword? %) (params % %) %) theme-data))
+    theme-data))
 
 (defn- read-theme [theme]
-  (some-> (theme-path theme) (str "/theme.edn") io/resource slurp edn/read-string))
+  (some-> (theme-path theme)
+          (str "/theme.edn")
+          io/resource slurp
+          edn/read-string
+          (insert-params theme)))
 
 (defn- make-parent-dir [file]
   (-> file io/file .getParentFile .mkdirs))
