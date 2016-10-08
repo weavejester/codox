@@ -41,11 +41,18 @@
   {:clojure       clj/read-namespaces
    :clojurescript cljs-read-namespaces})
 
-(defn- remove-matching-vars [vars re]
-  (remove #(re-find re (name (:name %))) vars))
+(defn- var-symbol [namespace var]
+  (symbol (name (:name namespace)) (name (:name var))))
+
+(defn- remove-matching-vars [vars re namespace]
+  (remove (fn [var]
+            (when (and re (re-find re (name (:name var))))
+              (println "Excluding var" (var-symbol namespace var))
+              true))
+          vars))
 
 (defn- remove-excluded-vars [namespaces exclude-vars]
-  (map #(update-in % [:publics] remove-matching-vars exclude-vars) namespaces))
+  (map #(update-in % [:publics] remove-matching-vars exclude-vars %) namespaces))
 
 (defn- add-var-defaults [vars defaults]
   (for [var vars]
