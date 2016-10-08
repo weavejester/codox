@@ -28,9 +28,6 @@
                            [org.clojure/clojurescript "1.7.189"]]
             :codox {:language :clojurescript}}
    :om     {:dependencies [[org.omcljs/om "0.8.8"]]}
-   :spec   {:dependencies [[org.clojure/clojure "1.9.0-alpha13"]]
-            :source-paths ^:replace ["src-spec/clojure"]
-            :codox {:ns-aliases {codox.example-spec ex}}}
    :typed  {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/core.typed "0.3.22"]]
             :plugins [[lein-typed "0.3.5"]]

@@ -48,9 +48,6 @@
 (defn- var-id [var]
   (str "var-" (-> var name URLEncoder/encode (str/replace "%" "."))))
 
-(defn- spec-id [name]
-  (str "spec-" (-> name URLEncoder/encode (str/replace "%" "."))))
-
 (def ^:private url-regex
   #"((https?|ftp|file)://[-A-Za-z0-9+()&@#/%?=~_|!:,.;]+[-A-Za-z0-9+()&@#/%=~_|])")
 
@@ -140,9 +137,6 @@
 
 (defn- var-uri [namespace var]
   (str (ns-filename namespace) "#" (var-id (:name var))))
-
-(defn- spec-uri [namespace name]
-  (str (ns-filename namespace) "#" (spec-id name)))
 
 (defn- get-source-uri [source-uris path]
   (some (fn [[re f]] (if (re-find re path) f)) source-uris))
@@ -281,15 +275,7 @@
               class   (if branch? "depth-2 branch" "depth-2")
               inner   [:div.inner (ns-tree-part 0) [:span (h (:name mem))]]]
           [:li {:class class}
-           (link-to (var-uri namespace mem) inner)]))))]
-   (when (seq (:kw-specs namespace))
-     [:div
-      [:h3 (link-to "#specs" [:span.inner "Specs"])]
-      [:ul
-       (for [kw-spec (:kw-specs namespace)]
-         [:li.depth-1
-          (link-to (spec-uri namespace (:name kw-spec))
-                   [:div.inner [:span (h (str "::" (:name kw-spec)))]])])]])])
+           (link-to (var-uri namespace mem) inner)]))))]])
 
 (def ^:private default-meta
   [:meta {:charset "UTF-8"}])
@@ -394,47 +380,6 @@
          (walk/postwalk #(remove-namespaces % implied-namespaces))
          (pprint-str))))
 
-(defn- kw-spec-link [text kw ns-info]
-  (html (link-to (spec-uri ns-info (name kw)) text)))
-
-(defrecord AbbrKeywordLink [kw abbr-ns ns-info]
-  Object
-  (toString [_]
-    (if abbr-ns
-      (str "::" abbr-ns (when (not= abbr-ns "") "/") (name kw))
-      (str kw))))
-
-(defmethod print-method AbbrKeywordLink [ak ^java.io.Writer w]
-  (let [s (h (str ak))]
-    (.write w (if-let [ns-info (:ns-info ak)]
-                (kw-spec-link s (:kw ak) ns-info)
-                s))))
-
-(defn- format-spec-with-links [project curr-ns spec-form]
-  (let [ns-abbrevs (-> (:ns-aliases project {})
-                       (assoc curr-ns ""))
-        info-by-ns (zipmap (map :name (:namespaces project))
-                           (:namespaces project))]
-    (pr-str
-      (walk/postwalk
-        (fn [form]
-          (if (and (keyword? form) (namespace form))
-            (let [ns (-> form namespace symbol)]
-              (->AbbrKeywordLink form (ns-abbrevs ns) (info-by-ns ns)))
-            form))
-        spec-form))))
-
-(defn- mark-up-spec [project namespace form]
-  (let [f (fn [form]
-            [:code
-              (format-spec-with-links project (:name namespace) form)])]
-    (if (or (:args form) (:ret form))
-      [:dl
-       (when (:args form) (list [:dt "args"] [:dd (f (:args form))]))
-       (when (:ret form) (list [:dt "ret"] [:dd (f (:ret form))]))
-       (when (:fn form) (list [:dt "fn"] [:dd (f (:fn form))]))]
-      (f form))))
-
 (defn- var-docs [project namespace var]
   [:div.public.anchor {:id (h (var-id (:name var)))}
    [:h3 (h (:name var))]
@@ -450,9 +395,6 @@
     (for [form (var-usage var)]
       [:code (h (pr-str form))])]
    [:div.doc (format-docstring project namespace var)]
-   (if-let [spec-form (:spec var)]
-     [:div.spec
-      (mark-up-spec project namespace spec-form)])
    (if-let [members (seq (:members var))]
      [:div.members
       [:h4 "members"]
@@ -463,12 +405,6 @@
      (if (:path var)
        [:div.src-link (link-to (var-source-uri project var) "view source")]
        (println "Could not generate source link for" (:name var))))])
-
-(defn- kw-spec-docs [project namespace kw-spec]
-  [:div.public.anchor {:id (h (spec-id (:name kw-spec)))}
-   [:h3 (h (str "::" (:name kw-spec)))]
-   [:div.spec
-    (mark-up-spec project namespace (:spec kw-spec))]])
 
 (defn- namespace-page [project namespace]
   (html5
@@ -484,11 +420,7 @@
      (added-and-deprecated-docs namespace)
      [:div.doc (format-docstring project nil namespace)]
      (for [var (sorted-public-vars namespace)]
-       (var-docs project namespace var))
-     (when (seq (:kw-specs namespace))
-       [:h2#specs.anchor "Specs"])
-     (for [kw-spec (:kw-specs namespace)]
-       (kw-spec-docs project namespace kw-spec))]]))
+       (var-docs project namespace var))]]))
 
 (defn- mkdirs [output-dir & dirs]
   (doseq [dir dirs]
