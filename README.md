@@ -224,6 +224,19 @@ For example, perhaps your Clojure source files are generated in
 
 [cljx]: https://github.com/lynaghk/cljx
 
+### Namespace aliases for clojure.spec
+
+Codox looks for any [`clojure.spec`](http://clojure.org/about/spec) specs
+registered on vars or keywords in the project namespaces. Since specs use
+fully-qualified keywords they can be verbose. You can provide namespace aliases
+to abbreviate them:
+
+```clojure
+:codox {:ns-aliases {com.acme-widgets.stuff stuff, foo.protocols p}}
+```
+
+Note that spec keywords are printed with `::` syntax within their own namespace.
+
 ### HTML Transformations
 
 The HTML writer can be customized using [Enlive][]-style

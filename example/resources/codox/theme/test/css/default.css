@@ -393,6 +393,14 @@ h4.deprecated {
     padding-left: 0;
 }
 
+.spec {
+    clear: both;
+}
+
+.spec dt {
+    font-weight: bold;
+}
+
 .type-sig {
     clear: both;
     color: #088;

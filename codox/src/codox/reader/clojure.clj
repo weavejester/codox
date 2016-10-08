@@ -12,6 +12,9 @@
     (require namespace)
     (catch FileNotFoundException _ nil)))
 
+(defn clojure-spec? []
+  (find-ns 'clojure.spec))
+
 (defn core-typed? []
   (find-ns 'clojure.core.typed.check))
 
@@ -63,6 +66,15 @@
    (protocol? var)    :protocol
    :else              :var))
 
+(defn clojure-spec-form [var]
+  (let [spec ((find-var 'clojure.spec/get-spec) var)
+        describe (find-var 'clojure.spec/describe)]
+    (if (or (:args spec) (:ret spec))
+      {:args (if-let [x (:args spec)] (describe x))
+       :ret (if-let [x (:ret spec)] (describe x))
+       :fn (if-let [x (:fn spec)] (describe x))}
+      (if spec (describe spec)))))
+
 (defn core-typed-type [var]
   (let [{:keys [delayed-errors ret]} (typecheck-var var)]
     (if (empty? delayed-errors)
@@ -74,6 +86,7 @@
                     :added :deprecated :doc/format])
       (update-some :doc correct-indent)
       (assoc-some  :type (var-type var)
+                   :spec (if (clojure-spec?) (clojure-spec-form var))
                    :type-sig (if (core-typed?) (core-typed-type var))
                    :members (seq (map (partial read-var vars)
                                       (protocol-methods var vars))))))
@@ -87,7 +100,20 @@
          (map (partial read-var vars))
          (sort-by (comp str/lower-case :name)))))
 
+(defn- read-kw-specs [ns]
+  (let [describe (find-var 'clojure.spec/describe)
+        reg ((find-var 'clojure.spec/registry))
+        ids (->> reg
+                 keys
+                 (filter keyword?)
+                 (filter (comp #{(name ns)} namespace)))]
+    (->> (select-keys reg ids)
+         (map (fn [[k v]] (merge (meta v) {:name (name k)
+                                           :spec (describe v)})))
+         (sort-by (comp str/lower-case :name)))))
+
 (defn- read-ns [namespace]
+  (try-require 'clojure.spec)
   (try-require 'clojure.core.typed.check)
   (when (core-typed?)
     (typecheck-namespace namespace))
@@ -97,6 +123,7 @@
         (meta)
         (assoc :name namespace)
         (assoc :publics (read-publics namespace))
+        (assoc :kw-specs (if (clojure-spec?) (read-kw-specs namespace)))
         (update-some :doc correct-indent)
         (list))
     (catch Exception e
@@ -134,8 +161,13 @@
       :arglists   - the arguments the function or macro takes
       :doc        - the doc-string of the var
       :type       - one of :macro, :protocol, :multimethod or :var
+      :spec       - any registered spec form for the var symbol
       :added      - the library version the var was added in
-      :deprecated - the library version the var was deprecated in"
+      :deprecated - the library version the var was deprecated in
+    :kw-specs
+      :name       - the name of the keyword under which the spec is registered
+      :spec       - the spec form
+      :line       - the line at which the spec was declared"
   ([] (read-namespaces "src"))
   ([path]
      (->> (io/file path)
