@@ -53,6 +53,11 @@
   {:arglists '([x])}
   :type)
 
+(defrecord FooRecord [aah choo]
+  Foop
+  (foop [x] aah)
+  (barp [x y] choo))
+
 (defn ^:no-doc hidden [x])
 
 (defn markfoo
