@@ -1,3 +1,8 @@
+## 0.10.1 (2016-10-08)
+
+* Add `:exclude-vars` option for excluding vars by regex
+* Add parameters for themes
+
 ## 0.10.0 (2016-09-15)
 
 * Add support for data-driven themes
