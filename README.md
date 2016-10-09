@@ -419,6 +419,18 @@ vars its documenting.
 ```
 
 
+## Live Documentation
+
+You can make the code in your documentation live and interactive by
+using the [Klipse theme][] written by [Yehonathan Sharvit][]. This
+third-party theme integrates the generated docs with the [Klipse][]
+code evaluator.
+
+[klipse theme]: https://github.com/viebel/codox-klipse-theme
+[yehonathan sharvit]: https://github.com/viebel
+[klipse]: https://github.com/viebel/klipse
+
+
 ## License
 
 Copyright © 2016 James Reeves
