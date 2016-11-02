@@ -11,6 +11,7 @@
           :output-path  (str (io/file (:target-path project "target") "doc"))}
          (-> project :codox)
          {:name      (str/capitalize (:name project))
+          :license   (:license project)
           :package   (symbol (:group project) (:name project))
           :root-path (:root project)}
          (select-keys project [:version :description])
