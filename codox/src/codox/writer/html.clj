@@ -313,9 +313,11 @@
     [:div#content.namespace-index
      [:h1 (project-title project)]
      (if-let [license (-> (get-in project [:license :name]) (strip-prefix "the "))]
-       [:h5 "Released under the " (if-let [url (get-in project [:license :url])]
-                                    (link-to url license)
-                                    license)])
+       [:h5.license
+        "Released under the "
+        (if-let [url (get-in project [:license :url])]
+          (link-to url license)
+          license)])
      (if-let [description (:description project)]
        [:div.doc [:p (h (add-ending description "."))]])
      (if-let [package (package project)]
