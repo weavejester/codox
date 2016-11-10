@@ -453,11 +453,12 @@
     (str "codox/theme/" (name theme-name))))
 
 (defn- insert-params [theme-data theme]
-  (if (and (vector? theme) (second theme))
-    (let [[_ params] theme]
-      (assert (map? params) "Theme parameters must be a map")
-      (walk/postwalk #(if (keyword? %) (params % %) %) theme-data))
-    theme-data))
+  (let [params   (if (vector? theme) (or (second theme) {}) {})
+        defaults (:defaults theme-data {})]
+    (assert (map? params) "Theme parameters must be a map")
+    (assert (map? defaults) "Theme defaults must be a map")
+    (->> (dissoc theme-data :defaults)
+         (walk/postwalk #(if (keyword? %) (params % (defaults % %)) %)))))
 
 (defn- read-theme [theme]
   (some-> (theme-path theme)
