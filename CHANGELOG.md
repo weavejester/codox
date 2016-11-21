@@ -1,3 +1,8 @@
+## 0.10.2 (2016-11-21)
+
+* Add license link to documentation index
+* Add default values to theme variables
+
 ## 0.10.1 (2016-10-08)
 
 * Add `:exclude-vars` option for excluding vars by regex
