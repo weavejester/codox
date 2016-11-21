@@ -1,6 +1,6 @@
 (set-env!
   :source-paths #{"src/clojure"}
-  :dependencies '[[boot-codox "0.10.1"]])
+  :dependencies '[[boot-codox "0.10.2"]])
 
 (require '[codox.boot :refer [codox]])
 
