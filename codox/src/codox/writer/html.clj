@@ -86,6 +86,12 @@
       (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
         (str (namespace var) ".html#" (var-id var))))))
 
+(defn- parse-wikilink [text]
+  (let [pos (.indexOf text "|")]
+    (if (>= pos 0)
+      [(subs text 0 pos) (subs text (inc pos))]
+      [text text])))
+
 (defn- absolute-url? [url]
   (re-find #"^([a-z]+:)?//" url))
 
@@ -104,8 +110,8 @@
     (render
       ([node]
        (if (instance? WikiLinkNode node)
-         (let [text (.getText node)]
-           (LinkRenderer$Rendering. (find-wikilink project ns text) text))
+         (let [[page text] (parse-wikilink (.getText node))]
+           (LinkRenderer$Rendering. (find-wikilink project ns page) text))
          (proxy-super render node)))
       ([node text]
        (if (instance? ExpLinkNode node)
