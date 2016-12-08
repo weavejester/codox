@@ -39,7 +39,7 @@
 
   foo | bar
   ----|----
-   1  |  2 
+   1  |  2
    3  |  4
 
   Definition lists:
@@ -55,7 +55,8 @@
     terms in a definition list can have definitions that span multiple lines.
 
   We can also use wikilinks to reference existing vars, like [[example/foo]] or
-  the [[Foop]] protocol, or to reference namespaces, like [[codox.example]].
+  the [[Foop]] protocol, or to reference namespaces, like [[codox.example]], and
+  optionally customize the link text, like this [[codox.example|link]].
 
   Any abbreviations, like HTML or HTTP, that have corresponding abbreviations,
   will be marked with `<abbr>` tags.
