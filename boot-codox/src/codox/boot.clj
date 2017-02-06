@@ -23,7 +23,9 @@
    l  language            LANG   kw     "Library language. (defaults to :clojure)"
    f  filter-namespaces   NS     #{sym} "Namespace restriction for documentation generation (defaults to all namespaces)"
    m  metadata            META   edn    "Metadata settings in edn format"
-   w  writer              WRITER sym    "Custom output writer"]
+   w  writer              WRITER sym    "Custom output writer"
+   E  exclude-vars        VARS   regex  "Regex pattern to exclude vars"
+   t  themes              THEMES edn    "Themes to use (defaults to [:default])"]
   (when-not name
     (util/fail "No codox project name specified\n")
     (System/exit 1))
@@ -49,7 +51,9 @@
                 :language     ~language
                 :namespaces   (quote ~filter-namespaces)
                 :metadata     ~metadata
-                :writer       (quote ~writer)}
+                :writer       (quote ~writer)
+                :exclude-vars ~exclude-vars
+                :themes       ~themes}
             (remove (comp nil? second))
             (into {})
             (codox.main/generate-docs)))
