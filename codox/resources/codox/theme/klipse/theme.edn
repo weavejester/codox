@@ -1,0 +1,25 @@
+{:transforms
+ [[:body]
+  [:prepend
+   [:link
+    {:rel "stylesheet"
+     :type "text/css"
+     :href "https://storage.googleapis.com/app.klipse.tech/css/codemirror.css"}]
+   [:div {:style "visibility: hidden;"}
+    [:div {:class "klipse"
+           :data-external-libs :klipse/external-libs}
+     :klipse/require-statement]]]
+  [:body]
+  [:append
+   [:script
+    "window.klipse_settings = {
+    selector: '.klipse',
+    codemirror_options_in: {
+    lineWrapping: true,
+    autoCloseBrackets: true
+    },
+    codemirror_options_out: {
+    lineWrapping: true
+    }
+    };"]
+   [:script {:src "https://storage.googleapis.com/app.klipse.tech/plugin/js/klipse_plugin.js"}]]]}
