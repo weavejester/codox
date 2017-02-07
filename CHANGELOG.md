@@ -1,3 +1,8 @@
+## 0.10.3 (2017-02-07)
+
+* Add support for wikilinks `[[page|text]]` format
+* Add `:exclude-vars` and `:themes` to boot-codox
+
 ## 0.10.2 (2016-11-21)
 
 * Add license link to documentation index
