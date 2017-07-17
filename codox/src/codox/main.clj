@@ -92,7 +92,7 @@
                                (sort-by :name))))
 
 (def defaults
-  {:language     :clojure
+  {:languages    [:clojure]
    :root-path    (System/getProperty "user.dir")
    :output-path  "target/doc"
    :source-paths ["src"]
@@ -103,11 +103,8 @@
    :metadata     {}
    :themes       [:default]})
 
-(defn- read-namespaces
-  [options]
-  (mapcat #(read-lang-namespaces (assoc options :language %))
-          (distinct
-            (remove nil? (cons (:language options) (:languages options))))))
+(defn- read-namespaces [options]
+  (mapcat #(read-lang-namespaces (assoc options :language %)) (:languages options)))
 
 (defn generate-docs
   "Generate documentation from source files."
