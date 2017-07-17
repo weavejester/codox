@@ -50,6 +50,11 @@ Remember to output files to the target directory with boot's built-in `target` t
 $ boot codox target
 ```
 
+## Breaking changes in 0.9.1
+
+* The `:language` option has been removed;
+* In its place an option `:languages`, whose value should be a vector of language keys, has been added.
+
 ## Breaking Changes in 0.9
 
 In preparation for a 1.0 release, Codox 0.9 has a number of breaking

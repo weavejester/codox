@@ -28,6 +28,18 @@
    :cljs   {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/clojurescript "1.7.189"]]
             :codox {:language :clojurescript}}
+   :both   {:dependencies [[org.clojure/clojure "1.7.0"]
+                           [org.clojure/clojurescript "1.7.189"]]
+            :codox {:languages [:clojure :clojurescript]
+                    :html
+                    {:transforms [[:head :title]
+                                  [:substitute [:title "Profile 'both': cljs + clj, cljs preferred"]]]}}}
+   :prefer-clj {:dependencies [[org.clojure/clojure "1.7.0"]
+                               [org.clojure/clojurescript "1.7.189"]]
+                :codox {:languages [:clojurescript :clojure]
+                        :html
+                        {:transforms [[:head :title]
+                                      [:substitute [:title "Profile 'prefer-clj': cljs + clj, clj preferred"]]]}}}
    :om     {:dependencies [[org.omcljs/om "0.8.8"]]}
    :typed  {:dependencies [[org.clojure/clojure "1.7.0"]
                            [org.clojure/core.typed "0.3.22"]]
