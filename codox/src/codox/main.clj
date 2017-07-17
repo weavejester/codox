@@ -103,15 +103,31 @@
    :metadata     {}
    :themes       [:default]})
 
+
+(defn- read-dialect-namespaces
+  "Wrap the `read-namespaces` function into a function which merges the lists of
+   namespaces generated for different dialects of clojure. Note that the key
+   `:language` in options may be bound to a single keyword (either `:clojure`
+   or `:clojurescript`) or to a vector containing both values."
+  [options]
+  (let
+    [languages (:language options)]
+    (if (or (vector? languages) (seq? languages))
+      (reduce concat
+              (map #(read-namespaces (merge options {:language %}))
+                   languages))
+      (read-namespaces options))))
+
+
 (defn generate-docs
   "Generate documentation from source files."
   ([]
-     (generate-docs {}))
+   (generate-docs {}))
   ([options]
-     (let [options    (merge defaults options)
-           write-fn   (writer options)
-           namespaces (read-namespaces options)
-           documents  (read-documents options)]
-       (write-fn (assoc options
-                        :namespaces namespaces
-                        :documents  documents)))))
+   (let [options    (merge defaults options)
+         write-fn   (writer options)
+         namespaces (read-dialect-namespaces options)
+         documents  (read-documents options)]
+     (write-fn (assoc options
+                 :namespaces namespaces
+                 :documents  documents)))))
