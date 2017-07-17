@@ -116,7 +116,7 @@
   ([options]
      (let [options    (merge defaults options)
            write-fn   (writer options)
-           namespaces (read-lang-namespaces options)
+           namespaces (read-namespaces options)
            documents  (read-documents options)]
        (write-fn (assoc options
                         :namespaces namespaces
