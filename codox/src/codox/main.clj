@@ -112,7 +112,7 @@
 (defn generate-docs
   "Generate documentation from source files."
   ([]
-     (generate-docs {}))
+   (generate-docs {}))
   ([options]
      (let [options    (merge defaults options)
            write-fn   (writer options)
