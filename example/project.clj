@@ -35,4 +35,8 @@
             :source-paths ^:replace ["src-typed/clojure"]}
    :no-src {:codox ^:replace {}}
    :no-doc {:codox {:doc-paths ^:replace []}}
-   :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}})
+   :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}
+   :git-commit
+   {:codox
+    {:source-uri
+     "https://github.com/weavejester/codox/blob/{git-commit}/example/{filepath}#L{basename}-{line}"}}})

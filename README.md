@@ -211,11 +211,12 @@ to the function's source file in the documentation, you can set the
 
 The URI is a template that may contain the following keys:
 
-* `{filepath}`  - the file path from the root of the repository
-* `{basename}`  - the basename of the file
-* `{classpath}` - the relative path of the file within the source directory
-* `{line}`      - the line number of the source file
-* `{version}`   - the version of the project
+* `{filepath}`   - the file path from the root of the repository
+* `{basename}`   - the basename of the file
+* `{classpath}`  - the relative path of the file within the source directory
+* `{line}`       - the line number of the source file
+* `{version}`    - the version of the project
+* `{git-commit}` - the Git commit id of the repository
 
 You can also assign different URI templates to different paths of your
 source tree. This is particularly useful for created source links from
