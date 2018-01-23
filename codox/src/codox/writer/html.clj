@@ -433,7 +433,7 @@
     [:div#content.namespace-docs
      [:h1#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
-     [:div.doc (format-docstring project nil namespace)]
+     [:div.doc (format-docstring project namespace namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
 
