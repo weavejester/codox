@@ -20,8 +20,8 @@
 (defn- macro? [var]
   (= (:type var) :macro))
 
-(defn- read-macro-namespaces [& paths]
-  (->> (apply clj/read-namespaces paths)
+(defn- read-macro-namespaces [paths read-opts]
+  (->> (clj/read-namespaces paths read-opts)
        (map (fn [ns] (update-in ns [:publics] #(filter macro? %))))
        (remove (comp empty? :publics))))
 
@@ -29,13 +29,13 @@
   (for [[name namespaces] (group-by :name namespaces)]
     (assoc (first namespaces) :publics (mapcat :publics namespaces))))
 
-(defn- cljs-read-namespaces [& paths]
+(defn- cljs-read-namespaces [paths read-opts]
   ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
   (require 'codox.reader.clojurescript)
   (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
     (merge-namespaces
-     (concat (apply reader paths)
-             (apply read-macro-namespaces paths)))))
+     (concat (reader paths read-opts)
+             (read-macro-namespaces paths read-opts)))))
 
 (def ^:private namespace-readers
   {:clojure       clj/read-namespaces
@@ -76,13 +76,13 @@
     namespaces))
 
 (defn- read-namespaces
-  [{:keys [language root-path source-paths namespaces metadata exclude-vars]}]
-  (-> (namespace-readers language)
-      (apply source-paths)
-      (filter-namespaces namespaces)
-      (remove-excluded-vars exclude-vars)
-      (add-source-paths root-path source-paths)
-      (add-ns-defaults metadata)))
+  [{:keys [language root-path source-paths namespaces metadata exclude-vars] :as opts}]
+  (let [reader (namespace-readers language)]
+    (-> (reader source-paths (select-keys opts [:exception-handler]))
+        (filter-namespaces namespaces)
+        (remove-excluded-vars exclude-vars)
+        (add-source-paths root-path source-paths)
+        (add-ns-defaults metadata))))
 
 (defn- read-documents [{:keys [doc-paths doc-files] :or {doc-files :all}}]
   (cond
