@@ -1,7 +1,9 @@
 (ns codox.main
   "Main namespace for generating documentation"
   (:use [codox.utils :only (add-source-paths)])
-  (:require [codox.reader.clojure :as clj]
+  (:require [clojure.string :as str]
+            [clojure.java.shell :as shell]
+            [codox.reader.clojure :as clj]
             [codox.reader.plaintext :as text]))
 
 (defn- writer [{:keys [writer]}]
@@ -91,17 +93,25 @@
                                (apply text/read-documents)
                                (sort-by :name))))
 
+(defn- git-commit [dir]
+  (let [{:keys [out exit] :as result} (shell/sh "git" "rev-parse" "HEAD" :dir dir)]
+    (when ((complement zero?) exit)
+      (throw (ex-info "Error getting git commit" result)))
+    (str/trim out)))
+
 (def defaults
-  {:language     :clojure
-   :root-path    (System/getProperty "user.dir")
-   :output-path  "target/doc"
-   :source-paths ["src"]
-   :doc-paths    ["doc"]
-   :doc-files    :all
-   :namespaces   :all
-   :exclude-vars #"^(map)?->\p{Upper}"
-   :metadata     {}
-   :themes       [:default]})
+  (let [root-path (System/getProperty "user.dir")]
+    {:language     :clojure
+     :root-path    root-path
+     :output-path  "target/doc"
+     :source-paths ["src"]
+     :doc-paths    ["doc"]
+     :doc-files    :all
+     :namespaces   :all
+     :exclude-vars #"^(map)?->\p{Upper}"
+     :metadata     {}
+     :themes       [:default]
+     :git-commit   (delay (git-commit root-path))}))
 
 (defn generate-docs
   "Generate documentation from source files."
