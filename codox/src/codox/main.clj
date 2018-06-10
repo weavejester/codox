@@ -95,7 +95,7 @@
 
 (defn- git-commit [dir]
   (let [{:keys [out exit] :as result} (shell/sh "git" "rev-parse" "HEAD" :dir dir)]
-    (when ((complement zero?) exit)
+    (when-not (zero? exit)
       (throw (ex-info "Error getting git commit" result)))
     (str/trim out)))
 
