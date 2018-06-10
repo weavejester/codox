@@ -324,6 +324,8 @@
     (primary-sidebar project)
     [:div#content.namespace-index
      [:h1 (project-title project)]
+     (if-let [scm-url (get-in project [:scm :url])]
+       [:a {:href scm-url :title "Source code repository"} scm-url])
      (if-let [license (-> (get-in project [:license :name]) (strip-prefix "the "))]
        [:h5.license
         "Released under the "

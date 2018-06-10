@@ -7,6 +7,7 @@
   :plugins [[lein-codox "0.10.3"]]
   :source-paths ["src/clojure"]
   :target-path "target/%s/"
+  :scm {:url "http://example.com/SCM-FIXME"}
   :codox
   {:project {:name "Example Project", :version "1.0.0"}
    :metadata {:doc "FIXME: write docs"}

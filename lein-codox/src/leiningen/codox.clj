@@ -13,6 +13,7 @@
          {:name      (str/capitalize (:name project))
           :license   (:license project)
           :package   (symbol (:group project) (:name project))
+          :scm       (:scm project)
           :root-path (:root project)}
          (select-keys project [:version :description])
          (-> project :codox :project)))
