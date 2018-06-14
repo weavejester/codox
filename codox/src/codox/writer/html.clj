@@ -372,9 +372,11 @@
     [:div#content.document
      [:div.doc (format-document project doc)]]]))
 
-(defn- var-usage [var]
-  (for [arglist (:arglists var)]
-    (list* (:name var) arglist)))
+(defn- var-usage [{:keys [name arglists] :as var}]
+  (for [arglist (if (= 'quote (first arglists))
+                  (rest arglists)
+                  arglists)]
+    (list* name arglist)))
 
 (defn- added-and-deprecated-docs [var]
   (list
