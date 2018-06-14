@@ -1,3 +1,9 @@
+## 0.10.4 (2018-06-14)
+
+* Add `{git-commit}` variable to source URI (#170)
+* Add `:exception-handler` option to `generate-docs` (#175)
+* Fix namespace doc links (#172)
+
 ## 0.10.3 (2017-02-07)
 
 * Add support for wikilinks `[[page|text]]` format

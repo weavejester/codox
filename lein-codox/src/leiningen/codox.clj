@@ -25,7 +25,7 @@
                   project)
         options (get-options project)]
     (eval/eval-in-project
-     (deps/add-if-missing project '[codox "0.10.3"])
+     (deps/add-if-missing project '[codox "0.10.4"])
      `(do (codox.main/generate-docs '~options)
           (shutdown-agents))
      `(require 'codox.main))
