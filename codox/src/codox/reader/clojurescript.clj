@@ -81,6 +81,7 @@
        (-> (ana/find-ns state ns-name)
            (select-keys [:name :doc])
            (update-some :doc correct-indent)
+           (merge (-> ns-name meta (select-keys [:no-doc])))
            (assoc :publics (read-publics state ns-name file)))})
     (catch Exception e
       (exception-handler e file))))
@@ -126,5 +127,6 @@
                     (map file-reader)
                     (apply merge)
                     (vals)
+                    (remove :no-doc)
                     (sort-by :name))))
            paths)))
