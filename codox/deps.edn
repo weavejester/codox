@@ -1,0 +1,8 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.7.0"}
+        org.clojure/tools.namespace {:mvn/version "0.2.11"}
+        org.clojure/clojurescript {:mvn/version "1.7.189"}
+        hiccup {:mvn/version "1.0.5"}
+        enlive {:mvn/version "1.1.6"}
+        org.pegdown/pegdown {:mvn/version "1.6.0"}
+        org.ow2.asm/asm-all {:mvn/version "5.0.3"}}}
