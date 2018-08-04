@@ -39,10 +39,14 @@
   (let [proto-name (name (:name protocol))]
     (filter #(if-let [p (:protocol %)] (= proto-name (name p))) vars)))
 
+(defn- multimethod? [var]
+  (= (:tag var) 'cljs.core/MultiFn))
+
 (defn- var-type [opts]
   (cond
    (:macro opts)           :macro
    (:protocol-symbol opts) :protocol
+   (multimethod? opts)     :multimethod
    :else                   :var))
 
 (defn- read-var [file vars var]
