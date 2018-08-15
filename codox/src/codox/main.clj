@@ -4,6 +4,7 @@
   (:require [clojure.string :as str]
             [clojure.java.shell :as shell]
             [codox.reader.clojure :as clj]
+            [codox.reader.clojurescript :as cljs]
             [codox.reader.plaintext :as text]))
 
 (defn- writer [{:keys [writer]}]
@@ -19,29 +20,9 @@
       (throw
          (Exception. (str "Could not resolve codox writer " writer-sym))))))
 
-(defn- macro? [var]
-  (= (:type var) :macro))
-
-(defn- read-macro-namespaces [paths read-opts]
-  (->> (clj/read-namespaces paths read-opts)
-       (map (fn [ns] (update-in ns [:publics] #(filter macro? %))))
-       (remove (comp empty? :publics))))
-
-(defn- merge-namespaces [namespaces]
-  (for [[name namespaces] (group-by :name namespaces)]
-    (assoc (first namespaces) :publics (mapcat :publics namespaces))))
-
-(defn- cljs-read-namespaces [paths read-opts]
-  ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
-  (require 'codox.reader.clojurescript)
-  (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
-    (merge-namespaces
-     (concat (reader paths read-opts)
-             (read-macro-namespaces paths read-opts)))))
-
 (def ^:private namespace-readers
   {:clojure       clj/read-namespaces
-   :clojurescript cljs-read-namespaces})
+   :clojurescript cljs/read-namespaces})
 
 (defn- var-symbol [namespace var]
   (symbol (name (:name namespace)) (name (:name var))))

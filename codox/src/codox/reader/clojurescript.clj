@@ -50,15 +50,16 @@
    :else                   :var))
 
 (defn- read-var [file vars var]
-  (-> var
-      (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
-      (update-some :name (comp symbol name))
-      (update-some :arglists remove-quote)
-      (update-some :doc correct-indent)
-      (assoc-some  :file    (.getPath file)
-                   :type    (var-type var)
-                   :members (map (partial read-var file vars)
-                                 (protocol-methods var vars)))))
+  (let [vt (var-type var)]
+    (-> var
+        (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
+        (update-some :name (comp symbol name))
+        (update-some :arglists remove-quote)
+        (update-some :doc correct-indent)
+        (assoc-some  :file    (if (= vt :macro) (:file var) (.getPath file))
+                     :type    vt
+                     :members (map (partial read-var file vars)
+                                   (protocol-methods var vars))))))
 
 (defn- read-publics [state namespace file]
   (let [vars (vals (ana/ns-publics state namespace))]
