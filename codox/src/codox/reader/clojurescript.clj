@@ -15,7 +15,7 @@
        (-> file .getName cljs-filename?)))
 
 (defn- remove-quote [x]
-  (if (and (list? x) (= (first x) 'quote))
+  (if (and (seq? x) (= (first x) 'quote))
     (second x)
     x))
 
