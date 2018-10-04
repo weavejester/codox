@@ -1,3 +1,8 @@
+## 0.10.5 (2018-10-04)
+
+* Respect `:no-doc` metadata in CLojureScript (#177)
+* Recognize multimethods in ClojureScript (#178)
+
 ## 0.10.4 (2018-06-14)
 
 * Add `{git-commit}` variable to source URI (#170)
