@@ -116,8 +116,8 @@
 
 (defn- find-namespaces [file]
   (cond
-    (.isDirectory file) (ns/find-namespaces-in-dir file)
-    (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
+    (.isDirectory file) (set (ns/find-namespaces-in-dir file))
+    (jar-file? file)    (set (ns/find-namespaces-in-jarfile (JarFile. file)))))
 
 (defn read-namespaces
   "Read Clojure namespaces from a set of source directories (defaults
