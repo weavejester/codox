@@ -4,6 +4,8 @@
   (:require [clojure.java.io :as io]
             [cljs.analyzer :as an]
             [cljs.analyzer.api :as ana]
+            [cljs.closure]
+            [cljs.env]
             [clojure.string :as str]))
 
 (defn- cljs-filename? [filename]
@@ -71,10 +73,11 @@
          (sort-by (comp str/lower-case :name)))))
 
 (defn- analyze-file [file]
-  (let [state (ana/empty-state)]
-    (binding [an/*analyze-deps* false]
-      (ana/no-warn
-        (ana/analyze-file state file {})))
+  (let [opts  (cljs.closure/add-implicit-options {})
+        state (cljs.env/default-compiler-env opts)]
+    (ana/no-warn
+     (cljs.closure/validate-opts opts)
+     (ana/analyze-file state file opts))
     state))
 
 (defn- read-file [path file exception-handler]
