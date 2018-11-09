@@ -2,6 +2,7 @@
   "Main namespace for generating documentation"
   (:use [codox.utils :only (add-source-paths)])
   (:require [clojure.string :as str]
+            [clojure.pprint]
             [clojure.java.shell :as shell]
             [codox.reader.clojure :as clj]
             [codox.reader.clojurescript :as cljs]
@@ -106,3 +107,17 @@
        (write-fn (assoc options
                         :namespaces namespaces
                         :documents  documents)))))
+
+(defn -main
+  [lang path]
+  (println "Analyzing lang:" lang)
+  (println "Analyzing path:" path)
+  (assert (#{"clojure" "clojurescript"} lang))
+  (->> (generate-docs {:writer 'clojure.core/identity
+                       :source-paths [path]
+                       :language (keyword lang)})
+       :namespaces
+       ;; Walk/realize entire structure, otherwise "Excluding ->Xyz"
+       ;; messages will be mixed with the pretty printed output
+       (clojure.walk/prewalk identity)
+       clojure.pprint/pprint))
