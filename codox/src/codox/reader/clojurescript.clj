@@ -72,7 +72,7 @@
 
 (defn- analyze-file [file]
   (let [state (ana/empty-state)]
-    (binding [an/*analyze-deps* false]
+    (binding [an/*analyze-deps* true]
       (ana/no-warn
         (ana/analyze-file state file {})))
     state))
