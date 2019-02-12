@@ -12,7 +12,7 @@ Include the following plugin in your `project.clj` file or your global
 profile:
 
 ```clojure
-:plugins [[lein-codox "0.10.5"]]
+:plugins [[lein-codox "0.10.6"]]
 ```
 
 Then run:
@@ -28,7 +28,7 @@ This will generate API documentation in the "target/doc" subdirectory
 
 Add boot-codox to your build.boot dependencies and require the namespace:
 ```
-(set-env! :dependencies '[[boot-codox "0.10.5" :scope "test"]])
+(set-env! :dependencies '[[boot-codox "0.10.6" :scope "test"]])
 (require '[codox.boot :refer [codox]])
 ```
 

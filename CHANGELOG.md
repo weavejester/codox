@@ -1,3 +1,7 @@
+## 0.10.6 (2019-02-12)
+
+* Fix error when running under Leiningen 2.9.0 (#181)
+
 ## 0.10.5 (2018-10-04)
 
 * Respect `:no-doc` metadata in CLojureScript (#177)
