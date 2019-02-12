@@ -5,4 +5,5 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :eval-in-leiningen true
-  :dependencies [[leinjacker "0.4.2"]])
+  :dependencies [[leinjacker "0.4.2"]
+                 [org.clojure/core.unify "0.5.7"]])
