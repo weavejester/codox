@@ -109,6 +109,18 @@
                         :documents  documents)))))
 
 (defn -main
+  "The main entry point for reading API information from files in a directory.
+
+  To analyze a project (debugging etc.) follow these steps:
+
+  1. unzip the project's jar into a directory
+  2. add the project's coordinates to the local `deps.edn` file
+  3. add the jar contents directory to `:paths` in `deps.edn`
+
+  You can then call this main function as follows:
+
+      clj -m codox.main clojurescript jar-contents-dir/
+      clj -m codox.main clojure jar-contents-dir/"
   [lang path]
   (println "Analyzing lang:" lang)
   (println "Analyzing path:" path)
