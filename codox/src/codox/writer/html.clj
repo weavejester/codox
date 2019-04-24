@@ -165,7 +165,7 @@
         (str/replace   "{classpath}"  (util/uri-path file))
         (str/replace   "{basename}"   (uri-basename path))
         (str/replace   "{line}"       (str line))
-        (str/replace   "{version}"    version)
+        (str/replace   "{version}"    (str version))
         (force-replace "{git-commit}" git-commit))))
 
 (defn- split-ns [namespace]
