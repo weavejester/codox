@@ -1,3 +1,8 @@
+## 0.10.7 (2019-05-15)
+
+* Add support for managed dependencies (#182)
+* Fix error with source-uri when version is `nil` (#183)
+
 ## 0.10.6 (2019-02-12)
 
 * Fix error when running under Leiningen 2.9.0 (#181)
