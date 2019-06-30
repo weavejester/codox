@@ -169,7 +169,7 @@ the documentation files explicitly:
 :codox {:doc-files ["doc/intro.md", "doc/tutorial.md"]}
 ```
 
-If `:doc-files` is specifies, then `:doc-paths` is ignored. Currently
+If `:doc-files` is specified, then `:doc-paths` is ignored. Currently
 only markdown files (`.md` or `.markdown`) are supported. Any links
 between markdown files will be converted to their HTML equivalents
 automatically.
