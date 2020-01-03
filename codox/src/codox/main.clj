@@ -28,7 +28,7 @@
        (remove (comp empty? :publics))))
 
 (defn- merge-namespaces [namespaces]
-  (for [[name namespaces] (group-by :name namespaces)]
+  (for [[_ namespaces] (group-by :name namespaces)]
     (assoc (first namespaces) :publics (mapcat :publics namespaces))))
 
 (defn- cljs-read-namespaces [paths read-opts]

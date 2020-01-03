@@ -1,7 +1,6 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
   (:import [java.net URLEncoder]
-           [java.io File]
            [org.pegdown
             PegDownProcessor Extensions FastEncoder
             LinkRenderer LinkRenderer$Rendering]
@@ -52,12 +51,12 @@
   #"((https?|ftp|file)://[-A-Za-z0-9+()&@#/%?=~_|!:,.;]+[-A-Za-z0-9+()&@#/%=~_|])")
 
 (defn- add-anchors [text]
-  (if text
+  (when text
     (str/replace text url-regex "<a href=\"$1\">$1</a>")))
 
 (defmulti format-docstring
   "Format the docstring of a var or namespace into HTML."
-  (fn [project ns var] (:doc/format var))
+  (fn [_ _ var] (:doc/format var))
   :default :plaintext)
 
 (defmethod format-docstring :plaintext [_ _ metadata]
@@ -356,7 +355,7 @@
 
 (defmulti format-document
   "Format a document into HTML."
-  (fn [project doc] (:format doc)))
+  (fn [_ doc] (:format doc)))
 
 (defmethod format-document :markdown [project doc]
   [:div.markdown (.markdownToHtml pegdown (:content doc) (link-renderer project))])
@@ -442,10 +441,6 @@
      [:div.doc (format-docstring project namespace namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
-
-(defn- mkdirs [output-dir & dirs]
-  (doseq [dir dirs]
-    (.mkdirs (io/file output-dir dir))))
 
 (defn- write-index [output-dir project]
   (spit (io/file output-dir "index.html") (transform-html project (index-page project))))
