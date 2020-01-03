@@ -19,7 +19,7 @@
   (assoc-some m k (apply f (m k) args)))
 
 (defn- find-minimum [coll]
-  (if (seq coll)
+  (when (seq coll)
     (apply min coll)))
 
 (defn- find-smallest-indent [text]
@@ -34,7 +34,7 @@
    `codox.reader/read-namespaces`), and a sequence of source directory paths,
    returns a File object indicating the file from the repo root."
   [file sources]
-  (if (and file (not (.isAbsolute (io/file file))))
+  (when (and file (not (.isAbsolute (io/file file))))
     (->> (map #(io/file % file) sources)
          (filter #(.exists %))
          first)))
@@ -51,7 +51,7 @@
             (str/join "\n")))))
 
 (defn correct-indent [text]
-  (if text
+  (when text
     (let [lines (str/split-lines text)]
       (->> (rest lines)
            (str/join "\n")
@@ -87,7 +87,7 @@
    character to the first page break (\f) character OR the first TWO
    newlines."
   [s]
-  (if s
+  (when s
     (->> (str/trim s)
          (re-find #"(?s).*?(?=\f)|.*?(?=\n\n)|.*"))))
 
@@ -105,7 +105,7 @@
 (defn re-escape
   "Escape a string so it can be safely placed in a regex."
   [s]
-  (str/escape s #(if (re-chars %) (str \\ %))))
+  (str/escape s #(when (re-chars %) (str \\ %))))
 
 (defn search-vars
   "Find the best-matching var given a partial var string, a list of namespaces,
