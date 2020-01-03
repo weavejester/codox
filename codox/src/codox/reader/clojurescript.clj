@@ -23,11 +23,11 @@
   (let [len (inc (count (.getPath parent)))]
     (fn [child]
       (let [child-name (.getPath child)]
-        (if (>= (count child-name) len)
+        (when (>= (count child-name) len)
           (io/file (subs child-name len)))))))
 
 (defn- find-files [file]
-  (if (.isDirectory file)
+  (when (.isDirectory file)
     (->> (file-seq file)
          (filter cljs-file?)
          (keep (strip-parent file)))))
