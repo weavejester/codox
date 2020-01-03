@@ -1,10 +1,10 @@
 (ns codox.reader.clojurescript
   "Read raw documentation information from ClojureScript source directory."
-  (:use [codox.utils :only [assoc-some update-some correct-indent]])
-  (:require [clojure.java.io :as io]
-            [cljs.analyzer :as an]
+  (:require [cljs.analyzer :as an]
             [cljs.analyzer.api :as ana]
-            [clojure.string :as str]))
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [codox.utils :refer [assoc-some correct-indent update-some]]))
 
 (defn- cljs-filename? [filename]
   (or (.endsWith filename ".cljs")

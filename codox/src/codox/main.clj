@@ -1,10 +1,10 @@
 (ns codox.main
   "Main namespace for generating documentation"
-  (:use [codox.utils :only (add-source-paths)])
-  (:require [clojure.string :as str]
-            [clojure.java.shell :as shell]
+  (:require [clojure.java.shell :as shell]
+            [clojure.string :as str]
             [codox.reader.clojure :as clj]
-            [codox.reader.plaintext :as text]))
+            [codox.reader.plaintext :as text]
+            [codox.utils :refer [add-source-paths]]))
 
 (defn- writer [{:keys [writer]}]
   (let [writer-sym (or writer 'codox.writer.html/write-docs)

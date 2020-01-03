@@ -1,6 +1,5 @@
 (ns codox.writer.html
   "Documentation writer that outputs HTML."
-  (:use [hiccup core page element])
   (:import [java.net URLEncoder]
            [java.io File]
            [org.pegdown
@@ -12,9 +11,10 @@
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.walk :as walk]
+            [codox.utils :as util]
+            [hiccup.core :refer [h html5 link-to unordered-list]]
             [net.cgrand.enlive-html :as enlive-html]
-            [net.cgrand.jsoup :as jsoup]
-            [codox.utils :as util]))
+            [net.cgrand.jsoup :as jsoup]))
 
 (def enlive-operations
   {:append     enlive-html/append
