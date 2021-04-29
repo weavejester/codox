@@ -17,7 +17,7 @@ profile:
 
 Then run:
 
-```
+```shell
 lein codox
 ```
 
@@ -27,26 +27,27 @@ This will generate API documentation in the "target/doc" subdirectory
 ### Boot
 
 Add boot-codox to your build.boot dependencies and require the namespace:
-```
+
+```clojure
 (set-env! :dependencies '[[boot-codox "0.10.7" :scope "test"]])
 (require '[codox.boot :refer [codox]])
 ```
 
 You can see the options available on the command line:
 
-```
+```shell
 $ boot codox -h
 ```
 
 or in the REPL:
 
-```
+```clojure
 boot.user=> (doc codox)
 ```
 
 Remember to output files to the target directory with boot's built-in `target` task:
 
-```
+```shell
 $ boot codox target
 ```
 
