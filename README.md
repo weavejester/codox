@@ -50,6 +50,26 @@ Remember to output files to the target directory with boot's built-in `target` t
 $ boot codox target
 ```
 
+### deps.edn
+
+Add an alias to your `deps.edn`:
+
+```clojure
+:codox {:extra-deps {codox/codox {:mvn/version "0.10.7"}}
+        :exec-fn codox.main/generate-docs
+        :exec-args {:source-paths  ["path/to/src"]}}
+```
+
+Run Codox via -X like this:
+
+```shell
+clojure -X:codox
+```
+
+Note: Codox expects the code it analyzes to be on the classpath so you
+may need to specify additional aliases from your project to make that
+happen, e.g., `clojure -X:dev:codox`.
+
 ## Breaking Changes in 0.9
 
 In preparation for a 1.0 release, Codox 0.9 has a number of breaking
