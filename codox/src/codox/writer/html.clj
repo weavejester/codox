@@ -3,10 +3,14 @@
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
            [java.io File]
-           [org.pegdown
-            PegDownProcessor Extensions FastEncoder
-            LinkRenderer LinkRenderer$Rendering]
-           [org.pegdown.ast ExpLinkNode RefLinkNode WikiLinkNode])
+           ;;Otherwise known has a hashmap...
+           [com.vladsch.flexmark.util.data MutableDataSet]
+           [com.vladsch.flexmark.parser Parser]
+           [com.vladsch.flexmark.html HtmlRenderer]
+           [com.vladsch.flexmark.ext.gfm.strikethrough StrikethroughExtension]
+           [com.vladsch.flexmark.ext.gfm.tasklist TaskListExtension]
+           [com.vladsch.flexmark.ext.autolink AutolinkExtension]
+           [com.vladsch.flexmark.ext.tables TablesExtension])
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
@@ -63,21 +67,18 @@
 (defmethod format-docstring :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
-(def ^:private pegdown
-  (PegDownProcessor.
-   (bit-or Extensions/AUTOLINKS
-           Extensions/QUOTES
-           Extensions/SMARTS
-           Extensions/STRIKETHROUGH
-           Extensions/TABLES
-           Extensions/FENCED_CODE_BLOCKS
-           Extensions/WIKILINKS
-           Extensions/DEFINITIONS
-           Extensions/ABBREVIATIONS
-           Extensions/ATXHEADERSPACE
-           Extensions/RELAXEDHRULES
-           Extensions/EXTANCHORLINKS)
-   2000))
+(def ^{:tag MutableDataSet} options
+  (doto (MutableDataSet.)
+    (.set Parser/EXTENSIONS
+          [(TablesExtension/create)
+           (StrikethroughExtension/create)
+           (AutolinkExtension/create)])))
+
+(def ^{:tag Parser} parser
+  (.build (Parser/builder options)))
+
+(def ^{:tag HtmlRenderer} renderer
+  (.build (HtmlRenderer/builder options)))
 
 (defn- find-wikilink [project ns text]
   (let [ns-strs (map (comp str :name) (:namespaces project))]
@@ -100,12 +101,10 @@
     (str/replace url #"\.(md|markdown)$" ".html")
     url))
 
-(defn- encode-title [rendering title]
-  (if (str/blank? title)
-    rendering
-    (.withAttribute rendering "title" (FastEncoder/encode title))))
 
-(defn- link-renderer [project & [ns]]
+;; CN - Not sure yet what exactly how to transform this functionality to flexmark -
+;; https://github.com/vsch/flexmark-java/blob/master/flexmark-java-samples/src/com/vladsch/flexmark/java/samples/CustomLinkResolverSample.java
+#_(defn- link-renderer [project & [ns]]
   (proxy [LinkRenderer] []
     (render
       ([node]
@@ -124,10 +123,16 @@
              (encode-title title))
          (proxy-super render node url title text))))))
 
+(defn markdown->html
+  (^String [markdown-str project]
+   (when (and markdown-str (not= (count markdown-str) 0))
+     (->> (.parse parser (str markdown-str))
+          (.render renderer))))
+  (^String [markdown-str]
+   (markdown->html markdown-str nil)))
+
 (defmethod format-docstring :markdown [project ns metadata]
-  [:div.markdown
-   (if-let [doc (:doc metadata)]
-     (.markdownToHtml pegdown doc (link-renderer project ns)))])
+  [:div.markdown (markdown->html (:doc metadata) project)])
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -359,7 +364,7 @@
   (fn [project doc] (:format doc)))
 
 (defmethod format-document :markdown [project doc]
-  [:div.markdown (.markdownToHtml pegdown (:content doc) (link-renderer project))])
+  [:div.markdown (markdown->html (:content doc) project)])
 
 (defn- document-page [project doc]
   (html5
