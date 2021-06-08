@@ -6,11 +6,15 @@
            ;;Otherwise known has a hashmap...
            [com.vladsch.flexmark.util.data MutableDataSet]
            [com.vladsch.flexmark.parser Parser]
-           [com.vladsch.flexmark.html HtmlRenderer]
+           [com.vladsch.flexmark.html HtmlRenderer HtmlRenderer$HtmlRendererExtension]
            [com.vladsch.flexmark.ext.gfm.strikethrough StrikethroughExtension]
            [com.vladsch.flexmark.ext.gfm.tasklist TaskListExtension]
            [com.vladsch.flexmark.ext.autolink AutolinkExtension]
-           [com.vladsch.flexmark.ext.tables TablesExtension])
+           [com.vladsch.flexmark.ext.tables TablesExtension]
+           [com.vladsch.flexmark.ext.wikilink WikiLinkExtension]
+           [com.vladsch.flexmark.html LinkResolverFactory LinkResolver]
+           [com.vladsch.flexmark.html.renderer LinkResolverBasicContext]
+           [codox LinkResolverFactoryImpl])
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
@@ -19,6 +23,8 @@
             [net.cgrand.enlive-html :as enlive-html]
             [net.cgrand.jsoup :as jsoup]
             [codox.utils :as util]))
+
+(set! *warn-on-reflection* true)
 
 (def enlive-operations
   {:append     enlive-html/append
@@ -41,7 +47,7 @@
   (apply str (enlive-html/emit* nodes)))
 
 (defn- enlive-parse [s]
-  (let [stream (io/input-stream (.getBytes s "UTF-8"))]
+  (let [stream (io/input-stream (.getBytes (str s) "UTF-8"))]
     (enlive-html/html-resource stream {:parser jsoup/parser})))
 
 (defn- transform-html [project s]
@@ -67,18 +73,32 @@
 (defmethod format-docstring :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
-(def ^{:tag MutableDataSet} options
+(declare link-resolver-factory)
+
+(defn flexmark-options
+  ^MutableDataSet [project]
   (doto (MutableDataSet.)
     (.set Parser/EXTENSIONS
           [(TablesExtension/create)
            (StrikethroughExtension/create)
-           (AutolinkExtension/create)])))
+           ;;Our custom link resolver has to be first else the extensions below
+           ;;get first crack at the links and we never see them.  We can always
+           ;;do nothing with the link and that will in effect forward the link
+           ;;further down the line.
+           (reify HtmlRenderer$HtmlRendererExtension
+             (rendererOptions [this options])
+             (extend [this builder renderer-type]
+               (.linkResolverFactory builder ^LinkResolverFactory (link-resolver-factory project))))
+           (AutolinkExtension/create)
+           (WikiLinkExtension/create)])))
 
-(def ^{:tag Parser} parser
-  (.build (Parser/builder options)))
+(defn parser
+  [project]
+  (.build (Parser/builder (flexmark-options project))))
 
-(def ^{:tag HtmlRenderer} renderer
-  (.build (HtmlRenderer/builder options)))
+(defn renderer
+  ^HtmlRenderer [project]
+  (.build (HtmlRenderer/builder (flexmark-options project))))
 
 (defn- find-wikilink [project ns text]
   (let [ns-strs (map (comp str :name) (:namespaces project))]
@@ -87,8 +107,9 @@
       (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
         (str (namespace var) ".html#" (var-id var))))))
 
+
 (defn- parse-wikilink [text]
-  (let [pos (.indexOf text "|")]
+  (let [pos (.indexOf (str text) "|")]
     (if (>= pos 0)
       [(subs text 0 pos) (subs text (inc pos))]
       [text text])))
@@ -101,6 +122,19 @@
     (str/replace url #"\.(md|markdown)$" ".html")
     url))
 
+(defn link-resolver-factory
+  ^LinkResolverFactory [project]
+  (LinkResolverFactoryImpl.
+   nil nil false
+   (fn [^LinkResolverBasicContext outer-context]
+     (reify
+       LinkResolver
+       (resolveLink [this node context link]
+         (println (format "link type %s status %s url %s"
+                          (.getName (.getLinkType link))
+                          (.getName (.getStatus link))
+                          (.getUrl link)))
+         link)))))
 
 ;; CN - Not sure yet what exactly how to transform this functionality to flexmark -
 ;; https://github.com/vsch/flexmark-java/blob/master/flexmark-java-samples/src/com/vladsch/flexmark/java/samples/CustomLinkResolverSample.java
@@ -124,12 +158,10 @@
          (proxy-super render node url title text))))))
 
 (defn markdown->html
-  (^String [markdown-str project]
-   (when (and markdown-str (not= (count markdown-str) 0))
-     (->> (.parse parser (str markdown-str))
-          (.render renderer))))
-  (^String [markdown-str]
-   (markdown->html markdown-str nil)))
+  ^String [markdown-str project]
+  (when (and markdown-str (not= (count markdown-str) 0))
+    (->> (.parse ^Parser (:parser project) (str markdown-str))
+         (.render ^HtmlRenderer (:renderer project)))))
 
 (defmethod format-docstring :markdown [project ns metadata]
   [:div.markdown (markdown->html (:doc metadata) project)])
@@ -509,7 +541,9 @@
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [{:keys [output-path] :as project}]
-  (let [project (apply-theme-transforms project)]
+  (let [project (-> (apply-theme-transforms project)
+                    (assoc :parser (parser project)
+                           :renderer (renderer project)))]
     (doto output-path
       (copy-theme-resources project)
       (write-index project)
