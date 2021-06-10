@@ -1,7 +1,9 @@
 (ns codox.main
   "Main namespace for generating documentation"
   (:use [codox.utils :only (add-source-paths)])
-  (:require [codox.reader.clojure :as clj]
+  (:require [clojure.string :as str]
+            [clojure.java.shell :as shell]
+            [codox.reader.clojure :as clj]
             [codox.reader.plaintext :as text]))
 
 (defn- writer [{:keys [writer]}]
@@ -20,8 +22,8 @@
 (defn- macro? [var]
   (= (:type var) :macro))
 
-(defn- read-macro-namespaces [& paths]
-  (->> (apply clj/read-namespaces paths)
+(defn- read-macro-namespaces [paths read-opts]
+  (->> (clj/read-namespaces paths read-opts)
        (map (fn [ns] (update-in ns [:publics] #(filter macro? %))))
        (remove (comp empty? :publics))))
 
@@ -29,13 +31,13 @@
   (for [[name namespaces] (group-by :name namespaces)]
     (assoc (first namespaces) :publics (mapcat :publics namespaces))))
 
-(defn- cljs-read-namespaces [& paths]
+(defn- cljs-read-namespaces [paths read-opts]
   ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
   (require 'codox.reader.clojurescript)
   (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
     (merge-namespaces
-     (concat (apply reader paths)
-             (apply read-macro-namespaces paths)))))
+     (concat (reader paths read-opts)
+             (read-macro-namespaces paths read-opts)))))
 
 (def ^:private namespace-readers
   {:clojure       clj/read-namespaces
@@ -90,6 +92,12 @@
     (seq doc-paths)       (->> doc-paths
                                (apply text/read-documents)
                                (sort-by :name))))
+
+(defn- git-commit [dir]
+  (let [{:keys [out exit] :as result} (shell/sh "git" "rev-parse" "HEAD" :dir dir)]
+    (when-not (zero? exit)
+      (throw (ex-info "Error getting git commit" result)))
+    (str/trim out)))
 
 (def defaults
   {:languages    [:clojure]

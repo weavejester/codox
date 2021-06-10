@@ -150,17 +150,23 @@
 (defn- uri-basename [path]
   (second (re-find #"/([^/]+?)$" path)))
 
+(defn- force-replace [^String s match replacement]
+  (if (.contains s match)
+    (str/replace s match (force replacement))
+    s))
+
 (defn- var-source-uri
-  [{:keys [source-uri version]}
+  [{:keys [source-uri version git-commit]}
    {:keys [path file line]}]
   (let [path (util/uri-path path)
         uri  (if (map? source-uri) (get-source-uri source-uri path) source-uri)]
     (-> uri
-        (str/replace "{filepath}"  path)
-        (str/replace "{classpath}" (util/uri-path file))
-        (str/replace "{basename}"  (uri-basename path))
-        (str/replace "{line}"      (str line))
-        (str/replace "{version}"   version))))
+        (str/replace   "{filepath}"   path)
+        (str/replace   "{classpath}"  (util/uri-path file))
+        (str/replace   "{basename}"   (uri-basename path))
+        (str/replace   "{line}"       (str line))
+        (str/replace   "{version}"    (str version))
+        (force-replace "{git-commit}" git-commit))))
 
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
@@ -433,7 +439,7 @@
     [:div#content.namespace-docs
      [:h1#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
-     [:div.doc (format-docstring project nil namespace)]
+     [:div.doc (format-docstring project namespace namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
 

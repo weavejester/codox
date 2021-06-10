@@ -25,7 +25,8 @@
                   project)
         options (get-options project)]
     (eval/eval-in-project
-     (deps/add-if-missing project '[codox "0.10.3"])
-     `(codox.main/generate-docs '~options)
+     (deps/add-if-missing project '[codox "0.10.7"])
+     `(do (codox.main/generate-docs '~options)
+          (shutdown-agents))
      `(require 'codox.main))
     (main/info "Generated HTML docs in" (:output-path options))))

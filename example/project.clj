@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]]
-  :plugins [[lein-codox "0.10.3"]]
+  :plugins [[lein-codox "0.10.7"]]
   :source-paths ["src/clojure"]
   :target-path "target/%s/"
   :codox
@@ -47,4 +47,8 @@
             :source-paths ^:replace ["src-typed/clojure"]}
    :no-src {:codox ^:replace {}}
    :no-doc {:codox {:doc-paths ^:replace []}}
-   :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}})
+   :1.7    {:dependencies [[org.clojure/clojure "1.7.0"]]}
+   :git-commit
+   {:codox
+    {:source-uri
+     "https://github.com/weavejester/codox/blob/{git-commit}/example/{filepath}#L{basename}-{line}"}}})

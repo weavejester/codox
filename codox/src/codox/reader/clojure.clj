@@ -87,7 +87,7 @@
          (map (partial read-var vars))
          (sort-by (comp str/lower-case :name)))))
 
-(defn- read-ns [namespace]
+(defn- read-ns [namespace exception-handler]
   (try-require 'clojure.core.typed.check)
   (when (core-typed?)
     (typecheck-namespace namespace))
@@ -100,12 +100,15 @@
         (update-some :doc correct-indent)
         (list))
     (catch Exception e
-      (println
-       (format "Could not generate clojure documentation for %s - root cause: %s %s"
-               namespace
-               (.getName (class e))
-               (.getMessage e)))
-      (.printStackTrace e))))
+      (exception-handler e namespace))))
+
+(defn- default-exception-handler [e namespace]
+  (println
+   (format "Could not generate clojure documentation for %s - root cause: %s %s"
+           namespace
+           (.getName (class e))
+           (.getMessage e)))
+  (.printStackTrace e))
 
 (defn- jar-file? [file]
   (and (.isFile file)
@@ -117,9 +120,13 @@
     (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
 
 (defn read-namespaces
-  "Read Clojure namespaces from a source directory (defaults to
-  \"src\"), and return a list of maps suitable for documentation
+  "Read Clojure namespaces from a set of source directories (defaults
+  to [\"src\"]), and return a list of maps suitable for documentation
   purposes.
+
+  Supported options using the second argument:
+    :exception-handler - function (fn [ex ns]) to handle exceptions
+    while reading a namespace
 
   Any namespace with {:no-doc true} in its metadata will be skipped.
 
@@ -136,11 +143,13 @@
       :type       - one of :macro, :protocol, :multimethod or :var
       :added      - the library version the var was added in
       :deprecated - the library version the var was deprecated in"
-  ([] (read-namespaces "src"))
-  ([path]
-     (->> (io/file path)
-          (find-namespaces)
-          (mapcat read-ns)
-          (remove :no-doc)))
-  ([path & paths]
-     (mapcat read-namespaces (cons path paths))))
+  ([] (read-namespaces ["src"] {}))
+  ([paths] (read-namespaces paths {}))
+  ([paths {:keys [exception-handler]
+           :or {exception-handler default-exception-handler}}]
+   (mapcat (fn [path]
+             (->> (io/file path)
+                  (find-namespaces)
+                  (mapcat #(read-ns % exception-handler))
+                  (remove :no-doc)))
+           paths)))
