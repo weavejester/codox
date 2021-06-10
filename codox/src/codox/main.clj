@@ -103,6 +103,10 @@
   {:languages    [:clojure]
    :root-path    (System/getProperty "user.dir")
    :output-path  "target/doc"
+   :cloverage-path "target/cloverage" ;; kind of ought to get this from the 
+                                      ;; cloverage source, so that if they
+                                      ;; change their default path we do too;
+                                      ;; but it isn't exposed in a usable way.
    :source-paths ["src"]
    :doc-paths    ["doc"]
    :doc-files    :all
