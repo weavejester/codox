@@ -39,10 +39,14 @@
   (let [proto-name (name (:name protocol))]
     (filter #(if-let [p (:protocol %)] (= proto-name (name p))) vars)))
 
+(defn- multimethod? [var]
+  (= (:tag var) 'cljs.core/MultiFn))
+
 (defn- var-type [opts]
   (cond
    (:macro opts)           :macro
    (:protocol-symbol opts) :protocol
+   (multimethod? opts)     :multimethod
    :else                   :var))
 
 (defn- read-var [file vars var]
@@ -72,7 +76,7 @@
         (ana/analyze-file state file {})))
     state))
 
-(defn- read-file [path file]
+(defn- read-file [path file exception-handler]
   (try
     (let [source  (io/file path file)
           ns-name (:ns (ana/parse-ns source))
@@ -81,19 +85,27 @@
        (-> (ana/find-ns state ns-name)
            (select-keys [:name :doc])
            (update-some :doc correct-indent)
+           (merge (-> ns-name meta (select-keys [:no-doc])))
            (assoc :publics (read-publics state ns-name file)))})
     (catch Exception e
-      (println
-       (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
-               file
-               (.getName (class e))
-               (.getMessage e)))
-      (.printStackTrace e))))
+      (exception-handler e file))))
+
+(defn- default-exception-handler [e file]
+  (println
+   (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
+           file
+           (.getName (class e))
+           (.getMessage e)))
+  (.printStackTrace e))
 
 (defn read-namespaces
-  "Read ClojureScript namespaces from a source directory (defaults to
-  \"src\"), and return a list of maps suitable for documentation
-  purposes.
+  "Read ClojureScript namespaces from a set of source directories
+  (defaults to [\"src\"]), and return a list of maps suitable for
+  documentation purposes.
+
+  Supported options using the second argument:
+    :exception-handler - function (fn [ex file]) to handle exceptions
+    while reading a namespace
 
   The keys in the maps are:
     :name   - the name of the namespace
@@ -108,14 +120,17 @@
       :type       - one of :macro, :protocol or :var
       :added      - the library version the var was added in
       :deprecated - the library version the var was deprecated in"
-  ([] (read-namespaces "src"))
-  ([path]
-     (let [path (io/file path)
-           file-reader (partial read-file path)]
-       (->> (find-files path)
-            (map file-reader)
-            (apply merge)
-            (vals)
-            (sort-by :name))))
-  ([path & paths]
-     (mapcat read-namespaces (cons path paths))))
+  ([] (read-namespaces ["src"] {}))
+  ([paths] (read-namespaces paths {}))
+  ([paths {:keys [exception-handler]
+           :or {exception-handler default-exception-handler}}]
+   (mapcat (fn [path]
+             (let [path (io/file path)
+                   file-reader #(read-file path % exception-handler)]
+               (->> (find-files path)
+                    (map file-reader)
+                    (apply merge)
+                    (vals)
+                    (remove :no-doc)
+                    (sort-by :name))))
+           paths)))
