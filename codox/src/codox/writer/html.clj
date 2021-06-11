@@ -13,7 +13,8 @@
            [com.vladsch.flexmark.ext.tables TablesExtension]
            [com.vladsch.flexmark.ext.wikilink WikiLinkExtension]
            [com.vladsch.flexmark.html LinkResolverFactory LinkResolver]
-           [com.vladsch.flexmark.html.renderer LinkResolverBasicContext]
+           [com.vladsch.flexmark.html.renderer LinkResolverBasicContext LinkType
+            LinkStatus]
            [codox LinkResolverFactoryImpl])
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -130,32 +131,18 @@
      (reify
        LinkResolver
        (resolveLink [this node context link]
-         (println (format "link type %s status %s url %s"
-                          (.getName (.getLinkType link))
-                          (.getName (.getStatus link))
-                          (.getUrl link)))
-         link)))))
+         (if (= "WIKI" (.getName (.getLinkType link)))
+           (if-let [url (find-wikilink project nil (.getUrl link))]
+             (-> link
+                 (.withUrl url)
+                 (.withStatus LinkStatus/VALID))
+             link)
+           (if-let [url (fix-markdown-url (.getUrl link))]
+             (-> link
+                 (.withUrl url)
+                 (.withStatus LinkStatus/VALID))
+             link)))))))
 
-;; CN - Not sure yet what exactly how to transform this functionality to flexmark -
-;; https://github.com/vsch/flexmark-java/blob/master/flexmark-java-samples/src/com/vladsch/flexmark/java/samples/CustomLinkResolverSample.java
-#_(defn- link-renderer [project & [ns]]
-  (proxy [LinkRenderer] []
-    (render
-      ([node]
-       (if (instance? WikiLinkNode node)
-         (let [[page text] (parse-wikilink (.getText node))]
-           (LinkRenderer$Rendering. (find-wikilink project ns page) text))
-         (proxy-super render node)))
-      ([node text]
-       (if (instance? ExpLinkNode node)
-         (-> (LinkRenderer$Rendering. (fix-markdown-url (.url node)) text)
-             (encode-title (.title node)))
-         (proxy-super render node text)))
-      ([node url title text]
-       (if (instance? RefLinkNode node)
-         (-> (LinkRenderer$Rendering. (fix-markdown-url url) text)
-             (encode-title title))
-         (proxy-super render node url title text))))))
 
 (defn markdown->html
   ^String [markdown-str project]
