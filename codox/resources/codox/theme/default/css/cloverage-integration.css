@@ -1,0 +1,40 @@
+/**
+ *
+ * CSS for cloverage integration elements, primarily SVG.
+ *
+ * Author: Simon Brooke [simon@journeyman.cc]
+ *
+ */
+
+rect {
+    stroke-dasharray: none; 
+    stroke: black; 
+    stroke-opacity: 1; 
+    fill: white; 
+    stroke-dashoffset: 0; 
+    stroke-width: 0.01; 
+    opacity: 1; 
+    stroke-miterlimit: 4; 
+    fill-opacity: 1
+}
+
+text {
+    text-anchor: left; 
+    line-height: 125%; 
+    font-style: normal; 
+    font-stretch: normal; 
+    stroke: none; 
+    text-align: left; 
+    font-size: 6 px; 
+    font-variant: normal; 
+    writing-mode: lr-tb; 
+    font-weight: normal; 
+    stroke-opacity: 1; fill: black; 
+    stroke-linejoin: miter; 
+    word-spacing: 0px; 
+    stroke-linecap: butt; 
+    stroke-width: 0.01 px; 
+    letter-spacing: 0px; 
+    fill-opacity: 1; 
+    font-family: 'Liberation Sans', Arial, Helvetica, sans-serif
+}

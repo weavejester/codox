@@ -14,6 +14,7 @@
             [clojure.walk :as walk]
             [net.cgrand.enlive-html :as enlive-html]
             [net.cgrand.jsoup :as jsoup]
+            [codox.cloverage-integration.runner :as cli]
             [codox.utils :as util]))
 
 (def enlive-operations
@@ -427,7 +428,10 @@
        [:div.src-link (link-to (var-source-uri project var) "view source")]
        (println "Could not generate source link for" (:name var))))])
 
-(defn- namespace-page [project namespace]
+(defn- namespace-page 
+  "Generate and return hiccup-formatted page describing this (string) 
+   `namespace` within the context of this `project`."
+  [project namespace]
   (html5
    [:head
     default-meta
@@ -440,8 +444,11 @@
      [:h1#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
      (when
-      (should-emit-cloverage-link (:name namespace))
-        (format-cloverage-link (:name namespace)))
+      (cli/should-emit-cloverage-link (:name namespace) (:cloverage project))
+       [:div#coverage
+        "Cloverage link here"
+        (cli/format-cloverage-summary (:name namespace) (:cloverage project))
+        (cli/format-cloverage-link (:name namespace) (:cloverage project))])
      [:div.doc (format-docstring project namespace namespace)]
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
@@ -453,7 +460,9 @@
 (defn- write-index [output-dir project]
   (spit (io/file output-dir "index.html") (transform-html project (index-page project))))
 
-(defn- write-namespaces [output-dir project]
+(defn- write-namespaces 
+  "Output HTML pages for each namespace in this `project` to this `output-dir`."
+  [output-dir project]
   (doseq [namespace (:namespaces project)]
     (spit (ns-filepath output-dir namespace)
           (transform-html project (namespace-page project namespace)))))
@@ -505,7 +514,8 @@
   (reduce apply-one-theme project themes))
 
 (defn write-docs
-  "Take raw documentation info and turn it into formatted HTML."
+  "Take raw documentation info and turn it into formatted HTML. This is the 
+   default writer called by `codox.main/generate-docs`"
   [{:keys [output-path] :as project}]
   (let [project (apply-theme-transforms project)]
     (doto output-path

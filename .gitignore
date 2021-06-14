@@ -7,3 +7,12 @@ target/
 checkouts/
 .lein-*
 .nrepl-port
+.gitignore
+
+codox/.calva/
+
+lein-codox/.calva/
+
+lein-codox/.classpath
+lein-codox/.project
+lein-codox/.settings/
