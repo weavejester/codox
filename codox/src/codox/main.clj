@@ -2,8 +2,10 @@
   "Main namespace for generating documentation"
   (:use [codox.utils :only (add-source-paths)])
   (:require [clojure.string :as str]
+            [clojure.pprint]
             [clojure.java.shell :as shell]
             [codox.reader.clojure :as clj]
+            [codox.reader.clojurescript :as cljs]
             [codox.reader.plaintext :as text]))
 
 (defn- writer [{:keys [writer]}]
@@ -19,29 +21,9 @@
       (throw
          (Exception. (str "Could not resolve codox writer " writer-sym))))))
 
-(defn- macro? [var]
-  (= (:type var) :macro))
-
-(defn- read-macro-namespaces [paths read-opts]
-  (->> (clj/read-namespaces paths read-opts)
-       (map (fn [ns] (update-in ns [:publics] #(filter macro? %))))
-       (remove (comp empty? :publics))))
-
-(defn- merge-namespaces [namespaces]
-  (for [[name namespaces] (group-by :name namespaces)]
-    (assoc (first namespaces) :publics (mapcat :publics namespaces))))
-
-(defn- cljs-read-namespaces [paths read-opts]
-  ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
-  (require 'codox.reader.clojurescript)
-  (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
-    (merge-namespaces
-     (concat (reader paths read-opts)
-             (read-macro-namespaces paths read-opts)))))
-
 (def ^:private namespace-readers
   {:clojure       clj/read-namespaces
-   :clojurescript cljs-read-namespaces})
+   :clojurescript cljs/read-namespaces})
 
 (defn- var-symbol [namespace var]
   (symbol (name (:name namespace)) (name (:name var))))
@@ -125,3 +107,29 @@
        (write-fn (assoc options
                         :namespaces namespaces
                         :documents  documents)))))
+
+(defn -main
+  "The main entry point for reading API information from files in a directory.
+
+  To analyze a project (debugging etc.) follow these steps:
+
+  1. unzip the project's jar into a directory
+  2. add the project's coordinates to the local `deps.edn` file
+  3. add the jar contents directory to `:paths` in `deps.edn`
+
+  You can then call this main function as follows:
+
+      clj -m codox.main clojurescript jar-contents-dir/
+      clj -m codox.main clojure jar-contents-dir/"
+  [lang path]
+  (println "Analyzing lang:" lang)
+  (println "Analyzing path:" path)
+  (assert (#{"clojure" "clojurescript"} lang))
+  (->> (generate-docs {:writer 'clojure.core/identity
+                       :source-paths [path]
+                       :language (keyword lang)})
+       :namespaces
+       ;; Walk/realize entire structure, otherwise "Excluding ->Xyz"
+       ;; messages will be mixed with the pretty printed output
+       (clojure.walk/prewalk identity)
+       clojure.pprint/pprint))

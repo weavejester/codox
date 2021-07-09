@@ -4,6 +4,8 @@
   (:require [clojure.java.io :as io]
             [cljs.analyzer :as an]
             [cljs.analyzer.api :as ana]
+            [cljs.closure]
+            [cljs.env]
             [clojure.string :as str]))
 
 (defn- cljs-filename? [filename]
@@ -15,7 +17,7 @@
        (-> file .getName cljs-filename?)))
 
 (defn- remove-quote [x]
-  (if (and (list? x) (= (first x) 'quote))
+  (if (and (seq? x) (= (first x) 'quote))
     (second x)
     x))
 
@@ -50,15 +52,16 @@
    :else                   :var))
 
 (defn- read-var [file vars var]
-  (-> var
-      (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
-      (update-some :name (comp symbol name))
-      (update-some :arglists remove-quote)
-      (update-some :doc correct-indent)
-      (assoc-some  :file    (.getPath file)
-                   :type    (var-type var)
-                   :members (map (partial read-var file vars)
-                                 (protocol-methods var vars)))))
+  (let [vt (var-type var)]
+    (-> var
+        (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
+        (update-some :name (comp symbol name))
+        (update-some :arglists remove-quote)
+        (update-some :doc correct-indent)
+        (assoc-some  :file    (if (= vt :macro) (:file var) (.getPath file))
+                     :type    vt
+                     :members (map (partial read-var file vars)
+                                   (protocol-methods var vars))))))
 
 (defn- read-publics [state namespace file]
   (let [vars (vals (ana/ns-publics state namespace))]
@@ -70,10 +73,11 @@
          (sort-by (comp str/lower-case :name)))))
 
 (defn- analyze-file [file]
-  (let [state (ana/empty-state)]
-    (binding [an/*analyze-deps* false]
-      (ana/no-warn
-        (ana/analyze-file state file {})))
+  (let [opts  (cljs.closure/add-implicit-options {})
+        state (cljs.env/default-compiler-env opts)]
+    (ana/no-warn
+     (cljs.closure/validate-opts opts)
+     (ana/analyze-file state file opts))
     state))
 
 (defn- read-file [path file exception-handler]
