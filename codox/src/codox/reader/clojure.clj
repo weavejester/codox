@@ -2,10 +2,10 @@
   "Read raw documentation information from Clojure source directory."
   (:import java.util.jar.JarFile
            java.io.FileNotFoundException)
-  (:use [codox.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [clojure.tools.namespace.find :as ns]
-            [clojure.string :as str]))
+            [codox.utils :refer (assoc-some correct-indent update-some)]))
 
 (defn try-require [namespace]
   (try
@@ -65,7 +65,7 @@
 
 (defn core-typed-type [var]
   (let [{:keys [delayed-errors ret]} (typecheck-var var)]
-    (if (empty? delayed-errors)
+    (when (empty? delayed-errors)
       (:t ret))))
 
 (defn- read-var [vars var]
@@ -74,7 +74,7 @@
                     :added :deprecated :doc/format])
       (update-some :doc correct-indent)
       (assoc-some  :type (var-type var)
-                   :type-sig (if (core-typed?) (core-typed-type var))
+                   :type-sig (when (core-typed?) (core-typed-type var))
                    :members (seq (map (partial read-var vars)
                                       (protocol-methods var vars))))))
 
