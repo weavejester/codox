@@ -2,11 +2,16 @@
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
-           [java.io File]
-           [org.pegdown
-            PegDownProcessor Extensions FastEncoder
-            LinkRenderer LinkRenderer$Rendering]
-           [org.pegdown.ast ExpLinkNode RefLinkNode WikiLinkNode])
+           [com.vladsch.flexmark.ast Link LinkRef]
+           [com.vladsch.flexmark.ext.wikilink WikiLink WikiLinkExtension]
+           [com.vladsch.flexmark.html HtmlRenderer
+            HtmlRenderer$HtmlRendererExtension LinkResolver LinkResolverFactory]
+           [com.vladsch.flexmark.html.renderer LinkResolverBasicContext
+            LinkStatus ResolvedLink]
+           [com.vladsch.flexmark.parser Parser]
+           [com.vladsch.flexmark.profile.pegdown Extensions
+            PegdownOptionsAdapter]
+           [com.vladsch.flexmark.util.misc Extension])
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
@@ -63,34 +68,13 @@
 (defmethod format-docstring :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
 
-(def ^:private pegdown
-  (PegDownProcessor.
-   (bit-or Extensions/AUTOLINKS
-           Extensions/QUOTES
-           Extensions/SMARTS
-           Extensions/STRIKETHROUGH
-           Extensions/TABLES
-           Extensions/FENCED_CODE_BLOCKS
-           Extensions/WIKILINKS
-           Extensions/DEFINITIONS
-           Extensions/ABBREVIATIONS
-           Extensions/ATXHEADERSPACE
-           Extensions/RELAXEDHRULES
-           Extensions/EXTANCHORLINKS)
-   2000))
 
-(defn- find-wikilink [project ns text]
+(defn- find-wiki-link [project ns text]
   (let [ns-strs (map (comp str :name) (:namespaces project))]
     (if (contains? (set ns-strs) text)
       (str text ".html")
       (if-let [var (util/search-vars (:namespaces project) text (:name ns))]
         (str (namespace var) ".html#" (var-id var))))))
-
-(defn- parse-wikilink [text]
-  (let [pos (.indexOf text "|")]
-    (if (>= pos 0)
-      [(subs text 0 pos) (subs text (inc pos))]
-      [text text])))
 
 (defn- absolute-url? [url]
   (re-find #"^([a-z]+:)?//" url))
@@ -100,34 +84,67 @@
     (str/replace url #"\.(md|markdown)$" ".html")
     url))
 
-(defn- encode-title [rendering title]
-  (if (str/blank? title)
-    rendering
-    (.withAttribute rendering "title" (FastEncoder/encode title))))
+(defn- update-link-url [^ResolvedLink link f]
+  (-> link
+      (.withStatus LinkStatus/VALID)
+      (.withUrl (f (.getUrl link)))))
 
-(defn- link-renderer [project & [ns]]
-  (proxy [LinkRenderer] []
-    (render
-      ([node]
-       (if (instance? WikiLinkNode node)
-         (let [[page text] (parse-wikilink (.getText node))]
-           (LinkRenderer$Rendering. (find-wikilink project ns page) text))
-         (proxy-super render node)))
-      ([node text]
-       (if (instance? ExpLinkNode node)
-         (-> (LinkRenderer$Rendering. (fix-markdown-url (.url node)) text)
-             (encode-title (.title node)))
-         (proxy-super render node text)))
-      ([node url title text]
-       (if (instance? RefLinkNode node)
-         (-> (LinkRenderer$Rendering. (fix-markdown-url url) text)
-             (encode-title title))
-         (proxy-super render node url title text))))))
+(defn- correct-internal-links [node link project ns]
+  (condp instance? node
+    WikiLink (update-link-url link #(find-wiki-link project ns %))
+    LinkRef  (update-link-url link fix-markdown-url)
+    Link     (update-link-url link fix-markdown-url)
+    link))
+
+(defn- make-renderer-extension
+  [project ns]
+  (reify HtmlRenderer$HtmlRendererExtension
+    (rendererOptions [_ _])
+    (extend [_ htmlRendererBuilder _]
+      (.linkResolverFactory
+       htmlRendererBuilder
+       (reify LinkResolverFactory
+         (getAfterDependents [_] nil)
+         (getBeforeDependents [_] nil)
+         (affectsGlobalScope [_] false)
+         (^LinkResolver apply [_ ^LinkResolverBasicContext _]
+          (reify LinkResolver
+            (resolveLink [_ node _ link]
+              (correct-internal-links node link project ns)))))))))
+
+(defn- make-flexmark-options
+  [project ns]
+  (-> (PegdownOptionsAdapter/flexmarkOptions
+       (bit-or Extensions/AUTOLINKS
+               Extensions/QUOTES
+               Extensions/SMARTS
+               Extensions/STRIKETHROUGH
+               Extensions/TABLES
+               Extensions/FENCED_CODE_BLOCKS
+               Extensions/WIKILINKS
+               Extensions/DEFINITIONS
+               Extensions/ABBREVIATIONS
+               Extensions/ATXHEADERSPACE
+               Extensions/RELAXEDHRULES
+               Extensions/EXTANCHORLINKS)
+       (into-array Extension [(make-renderer-extension project ns)]))
+      (.toMutable)
+      (.set WikiLinkExtension/LINK_FIRST_SYNTAX true)
+      (.toImmutable)))
+
+(defn- markdown-to-html
+  ([doc project]
+   (markdown-to-html doc project nil))
+  ([doc project ns]
+   (let [options  (make-flexmark-options project ns)
+         parser   (.build (Parser/builder options))
+         renderer (.build (HtmlRenderer/builder options))]
+     (->> doc (.parse parser) (.render renderer)))))
 
 (defmethod format-docstring :markdown [project ns metadata]
   [:div.markdown
    (if-let [doc (:doc metadata)]
-     (.markdownToHtml pegdown doc (link-renderer project ns)))])
+     (markdown-to-html doc project ns))])
 
 (defn- ns-filename [namespace]
   (str (:name namespace) ".html"))
@@ -359,7 +376,7 @@
   (fn [project doc] (:format doc)))
 
 (defmethod format-document :markdown [project doc]
-  [:div.markdown (.markdownToHtml pegdown (:content doc) (link-renderer project))])
+  [:div.markdown (markdown-to-html (:content doc) project)])
 
 (defn- document-page [project doc]
   (html5
