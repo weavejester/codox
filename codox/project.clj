@@ -9,5 +9,7 @@
                  [org.clojure/clojurescript "1.7.189"]
                  [hiccup "1.0.5"]
                  [enlive "1.1.6"]
-                 [org.pegdown/pegdown "1.6.0"]
+                 [com.vladsch.flexmark/flexmark "0.62.2"]
+                 [com.vladsch.flexmark/flexmark-profile-pegdown "0.62.2"]
+                 [com.vladsch.flexmark/flexmark-util-misc"0.62.2"]
                  [org.ow2.asm/asm-all "5.0.3"]])
