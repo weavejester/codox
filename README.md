@@ -12,7 +12,7 @@ Include the following plugin in your `project.clj` file or your global
 profile:
 
 ```clojure
-:plugins [[lein-codox "0.10.7"]]
+:plugins [[lein-codox "0.10.8"]]
 ```
 
 Then run:
@@ -28,7 +28,7 @@ This will generate API documentation in the "target/doc" subdirectory
 
 Add boot-codox to your build.boot dependencies and require the namespace:
 ```
-(set-env! :dependencies '[[boot-codox "0.10.7" :scope "test"]])
+(set-env! :dependencies '[[boot-codox "0.10.8" :scope "test"]])
 (require '[codox.boot :refer [codox]])
 ```
 
@@ -55,7 +55,7 @@ $ boot codox target
 Add an alias to your `deps.edn`:
 
 ```clojure
-:codox {:extra-deps {codox/codox {:mvn/version "0.10.7"}}
+:codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}}
         :exec-fn codox.main/generate-docs
         :exec-args {:source-paths  ["path/to/src"]}}
 ```

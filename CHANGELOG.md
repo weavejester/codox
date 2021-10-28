@@ -1,3 +1,7 @@
+## 0.10.8 (2021-10-28)
+
+* Replaced deprecated Pegdown library with Flexmark (#205)
+
 ## 0.10.7 (2019-05-15)
 
 * Add support for managed dependencies (#182)
