@@ -457,6 +457,11 @@
      [:h1#top.anchor (h (:name namespace))]
      (added-and-deprecated-docs namespace)
      [:div.doc (format-docstring project namespace namespace)]
+     (when-let [{:keys [dir alt width height extension]} (:image project)]
+      [:div.image [:img {:src (str dir "/" (:name namespace) "." extension)
+                         :alt alt
+                         :width width
+                         :height height }]])
      (for [var (sorted-public-vars namespace)]
        (var-docs project namespace var))]]))
 
