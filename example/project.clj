@@ -15,6 +15,7 @@
                "doc/formatting.md"]
    :source-uri
    "https://github.com/weavejester/codox/blob/{version}/codox.example/{filepath}#L{basename}-{line}"
+   :image {:dir "images" :extension "png" :alt "dependencies graph" :width "300" :height "600"}
    :html
    {:transforms [[:head] [:prepend [:script "console.log('hello');"]]
                  [:head] [:append  [:script "console.log('world');"]]
