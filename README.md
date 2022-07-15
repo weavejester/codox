@@ -57,10 +57,15 @@ Add an alias to your `deps.edn`:
 ```clojure
 :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}}
         :exec-fn codox.main/generate-docs
-        :exec-args {:source-paths  ["path/to/src"]}}
+        :exec-args {:source-paths ["path/to/src"]}}
 ```
 
-Run Codox via -X like this:
+When using `deps.edn`, project options should be added to the
+`:exec-args` map in your Codox alias, as above.  This behavior differs
+from the examples in "Project Options" section, which use the
+Leiningen configuration format.
+
+Run Codox via `-X` like this:
 
 ```shell
 clojure -X:codox
@@ -218,6 +223,9 @@ description in the output. You can override these by specifying a
 ```clojure
 :codox {:project {:name "Example", :version "1.0", :description "N/A"}}
 ```
+
+Note: when using `deps.edn`, these entries should be added to the top
+level of the Codox configuration map (i.e. not under `:project`).
 
 ### Source Links
 
