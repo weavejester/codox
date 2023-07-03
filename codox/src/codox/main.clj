@@ -58,14 +58,24 @@
     (filter #(some (partial ns-matches? %) ns-filters) namespaces)
     namespaces))
 
+(defn- cross-platform?
+  "Do given options indicate *both* Clojure and ClojureScript sources?"
+  [{:keys [language] :as opts}]
+  (= language :both))
+
 (defn- read-namespaces
+  "Returns {<language> <namespace-seq>} for cross-platform opts,
+  or <namespace-seq> otherwise."
   [{:keys [language root-path source-paths namespaces metadata exclude-vars] :as opts}]
-  (let [reader (namespace-readers language)]
-    (-> (reader source-paths (select-keys opts [:exception-handler]))
-        (filter-namespaces namespaces)
-        (remove-excluded-vars exclude-vars)
-        (add-source-paths root-path source-paths)
-        (add-ns-defaults metadata))))
+  (if (cross-platform? opts)
+    {:clojure       (read-namespaces (assoc opts :language :clojure))
+     :clojurescript (read-namespaces (assoc opts :language :clojurescript))}
+    (let [reader (namespace-readers language)]
+      (-> (reader source-paths (select-keys opts [:exception-handler]))
+          (filter-namespaces namespaces)
+          (remove-excluded-vars exclude-vars)
+          (add-source-paths root-path source-paths)
+          (add-ns-defaults metadata)))))
 
 (defn- read-documents [{:keys [doc-paths doc-files] :or {doc-files :all}}]
   (cond
@@ -105,4 +115,5 @@
            documents  (read-documents options)]
        (write-fn (assoc options
                         :namespaces namespaces
-                        :documents  documents)))))
+                        :documents  documents
+                        :cross-platform? (cross-platform? options))))))
