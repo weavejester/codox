@@ -44,7 +44,7 @@ h5.license {
     right: 0;
     height: 22px;
     color: #f5f5f5;
-    padding: 5px 7px;
+    padding: 7px 10px;
 }
 
 #content {
@@ -97,6 +97,8 @@ h5.license {
 }
 
 #header h1 {
+    display: block;
+    float: left;
     margin: 0;
     padding: 0;
     font-size: 18px;
@@ -119,6 +121,26 @@ h5.license {
 
 #header a {
     color: #f5f5f5;
+}
+
+#langs {
+    display: block;
+    float: left;
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+#langs .lang {
+    display: inline-block;
+    margin: 0 2px;
+    padding: 0 7px;
+    background-color: #717171;
+    border-radius: 6px;
+    vertical-align: middle;
+}
+
+#langs .lang.current {
+    background-color: #a33;
 }
 
 .sidebar a {

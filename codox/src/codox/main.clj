@@ -78,13 +78,25 @@
     namespaces))
 
 (defn- read-namespaces
+  "Returns {<language> <namespace-seq>} for cross-platform opts,
+  or <namespace-seq> otherwise."
   [{:keys [language root-path source-paths namespaces metadata exclude-vars] :as opts}]
-  (let [reader (namespace-readers language)]
-    (-> (reader source-paths (select-keys opts [:exception-handler]))
-        (filter-namespaces namespaces)
-        (remove-excluded-vars exclude-vars)
-        (add-source-paths root-path source-paths)
-        (add-ns-defaults metadata))))
+  (if (:cross-platform? opts)
+    (reduce
+      (fn [m language]
+        (assoc m language
+          (read-namespaces
+            (assoc opts
+              :language language
+              :cross-platform? false))))
+      {}
+      (:languages opts))
+    (let [reader (namespace-readers language)]
+      (-> (reader source-paths (select-keys opts [:exception-handler]))
+          (filter-namespaces namespaces)
+          (remove-excluded-vars exclude-vars)
+          (add-source-paths root-path source-paths)
+          (add-ns-defaults metadata)))))
 
 (defn- read-documents [{:keys [doc-paths doc-files] :or {doc-files :all}}]
   (cond
@@ -113,12 +125,24 @@
      :themes       [:default]
      :git-commit   (delay (git-commit root-path))}))
 
+(defn- cross-platform-options [{:keys [language] :as opts}]
+  (if-not (set? language)
+    opts ; {:language <keyword>}
+    (if (= (count language) 1)
+      (assoc opts :language (first language)) ; {:language <keyword>}
+
+      ;; Cross-platform case: {:language nil, :languages <set>}
+      (assoc opts
+        :language        nil
+        :languages       language
+        :cross-platform? true))))
+
 (defn generate-docs
   "Generate documentation from source files."
   ([]
      (generate-docs {}))
   ([options]
-     (let [options    (merge defaults options)
+     (let [options    (-> (merge defaults options) cross-platform-options)
            write-fn   (writer options)
            namespaces (read-namespaces options)
            documents  (read-documents options)]
