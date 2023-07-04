@@ -480,6 +480,24 @@
      [:h4.type (name (:type var))])
    (if (:dynamic var)
      [:h4.dynamic "dynamic"])
+
+   (if (:cross-platform? project)
+     (let [languages (get-in project [:var-langs (:name namespace) (:name var)])
+           has-clj? (contains? languages :clojure)
+           has-cljs? (contains? languages :clojurescript)
+           {:keys [language]} project]
+
+       (list
+         (when has-clj?
+           (if (= language :clojurescript)
+             [:h4.lang (link-to (var-uri (assoc namespace :language :clojure) var) "clj")]
+             [:h4.lang.current "clj"]))
+
+         (when has-cljs?
+           (if (= language :clojure)
+             [:h4.lang (link-to (var-uri (assoc namespace :language :clojurescript) var) "cljs")]
+             [:h4.lang.current "cljs"])))))
+
    (added-and-deprecated-docs var)
    (if (:type-sig var)
      [:div.type-sig

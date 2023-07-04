@@ -77,6 +77,31 @@
           (add-source-paths root-path source-paths)
           (add-ns-defaults metadata)))))
 
+(defn- get-var-langs
+  "Returns {<ns> {<var> <set-of-languages>}} for given namespaces."
+  ([language namespaces var-langs]
+   (reduce
+     (fn [var-langs ns]
+       (reduce
+         (fn [var-langs public-var]
+           (update-in var-langs [(:name ns) (:name public-var)]
+             #(conj (or % #{}) language)))
+         var-langs
+         (:publics ns)))
+     var-langs
+     namespaces))
+
+  ([options namespaces]
+   (if-not (cross-platform? options)
+     (get-var-langs (:language options) namespaces {})
+     (->>
+       (get-var-langs :clojure (:clojure namespaces) {})
+       (get-var-langs :clojurescript (:clojurescript namespaces))))))
+
+(comment (get-var-langs {:language :clojure}
+           '({:name codox.main :publics ({:name defaults} {:name bar})}
+             {:name codox.foo  :publics ({:name bar})})))
+
 (defn- read-documents [{:keys [doc-paths doc-files] :or {doc-files :all}}]
   (cond
     (not= doc-files :all) (map text/read-file doc-files)
@@ -112,8 +137,10 @@
      (let [options    (merge defaults options)
            write-fn   (writer options)
            namespaces (read-namespaces options)
-           documents  (read-documents options)]
+           documents  (read-documents options)
+           var-langs  (get-var-langs options namespaces)]
        (write-fn (assoc options
                         :namespaces namespaces
                         :documents  documents
+                        :var-langs  var-langs
                         :cross-platform? (cross-platform? options))))))
