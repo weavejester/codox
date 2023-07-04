@@ -483,6 +483,18 @@
      [:h4.type (name (:type var))])
    (if (:dynamic var)
      [:h4.dynamic "dynamic"])
+
+   (if (:cross-platform? project)
+     (let [var-langs (get-in project [:var-langs (:name namespace) (:name var)])
+           {:keys [language languages]} project]
+
+       (for [language* languages]
+         (when (contains? var-langs language*)
+           (if (= language language*)
+             [:h4.lang.current (:ext (language-info language*))]
+             [:h4.lang (link-to (var-uri (assoc namespace :language language*) var)
+                         (:ext (language-info language*)))])))))
+
    (added-and-deprecated-docs var)
    (if (:type-sig var)
      [:div.type-sig

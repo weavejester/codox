@@ -347,7 +347,8 @@ h5.license {
 h4.type,
 h4.dynamic,
 h4.added,
-h4.deprecated {
+h4.deprecated,
+h4.lang {
     float: left;
     margin: 3px 10px 15px 0;
     font-size: 15px;
@@ -358,7 +359,8 @@ h4.deprecated {
 .public h4.type,
 .public h4.dynamic,
 .public h4.added,
-.public h4.deprecated {
+.public h4.deprecated,
+.public h4.lang {
     font-size: 13px;
     font-weight: bold;
     margin: 3px 0 0 10px;
@@ -366,7 +368,8 @@ h4.deprecated {
 
 .members h4.type,
 .members h4.added,
-.members h4.deprecated {
+.members h4.deprecated,
+.members h4.lang {
     margin-top: 1px;
 }
 
@@ -384,6 +387,16 @@ h4.added {
 
 h4.deprecated {
     color: #880000;
+}
+
+.public h4.lang, .public h4.lang a {
+    font-weight: normal;
+    font-variant: normal;
+    color: #717171;
+}
+
+.public h4.lang.current {
+    color: #a33;
 }
 
 .namespace {
