@@ -147,20 +147,26 @@
      (markdown-to-html doc project ns))])
 
 (defn- language-info
-  [language]
-  (when language
-    (case language
-      :clojure       {:ext "clj",  :filename-suffix ".clj",  :name "Clojure"}
-      :clojurescript {:ext "cljs", :filename-suffix ".cljs", :name "ClojureScript"}
-      (ex-info (str "Unexpected language: `" language "`")
-        {:language language}))))
+  ([language]
+   (when language
+     (case language
+       :clojure       {:ext "clj",  :filename-suffix ".clj",  :name "Clojure"}
+       :clojurescript {:ext "cljs", :filename-suffix ".cljs", :name "ClojureScript"}
+       (ex-info (str "Unexpected language: `" language "`")
+         {:language language}))))
+         
+  ([language base-language]
+   (when-let [info (language-info language)]
+     (if (= language base-language)
+       (assoc info :filename-suffix "")
+       info))))
 
 (defn- index-filename [language]
   (str "index" (:filename-suffix (language-info language)) ".html"))
 
 (defn- ns-filename [namespace]
   (str (:name namespace)
-    (:filename-suffix (language-info (:language namespace)))
+    (:filename-suffix (language-info (:language namespace) (:base-language namespace)))
     ".html"))
 
 (comment
@@ -517,8 +523,11 @@
     (.mkdirs (io/file output-dir dir))))
 
 (defn- cross-platform-namespaces
-  [namespaces language]
-  (map #(assoc % :language language)
+  [namespaces language base-language]
+  (map
+    #(assoc %
+       :language language
+       :base-language base-language)
     (get namespaces language)))
 
 (defn- write-index [output-dir project]
@@ -527,7 +536,7 @@
     (when cross-platform?
       ;; Write an index file for each language
       (doseq [language (:languages project)]
-        (let [namespaces (cross-platform-namespaces namespaces language)
+        (let [namespaces (cross-platform-namespaces namespaces language (:base-language project))
               project
               (assoc project
                 :namespaces namespaces
@@ -550,7 +559,7 @@
     (if cross-platform?
       ;; Write namespace files for each language
       (doseq [language (:languages project)]
-        (let [namespaces (cross-platform-namespaces namespaces language)]
+        (let [namespaces (cross-platform-namespaces namespaces language (:base-language project))]
           (doseq [namespace namespaces]
             (let [project (assoc project
                             :namespaces namespaces
