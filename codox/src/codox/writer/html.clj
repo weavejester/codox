@@ -147,17 +147,26 @@
      (markdown-to-html doc project ns))])
 
 (defn- language-fileext
-  [language]
-  (case language
-    :clojure       ".clj"
-    :clojurescript ".cljs"
-    nil            ""))
+  ([language]
+   (case language
+     :clojure       ".clj"
+     :clojurescript ".cljs"
+     nil            ""))
+  ([language base-language]
+   (when (not= language base-language)
+     (language-fileext language))))
 
 (defn- index-filename [language]
   (str "index" (language-fileext language) ".html"))
 
 (defn- ns-filename [namespace]
-  (str (:name namespace) (language-fileext (:language namespace)) ".html"))
+  (str (:name namespace)
+    (language-fileext (:language namespace) (:base-language namespace))
+    ".html"))
+
+(comment
+  (ns-filename {:name 'my-ns :language :clojure})
+  (ns-filename {:name 'my-ns :language :clojure :base-language :clojure}))
 
 (defn- ns-filepath [output-dir namespace]
   (str output-dir "/" (ns-filename namespace)))
@@ -510,13 +519,22 @@
   (doseq [dir dirs]
     (.mkdirs (io/file output-dir dir))))
 
+(defn- cross-platform-namespaces
+  [namespaces language base-language]
+  (map
+    #(assoc %
+       :language language
+       :base-language base-language)
+    (get namespaces language)))
+
 (defn- write-index [output-dir project]
   (let [{:keys [namespaces cross-platform?]} project]
 
     (when cross-platform?
       ;; Write an index file for each language
       (doseq [language (keys namespaces)]
-        (let [namespaces (map #(assoc % :language language) (get namespaces language))
+        (let [namespaces (cross-platform-namespaces namespaces language
+                           (:base-language project))
               project
               (assoc project
                 :namespaces namespaces
@@ -539,7 +557,8 @@
     (if cross-platform?
       ;; Write namespace files for each language
       (doseq [language (keys namespaces)]
-        (let [namespaces (map #(assoc % :language language) (get namespaces language))]
+        (let [namespaces (cross-platform-namespaces namespaces language
+                           (:base-language project))]
           (doseq [namespace namespaces]
             (let [project (assoc project
                             :namespaces namespaces
