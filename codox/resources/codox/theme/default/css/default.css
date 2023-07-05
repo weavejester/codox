@@ -92,7 +92,7 @@ h5.license {
 
 #header {
     background: #3f3f3f;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #cccccc;
     z-index: 100;
 }
 
@@ -103,7 +103,6 @@ h5.license {
     padding: 0;
     font-size: 18px;
     font-weight: lighter;
-    text-shadow: -1px -1px 0px #333;
 }
 
 #header h1 .project-version {
