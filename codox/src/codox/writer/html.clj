@@ -150,8 +150,8 @@
   ([language]
    (when language
      (case language
-       :clojure       {:ext "clj",  :filename-suffix ".clj",  :name "Clojure"}
-       :clojurescript {:ext "cljs", :filename-suffix ".cljs", :name "ClojureScript"}
+       :clojure       {:sort 1, :ext "clj",  :filename-suffix ".clj",  :name "Clojure"}
+       :clojurescript {:sort 2, :ext "cljs", :filename-suffix ".cljs", :name "ClojureScript"}
        (ex-info (str "Unexpected language: `" language "`")
          {:language language}))))
          
@@ -160,6 +160,11 @@
      (if (= language base-language)
        (assoc info :filename-suffix "")
        info))))
+
+(defn- sorted-languages [languages]
+  (sort-by #(:sort (language-info %)) languages))
+
+(comment (sorted-languages #{:clojurescript :clojure}))
 
 (defn- index-filename [language]
   (str "index" (:filename-suffix (language-info language)) ".html"))
@@ -312,7 +317,7 @@
     (list
       [:h3.no-link [:span.inner "Platforms"]]
       [:ul.index-link
-       (for [language (:languages project)]
+       (for [language (sorted-languages (:languages project))]
          [:li.depth-1
           (link-to (index-filename language)
             [:div.inner (:name (language-info language))])])])))
@@ -354,7 +359,7 @@
   (when (:cross-platform? project)
     (let [{:keys [language languages]} project]
       [:div#langs
-       (for [language* languages]
+       (for [language* (sorted-languages languages)]
          (if (= language language*)
            [:div.lang.current (:ext (language-info language*))]
            [:div.lang (link-to (index-filename language*) (:ext (language-info language*)))]))])))
@@ -413,7 +418,7 @@
          [:p "This project includes code for multiple platforms, please "
           [:strong "choose a platform"] " to view its documentation:"]
          [:ul
-          (for [language (:languages project)]
+          (for [language (sorted-languages (:languages project))]
             [:li (link-to (index-filename language) (:name (language-info language)))])]))
 
      (when (:show-namespaces? project)
@@ -488,7 +493,7 @@
      (let [var-langs (get-in project [:var-langs (:name namespace) (:name var)])
            {:keys [language languages]} project]
 
-       (for [language* languages]
+       (for [language* (sorted-languages languages)]
          (when (contains? var-langs language*)
            (if (= language language*)
              [:h4.lang.current (:ext (language-info language*))]
