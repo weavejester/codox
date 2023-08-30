@@ -2,6 +2,7 @@
   "Main namespace for generating documentation"
   (:use [codox.utils :only (add-source-paths)])
   (:require [clojure.string :as str]
+            [clojure.pprint]
             [clojure.java.shell :as shell]
             [codox.reader.clojure :as clj]
             [codox.reader.clojurescript :as cljs]
@@ -106,3 +107,29 @@
        (write-fn (assoc options
                         :namespaces namespaces
                         :documents  documents)))))
+
+(defn -main
+  "The main entry point for reading API information from files in a directory.
+
+  To analyze a project (debugging etc.) follow these steps:
+
+  1. unzip the project's jar into a directory
+  2. add the project's coordinates to the local `deps.edn` file
+  3. add the jar contents directory to `:paths` in `deps.edn`
+
+  You can then call this main function as follows:
+
+      clj -m codox.main clojurescript jar-contents-dir/
+      clj -m codox.main clojure jar-contents-dir/"
+  [lang path]
+  (println "Analyzing lang:" lang)
+  (println "Analyzing path:" path)
+  (assert (#{"clojure" "clojurescript"} lang))
+  (->> (generate-docs {:writer 'clojure.core/identity
+                       :source-paths [path]
+                       :language (keyword lang)})
+       :namespaces
+       ;; Walk/realize entire structure, otherwise "Excluding ->Xyz"
+       ;; messages will be mixed with the pretty printed output
+       (clojure.walk/prewalk identity)
+       clojure.pprint/pprint))

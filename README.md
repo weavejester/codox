@@ -1,3 +1,12 @@
+### Notes about this fork
+
+- Focused on extracting structured data (EDN) from jars.
+- Any writing-related (HTML etc.) dependencies have been removed, code is kept to keep diff to mainline manageable.
+- Various tweaks have been done to align the results of Clojure and ClojureScript analysis.
+
+
+---
+
 # Codox
 
 A tool for generating API documentation from Clojure or ClojureScript
